@@ -1,7 +1,7 @@
 express = require 'express'
 http = require 'http'
 path = require 'path'
-apiKit = require 'apikit-express'
+apiKit = require 'apikit-node'
 
 app = module.exports = express()
 
