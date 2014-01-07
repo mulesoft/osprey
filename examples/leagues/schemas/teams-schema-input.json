@@ -1,0 +1,36 @@
+    {
+                  "$schema": "http://json-schema.org/draft-03/schema",
+                  "items": {
+                      "description": "The team is the basic unit for keeping track of a roster of players. With the Team APIs, you can obtain team-related information, like the team name, stats, points, and more.",
+                      "name": "Team",
+                      "properties": {
+                          "homeCity": {
+                              "description": "Name of the city to which this team belongs",
+                              "type": "string"
+                          },
+                          "id": {
+                              "description": "A three-letter code that identifies the team id",
+                              "maxLength": 3,
+                              "minLength": 3,
+                              "type": "string"
+                          },
+                          "name": {
+                              "description": "Name of the team",
+                              "type": "string"
+                          },
+                          "required": [
+                              "id",
+                              "name",
+                              "homeCity"
+                          ],
+                          "stadium": {
+                              "description": "Name of the stadium",
+                              "type": "string"
+                          }
+                      },
+                      "type": "object"
+                  },
+                  "name": "Teams",
+                  "required": true,
+                  "type": "array"
+              }

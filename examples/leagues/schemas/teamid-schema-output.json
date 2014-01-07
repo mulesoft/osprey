@@ -1,0 +1,35 @@
+   {
+                    "$schema": "http://json-schema.org/draft-03/schema",
+                    "properties": {
+                        "homeCity": {
+                            "description": "Name of the city to which this team belongs",
+                            "type": "string"
+                        },
+                        "matches": {
+                            "description": "The total number of matches that has been played by this team between all seasons",
+                            "type": "integer",
+                            "minimum": 0
+                        },
+                        "id": {
+                            "description": "A three-letter code that identifies the team id",
+                            "maxLength": 3,
+                            "minLength": 3,
+                            "type": "string"
+                        },
+                        "name": {
+                            "description": "Name of the team",
+                            "type": "string"
+                        },
+                        "required": [
+                            "id",
+                            "name",
+                            "homeCity"
+                        ],
+                        "stadium": {
+                            "description": "Name of the stadium",
+                            "type": "string"
+                        }
+                    },
+                    "type": "object",
+                    "name": "Team"
+                }

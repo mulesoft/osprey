@@ -1,0 +1,120 @@
+   [{
+                "name": "Athletic Bilbao",
+                "id": "ATH",
+                "homeCity": "Bilbao",
+                "stadium": "San Mames"
+              },
+              {
+                "name": "Atletico Madrid",
+                "id": "ATL",
+                "homeCity": "Madrid",
+                "stadium": "Vicente Calderon"
+              },
+              {
+                "name": "Barcelona",
+                "id": "BAR",
+                "homeCity": "Barcelona",
+                "stadium": "Camp Nou"
+              },
+              {
+                "name": "Betis",
+                "id": "BET",
+                "homeCity": "Seville",
+                "stadium": "Benito Villamarin"
+              },
+              {
+                "name": "Espanyol",
+                "id": "ESP",
+                "homeCity": "Barcelona",
+                "stadium": "Cornella-El Prat"
+              },
+              {
+                "name": "Getafe",
+                "id": "GET",
+                "homeCity": "Getafe",
+                "stadium": "Coliseum Alfonso Perez"
+              },
+              {
+                "name": "Granada",
+                "id": "GRA",
+                "homeCity": "Granada",
+                "stadium": "Nuevo Los Carmenes"
+              },
+              {
+                "name": "Levante",
+                "id": "LEV",
+                "homeCity": "Valencia",
+                "stadium": "Ciutat de Valencia"
+              },
+              {
+                "name": "Malaga",
+                "id": "MAL",
+                "homeCity": "Malaga",
+                "stadium": "La Roselda"
+              },
+              {
+                "name": "Mallorca",
+                "id": "MAL",
+                "homeCity": "Palma",
+                "stadium": "Iberostar Stadium"
+              },
+              {
+                "name": "Osasuna",
+                "id": "OSA",
+                "homeCity": "Pamplona",
+                "stadium": "El Sadar"
+              },
+              {
+                "name": "Racing Santander",
+                "id": "RAC",
+                "homeCity": "Santander",
+                "stadium": "El Sardinero"
+              },
+              {
+                "name": "Rayo Vallecano",
+                "id": "RAY",
+                "homeCity": "Madrid",
+                "stadium": "Campo de Vallecas"
+              },
+              {
+                "name": "Real Madrid",
+                "id": "RMA",
+                "homeCity": "Madrid",
+                "stadium": "Santiago Bernabeu"
+              },
+              {
+                "name": "Real Sociedad",
+                "id": "RSC",
+                "homeCity": "San Sebastian",
+                "stadium": "Anoeta"
+              },
+              {
+                "name": "Sevilla",
+                "id": "SEV",
+                "homeCity": "Seville",
+                "stadium": "Ramon Sanchez Pizjuan"
+              },
+              {
+                "name": "Sporting de Gijon",
+                "id": "SPG",
+                "homeCity": "Gijon",
+                "stadium": "El Molinon"
+              },
+              {
+                "name": "Valencia",
+                "id": "VAL",
+                "homeCity": "Valencia",
+                "stadium": "Mestalla"
+              },
+              {
+                "name": "Villareal",
+                "id": "VIL",
+                "homeCity": "Vila-real",
+                "stadium": "El Madrigal"
+              },
+              {
+                "name": "Zaragoza",
+                "id": "ZAR",
+                "homeCity": "Zaragoza",
+                "stadium": "La Romareda"
+              }]

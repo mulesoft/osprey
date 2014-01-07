@@ -1,0 +1,15 @@
+             {
+                  "$schema": "http://json-schema.org/draft-03/schema",
+                  "properties": {
+                      "homeTeamScore": {
+                          "description": "Goals scored by the home team",
+                          "type": "integer"
+                      },
+                      "awayTeamScore": {
+                          "description": "Goals scored by the away tam",
+                          "type": "integer"
+                      }
+                  },
+                  "required": true,
+                  "type": "object"
+              }

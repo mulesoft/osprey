@@ -1,0 +1,22 @@
+              [{
+                "position": 1,
+                "team": "BAR",
+                "points": 36,
+                "matchesPlayed": 12,
+                "matchesWon": 10,
+                "matchesDraw": 0,
+                "matchesLost": 2,
+                "goalsInFavor": 15,
+                "goalsAgainst": 6
+              },
+              {
+                "position": 2,
+                "team": "RMA",
+                "points": 34,
+                "matchesPlayed": 12,
+                "matchesWon": 11,
+                "matchesDraw": 1,
+                "matchesLost": 2,
+                "goalsInFavor": 14,
+                "goalsAgainst": 3
+              }]

@@ -1,0 +1,193 @@
+#%RAML 0.8
+---
+title: La Liga
+version: 1.0
+protocols: [ HTTP, HTTPS ]
+baseUri: http://localhost:8080/api
+documentation:
+  - title: Getting Started
+    content: |
+      This sample API has been created as part of your APIkit project. It is located in src/main/api. Feel free to poke around.
+
+resourceTypes:
+  - teamIdRT:
+      usage: This resourceType should be used for TEAMID items
+      put:
+        description: Update team details such as the name of the home stadium, or the name of the team itself.
+        body:
+          application/json:
+            example: !include examples/teamid-put-example.json
+            schema: !include schemas/teamid-schema-input.json
+
+        responses:
+          204:
+            description: |
+              The team has been succesfully updated
+          404:
+            description: |
+              Unable to find a team with that identifier
+      delete:
+        description: Remove a team from the league. Notice that this operation is non-reversible and all data associated with the team, including its statistics will be lost. Use with caution.
+        responses:
+          204:
+            description: |
+              The resource has been succesfully removed.
+          404:
+            description: |
+              Unable to find a team with that identifier
+traits:
+  - location:
+      usage: Apply this to any method that needs to be secured
+      description: Some requests require authentication.
+      queryParameters:
+        city:
+          description: |
+            Filter the list of teams by home city.
+          type: string
+          example: Barcelona
+          required: false
+
+securitySchemes:
+    - oauth_2_0:
+        description: |
+            Dropbox supports OAuth 2.0 for authenticating all API requests.
+        type: OAuth 2.0
+        describedBy:
+            headers:
+                Authorization:
+                    description: |
+                       Used to send a valid OAuth 2 access token. Do not use
+                       with the "access_token" query string parameter.
+                    type: string
+            queryParameters:
+                access_token:
+                    description: |
+                       Used to send a valid OAuth 2 access token. Do not use together with
+                       the "Authorization" header
+                    type: string
+            responses:
+                401:
+                    description: |
+                        Bad or expired token. This can happen if the user or Dropbox
+                        revoked or expired an access token. To fix, you should re-
+                        authenticate the user.
+                403:
+                    description: |
+                        Bad OAuth request (wrong consumer key, bad nonce, expired
+                        timestamp...). Unfortunately, re-authenticating the user won't help here.
+        settings:
+          authorizationUri: https://www.dropbox.com/1/oauth2/authorize
+          accessTokenUri: https://api.dropbox.com/1/oauth2/token
+          authorizationGrants: [ code, token ]
+
+/teams:
+  displayName: Teams
+  #description: |
+  #  A collection of teams that are participating in La Liga. Teams API allow you add, remove and retrieve individual team information from La Liga.
+  get:
+    description: Obtain information from a collection of teams simultaneously
+    is: [location]
+    responses:
+      200:
+        body:
+          application/json:
+            schema: !include schemas/teams-schema-input.json
+            example: !include examples/teams-example.json     
+  post:
+    description: Add a new team to the league
+    body:
+      application/json:
+        example: !include examples/teams-post-example.json
+        schema: !include schemas/teams-schema-output.json
+    responses:
+      201:
+        description: |
+          The team has been succesfully created
+        headers:
+          Location:
+            type: string
+            description: Location of the newly created team
+      409:
+        description: |
+          The team already exists
+  /{teamId}:
+    type: "teamIdRT"
+    displayName: Team
+    #description: |
+    #  The team is the basic unit for keeping track of a roster of players that are participating together in La Liga. With the Team APIs, you can obtain team-related information, like the team name, stats, points, and more.
+    uriParameters:
+      teamId:
+        description: |
+          Three letter code that identifies the team.
+        type: string
+        minLength: 3
+        maxLength: 3
+        example: BAR
+/positions:
+  displayName: Position Table
+  get:
+    description: Retrieve the current standing for the current season
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/positions-example.json
+            schema: !include schemas/positions-output.json
+/fixture:
+  displayName: Fixture
+  #description: |
+  #  A collection of teams that are participating in La Liga. Teams API allow you add, remove and retrieve individual team information from La Liga.
+  get:
+    description: Retrieve a list of matches for the current season
+    responses:
+      200:
+        body:
+          application/json:
+            example: !include examples/fixture-get-example.json           
+            schema: !include schemas/fixture-schema-output.json 
+ 
+  /{homeTeamId}/{awayTeamId}:
+    displayName: Match
+    uriParameters:
+      homeTeamId:
+        description: Id of the team that plays in its home stadium
+        type: string
+        minLength: 3
+        maxLength: 3
+        example: BAR
+      awayTeamId:
+        description: Id of the away team
+        type: string
+        minLength: 3
+        maxLength: 3
+        example: RMA
+    get:
+      description: Retrieve details of the match between the two teams
+      responses:
+        200:
+          body:
+            application/json:
+              example: !include examples/match-get-example.json
+              schema: !include schemas/match-schema-output.json
+    put:
+      description: Update match results. Can only be done after the game has ended.
+      body:
+        application/json:
+            example: |
+              {
+                "homeTeamScore": 3,
+                "awayTeamScore": 0
+              }
+            schema: !include schemas/match-schema-input.json
+ 
+      responses:
+        204:
+          description: |
+            Match successfully updated
+        404:
+          description: |
+            The match cannot be found
+        409:
+          description: |
+            Cannot update match before the match is actually played.
+      

@@ -1,0 +1,51 @@
+              {
+                  "$schema": "http://json-schema.org/draft-03/schema",
+                  "items": {
+                      "description": "An standing position of a team whitin a tournament",
+                      "name": "Position",
+                      "properties": {
+                          "position": {
+                              "description": "Current ranking",
+                              "type": "integer"
+                          },
+                          "team": {
+                              "description": "Code of the team in the current position",
+                              "type": "string",
+                              "maxLength": 3,
+                              "minLength": 3
+                          },
+                          "points": {
+                              "description": "Number of points accumulated to date",
+                              "type": "integer"
+                          },
+                          "matchesPlayed": {
+                              "description": "Number of matches played to date",
+                              "type": "integer"
+                          },
+                          "matchesWon": {
+                              "description": "Number of matches won to date",
+                              "type": "integer"
+                          },
+                          "matchesLost": {
+                              "description": "Number of matches lost to date",
+                              "type": "integer"
+                          },
+                          "matchesDraw": {
+                              "description": "Number of matches draw to date",
+                              "type": "integer"
+                          },
+                          "goalsInFavor": {
+                              "description": "Number of goals scored against other teams",
+                              "type": "integer"
+                          },
+                          "goalsAgainst": {
+                              "description": "Number of goals scored by other teams against this team",
+                              "type": "integer"
+                          }
+                      },
+                      "type": "object"
+                  },
+                  "name": "Positions",
+                  "required": true,
+                  "type": "array"
+              }
