@@ -6,15 +6,15 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git://github.com/jcenturion/apikit-node.git"
+    "url": "git://github.com/mulesoft/apikit-node.git"
   },
   "bugs": {
-    "url": "https://github.com/jcenturion/apikit-node/issues"
+    "url": "https://github.com/mulesoft/apikit-node/issues"
   },
   "licenses": [
     {
       "type": "Apache 2.0",
-      "url": "https://github.com/jcenturion/apikit-node/blob/master/LICENSE"
+      "url": "https://github.com/mulesoft/apikit-node/blob/master/LICENSE"
     }
   ],
   "main": "dist/apikit-node.js",
