@@ -3,7 +3,6 @@ PostHandler = require './handlers/post-handler'
 PutHandler = require './handlers/put-handler'
 DeleteHandler = require './handlers/delete-handler'
 HeadHandler = require './handlers/head-handler'
-Validation = require './validation/validation'
 
 class ApiKitRouter
   constructor: (@routes, @resources, @uriTemplateReader) ->
@@ -20,12 +19,6 @@ class ApiKitRouter
     method = req.method.toLowerCase()
 
     if template? and not @routerExists method, req.url
-      validation = new Validation req, @uriTemplateReader, @resources[template.uriTemplate], apiPath
-
-      if not validation.isValid()
-        res.send 400
-        return
-
       methodInfo = @methodLookup method, template.uriTemplate
 
       if methodInfo?
