@@ -3,6 +3,7 @@ ApiKitRouter = require './router'
 parser = require './wrapper'
 express = require 'express'
 Validation = require './validation/validation'
+path = require 'path'
 
 ramlEndpoint = (ramlPath) ->
   return (req, res) ->
@@ -11,7 +12,7 @@ ramlEndpoint = (ramlPath) ->
     else
       res.send 406
 
-ramlRouting = (apiPath, ramlPath, routes) ->
+route = (apiPath, ramlPath, routes) ->
   (req, res, next) ->
     if req.path.indexOf(apiPath) >= 0
       parser.loadRaml ramlPath, (wrapper) ->
@@ -46,13 +47,16 @@ validations = (ramlPath, routes) ->
 
       next()
 
-exports.register = (apiPath, context, path) ->
-  context.use ramlRouting(apiPath, path + '/assets/raml/api.raml', context.routes)
-  context.use "#{apiPath}/console", express.static(path + '/assets/console')
-  context.get apiPath, ramlEndpoint(path + '/assets/raml/api.raml')
+exports.register = (apiPath, context, settings) ->
+  context.use route(apiPath, settings.ramlFile, context.routes)
 
-exports.ramlEndpoint = ramlEndpoint
-exports.ramlRouting = ramlRouting
+  settings.enableConsole = true unless settings.enableConsole?
+
+  if settings.enableConsole
+    context.use "#{apiPath}/console", express.static(path.join(__dirname, '/assets/console'))
+    context.get apiPath, ramlEndpoint(settings.ramlFile)
+
+exports.route = route
 exports.validations = validations
 
 # TODO: Default Parameters should be exposed from here

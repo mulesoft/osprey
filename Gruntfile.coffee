@@ -28,6 +28,12 @@ module.exports = (grunt) ->
       build: ['dist']
 
     copy:
+      assets:
+        expand: true,
+        flatten: false,
+        cwd: 'src',
+        src: 'assets/**/*.*',
+        dest: 'dist/'
       license:
         expand: true,
         flatten: false,

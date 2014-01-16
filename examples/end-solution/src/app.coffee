@@ -13,11 +13,15 @@ app.use express.logger('dev')
 app.set 'port', process.env.PORT || 3000
 
 # APIKit Configuration
-# app.use apiKit.ramlRouting('/api', __dirname + '/assets/raml/api.raml', app.routes)
-# app.use '/api/console', express.static(__dirname + '/assets/console')
-# app.get '/api', apiKit.ramlEndpoint(__dirname + '/assets/raml/api.raml')
+# app.use apiKit.route('/api', __dirname + '/assets/raml/api.raml', app.routes)
 
-apiKit.register '/api', app, __dirname
+apiKit.register '/api', app, {
+  ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
+  enableConsole: true,
+  enableMocks: true
+}
+
+# apiKit.get('/teams/{teamId}', function (req, res){})
 
 unless module.parent
   app.listen app.get('port')
