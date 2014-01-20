@@ -21,8 +21,9 @@ apiKit.register '/api', app, {
   enableMocks: true
 }
 
-# apiKit.get('/teams/{teamId}', function (req, res){})
-
+apiKit.get '/teams2/:teamId', (req, res) ->
+  res.send({ name: 'test' })
+  
 unless module.parent
   app.listen app.get('port')
   console.log 'listening on port 3000'
