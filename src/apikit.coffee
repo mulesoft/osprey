@@ -62,3 +62,5 @@ class ApiKit
       uriTemplateReader = new UriTemplateReader templates
 
       callback new ApiKitRouter @apiPath, @context, resources, uriTemplateReader
+
+module.exports = ApiKit

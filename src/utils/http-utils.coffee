@@ -34,7 +34,7 @@ class HttpUtils
     if not isValid && methodInfo.responses[statusCode].body?
       res.send 406
 
-    unless customHandler?
+    if customHandler
       customHandler req, res
     else
       res.send(response || statusCode)

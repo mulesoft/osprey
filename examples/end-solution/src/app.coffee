@@ -13,6 +13,7 @@ app.use express.logger('dev')
 app.set 'port', process.env.PORT || 3000
 
 # APIKit Configuration
+# app.use apiKit.validations("../leagues/leagues.raml", app.routes)
 # app.use apiKit.route('/api', app, {
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
 #   enableMocks: true
@@ -21,7 +22,8 @@ app.set 'port', process.env.PORT || 3000
 apiKit.register '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   enableConsole: true,
-  enableMocks: true
+  enableMocks: true,
+  enableValidations: true #TODO!
 }
 
 # TODO: Throw an exception if the route is not present in the raml!
