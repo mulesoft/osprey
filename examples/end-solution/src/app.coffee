@@ -1,5 +1,4 @@
 express = require 'express'
-http = require 'http'
 path = require 'path'
 apiKit = require 'apikit-node'
 
