@@ -1,8 +1,16 @@
 HttpUtils = require '../utils/http-utils'
+ApiKitBase = require '../utils/base'
 
-class ApiKitDeleteHandler extends HttpUtils
+class MockDeleteHandler extends HttpUtils
   resolve: (req, res, methodInfo) ->
-    # TODO: Add validations
     res.send @readStatusCode(methodInfo)
 
-module.exports = ApiKitDeleteHandler
+class DeleteHandler extends ApiKitBase
+  constructor: (@apiPath, @context, @resources) ->
+
+  resolve: (uriTemplate, handler) =>
+    @context.delete template, (req, res) ->
+      handler req, res
+
+exports.MockHandler = MockDeleteHandler
+exports.Handler = DeleteHandler

@@ -1,77 +1,50 @@
-GetHandler = require './handlers/get-handler'
-PostHandler = require './handlers/post-handler'
-PutHandler = require './handlers/put-handler'
-DeleteHandler = require './handlers/delete-handler'
-HeadHandler = require './handlers/head-handler'
+GetMethod = require './handlers/get-handler'
+PostMethod = require './handlers/post-handler'
+PutMethod = require './handlers/put-handler'
+DeleteMethod = require './handlers/delete-handler'
+HeadMethod = require './handlers/head-handler'
+ApiKitBase = require './utils/base'
 
-class ApiKitRouter
-  constructor: (@routes, @resources, @uriTemplateReader) ->
-    @httpMethodHandlers =
-      get: new GetHandler
-      post: new PostHandler
-      put: new PutHandler
-      delete: new DeleteHandler
-      head: new HeadHandler
+class ApiKitRouter extends ApiKitBase
+  constructor: (@apiPath, @context, @resources, @uriTemplateReader) ->
+    @mockMethodHandlers =
+      get: new GetMethod.MockHandler
+      post: new PostMethod.MockHandler
+      put: new PutMethod.MockHandler
+      delete: new DeleteMethod.MockHandler
+      head: new HeadMethod.MockHandler
 
-  resolve: (apiPath, req, res, next, enableMocks) =>
-    uri = req.url.replace apiPath, ''
+    @methodHandlers =
+      get: new GetMethod.Handler @apiPath, @context, @resources
+      post: new PostMethod.Handler @apiPath, @context, @resources
+      put: new PutMethod.Handler @apiPath, @context, @resources
+      delete: new DeleteMethod.Handler @apiPath, @context, @resources
+      head: new HeadMethod.Handler @apiPath, @context, @resources
+
+  resolveMock: (req, res, next, enableMocks) =>
+    uri = req.url.replace @apiPath, ''
     template = @uriTemplateReader.getTemplateFor uri
     method = req.method.toLowerCase()
 
     enableMocks = true unless enableMocks?
 
     if template? and not @routerExists method, req.url
-      methodInfo = @methodLookup method, template.uriTemplate
+      methodInfo = @methodLookup @resources, method, template.uriTemplate
 
       if methodInfo? and enableMocks
-        @httpMethodHandlers[method].resolve req, res, methodInfo
+        @mockMethodHandlers[method].resolve req, res, methodInfo
         return
 
     next()
 
-  methodLookup: (httpMethod, uri) =>
-    if @resources[uri]?.methods?
-      methodInfo = @resources[uri].methods.filter (method) ->
-        method.method == httpMethod
-
-    if methodInfo? and methodInfo.length then methodInfo[0] else null
-
   routerExists: (httpMethod, uri) =>
-    if @routes[httpMethod]?
-      result = @routes[httpMethod].filter (route) ->
+    if @context.routes[httpMethod]?
+      result = @context.routes[httpMethod].filter (route) ->
         uri.match(route.regexp)?.length
 
     result? and result.length is 1
 
-  readStatusCode: (methodInfo) ->
-    statusCode = 200
+  resolveMethod: (httpMethod, uriTemplate, handler) =>
+    @methodHandlers[httpMethod].resolve uriTemplate, handler
 
-    for key of methodInfo.responses
-      statusCode = key
-      break
-
-    Number statusCode
-
-  get: (app, apiPath, uriTemplate, handler) =>
-    template = "#{apiPath}#{uriTemplate}"
-  
-    app.get template, (req, res) =>
-      isValid = false
-      methodInfo = @methodLookup 'get', uriTemplate
-      statusCode = @readStatusCode methodInfo
-
-      console.log methodInfo
-
-      for mimeType of methodInfo.responses[statusCode].body
-        if req.accepts(mimeType)
-          res.set 'Content-Type', mimeType
-          isValid = true
-          break
-
-      if not isValid && methodInfo.responses[statusCode].body?
-        res.send 406
-      else
-        handler(req, res)
-      # res.send(response || statusCode)
-    
 module.exports = ApiKitRouter

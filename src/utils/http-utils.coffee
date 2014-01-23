@@ -19,7 +19,7 @@ class HttpUtils
     unless isValid
       res.send 415
 
-  negotiateAcceptType: (req, res, methodInfo) ->
+  negotiateAcceptType: (req, res, methodInfo, customHandler) ->
     statusCode = @readStatusCode(methodInfo)
     isValid = false
     response = null
@@ -34,6 +34,9 @@ class HttpUtils
     if not isValid && methodInfo.responses[statusCode].body?
       res.send 406
 
-    res.send(response || statusCode)
+    unless customHandler?
+      customHandler req, res
+    else
+      res.send(response || statusCode)
 
 module.exports = HttpUtils
