@@ -13,7 +13,10 @@ app.use express.logger('dev')
 app.set 'port', process.env.PORT || 3000
 
 # APIKit Configuration
-# app.use apiKit.route('/api', __dirname + '/assets/raml/api.raml', app.routes)
+# app.use apiKit.route('/api', app, {
+#   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
+#   enableMocks: true
+# })
 
 apiKit.register '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
@@ -21,9 +24,10 @@ apiKit.register '/api', app, {
   enableMocks: true
 }
 
-apiKit.get '/teams2/:teamId', (req, res) ->
-  res.send({ name: 'test' })
-  
+# TODO: Throw an exception if the route is not present in the raml!
+# apiKit.get '/teams/:teamId', (req, res) ->
+#   res.send({ name: 'test' })
+
 unless module.parent
   app.listen app.get('port')
   console.log 'listening on port 3000'
