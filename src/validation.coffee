@@ -1,4 +1,5 @@
 SchemaValidator = require('jsonschema').Validator
+ApiKitBase = require './utils/base'
 
 class Validation
   constructor: (@req, @uriTemplateReader, @resource, @apiPath) ->
@@ -36,7 +37,9 @@ class Validation
 
   validateUriParams: () =>
     uri = @req.url.replace @apiPath, ''
+
     reqUriParameters = @uriTemplateReader.getUriParametersFor uri
+
     for key, ramlUriParameter of @resource.uriParameters
       if not @validate reqUriParameters[key], ramlUriParameter
         return false

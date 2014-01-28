@@ -3,7 +3,7 @@ ApiKitRouter = require './router'
 parser = require './wrapper'
 express = require 'express'
 path = require 'path'
-Validation = require './validation/validation'
+Validation = require './validation'
 
 class ApiKit
   constructor: (@apiPath, @context, @settings) ->
@@ -39,47 +39,20 @@ class ApiKit
   validations: () =>
     (req, res, next) =>
       @readRaml (router, uriTemplateReader, resources) =>
-        result = @context.routes[req.method.toLowerCase()].filter (route) ->
-          req.url.match(route.regexp)?.length
+        uri = req.url.replace @apiPath, ''
+        template = uriTemplateReader.getTemplateFor(uri)
 
-        if result.length
-          key = result[0].path.replace @apiPath, ''
-          resource = resources[key]
+        if template?
+          resource = resources[template.uriTemplate]
 
           if resource?
-            validation = new Validation req, uriTemplateReader, resource
-          
+            validation = new Validation req, uriTemplateReader, resource, @apiPath
+            console.log 'validation created'
             if req.path.indexOf(@apiPath) >= 0 and not validation.isValid()
-              res.status('400')
-              return
-            else
-              next()
-          else
-            next()
-        else
-          next()
-
-  # validations = (ramlPath, routes) ->
-  # (req, res, next) ->
-  #   parser.loadRaml ramlPath, (wrapper) ->
-  #     resources = wrapper.getResources()
-
-  #     result = routes[req.method.toLowerCase()].filter (route) ->
-  #       req.url.match(route.regexp)?.length
-
-  #     if result.length
-  #       resource = resources[result[0].path]
-
-  #       templates = wrapper.getUriTemplates()
-
-  #       uriTemplateReader = new UriTemplateReader templates
-
-  #       validation = new Validation req, uriTemplateReader, resource
-  #       if not validation.isValid()
-  #         res.status('400')
-  #         return
-
-  #     next()
+              console.log 'validation executed'
+              res.send 400
+          
+        next()
 
   get: (uriTemplate, handler) =>
     @readRaml (router) ->

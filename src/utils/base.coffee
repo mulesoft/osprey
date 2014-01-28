@@ -8,6 +8,10 @@ class ApiKitBase extends HttpUtils
 
     if methodInfo? and methodInfo.length then methodInfo[0] else null
 
+  resourceLookup: (routes, resources, req) ->
+    result = routes[req.method.toLowerCase()].filter (route) ->
+      req.url.match(route.regexp)?.length
+
   readStatusCode: (methodInfo) ->
     statusCode = 200
 

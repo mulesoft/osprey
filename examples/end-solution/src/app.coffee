@@ -26,7 +26,7 @@ apiKit.register '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   enableConsole: true,
   enableMocks: true,
-  enableValidations: false
+  enableValidations: true
 }
 
 # TODO: Throw an exception if the route is not present in the raml!
