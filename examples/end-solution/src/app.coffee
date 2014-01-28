@@ -12,15 +12,12 @@ app.use express.logger('dev')
 app.set 'port', process.env.PORT || 3000
 
 # APIKit Configuration
-# app.use apiKit.validations("../leagues/leagues.raml", app.routes)
-# app.use apiKit.route('/api', app, {
+# app.use apiKit.validations '/api', app,
+#   ramlFile: path.join(__dirname, '/assets/raml/api.raml')
+
+# app.use apiKit.route '/api', app,
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
-#   enableMocks: true
-# })
-
-
-#TODO: fix validations
-#TODO: query params for mocks is not working
+#   enableMocks: false
 
 apiKit.register '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
