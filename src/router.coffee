@@ -3,6 +3,7 @@ PostMethod = require './handlers/post-handler'
 PutMethod = require './handlers/put-handler'
 DeleteMethod = require './handlers/delete-handler'
 HeadMethod = require './handlers/head-handler'
+PatchMethod = require './handlers/patch-handler'
 ApiKitBase = require './utils/base'
 
 class ApiKitRouter extends ApiKitBase
@@ -13,6 +14,7 @@ class ApiKitRouter extends ApiKitBase
       put: new PutMethod.MockHandler
       delete: new DeleteMethod.MockHandler
       head: new HeadMethod.MockHandler
+      patch: new PatchMethod.MockHandler
 
     @methodHandlers =
       get: new GetMethod.Handler @apiPath, @context, @resources
@@ -20,6 +22,7 @@ class ApiKitRouter extends ApiKitBase
       put: new PutMethod.Handler @apiPath, @context, @resources
       delete: new DeleteMethod.Handler @apiPath, @context, @resources
       head: new HeadMethod.Handler @apiPath, @context, @resources
+      patch: new PatchMethod.Handler @apiPath, @context, @resources
 
   resolveMock: (req, res, next, enableMocks) =>
     uri = req.url.replace @apiPath, ''

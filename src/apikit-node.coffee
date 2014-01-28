@@ -1,5 +1,4 @@
 UriTemplateReader = require './uri-template-reader'
-Validation = require './validation/validation'
 parser = require './wrapper'
 ApiKit = require './apikit'
 
@@ -11,29 +10,24 @@ exports.route = (apiPath, context, settings) ->
   @apikit = new ApiKit(apiPath, context, settings)
   @apikit.route settings.enableMocks
 
+exports.validations = (apiPath, context, settings) ->
+  @apikit = new ApiKit(apiPath, context, settings)
+  @apikit.validations()
+
 exports.get = (uriTemplate, handler) =>
   @apikit.get uriTemplate, handler
 
-validations = (ramlPath, routes) ->
-  (req, res, next) ->
-    parser.loadRaml ramlPath, (wrapper) ->
-      resources = wrapper.getResources()
+exports.post = (uriTemplate, handler) =>
+  @apikit.post uriTemplate, handler
 
-      result = routes[req.method.toLowerCase()].filter (route) ->
-        req.url.match(route.regexp)?.length
+exports.put = (uriTemplate, handler) =>
+  @apikit.put uriTemplate, handler
 
-      if result.length
-        resource = resources[result[0].path]
+exports.delete = (uriTemplate, handler) =>
+  @apikit.delete uriTemplate, handler
 
-        templates = wrapper.getUriTemplates()
+exports.patch = (uriTemplate, handler) =>
+  @apikit.patch uriTemplate, handler
 
-        uriTemplateReader = new UriTemplateReader templates
-
-        validation = new Validation req, uriTemplateReader, resource
-        if not validation.isValid()
-          res.status('400')
-          return
-
-      next()
-
-exports.validations = validations
+exports.head = (uriTemplate, handler) =>
+  @apikit.head uriTemplate, handler

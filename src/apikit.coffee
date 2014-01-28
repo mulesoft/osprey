@@ -3,11 +3,15 @@ ApiKitRouter = require './router'
 parser = require './wrapper'
 express = require 'express'
 path = require 'path'
+Validation = require './validation/validation'
 
 class ApiKit
   constructor: (@apiPath, @context, @settings) ->
 
   register: =>
+    if @settings.enableValidations
+      @context.use @validations()
+
     @context.use @route(@settings.enableMocks)
 
     @settings.enableConsole = true unless @settings.enableConsole?
@@ -31,6 +35,52 @@ class ApiKit
       else
         next()
 
+  # TODO: refactor
+  validations: () =>
+    (req, res, next) =>
+      @readRaml (router, uriTemplateReader, resources) =>
+        result = @context.routes[req.method.toLowerCase()].filter (route) ->
+          req.url.match(route.regexp)?.length
+
+        if result.length
+          key = result[0].path.replace @apiPath, ''
+          resource = resources[key]
+
+          if resource?
+            validation = new Validation req, uriTemplateReader, resource
+          
+            if req.path.indexOf(@apiPath) >= 0 and not validation.isValid()
+              res.status('400')
+              return
+            else
+              next()
+          else
+            next()
+        else
+          next()
+
+  # validations = (ramlPath, routes) ->
+  # (req, res, next) ->
+  #   parser.loadRaml ramlPath, (wrapper) ->
+  #     resources = wrapper.getResources()
+
+  #     result = routes[req.method.toLowerCase()].filter (route) ->
+  #       req.url.match(route.regexp)?.length
+
+  #     if result.length
+  #       resource = resources[result[0].path]
+
+  #       templates = wrapper.getUriTemplates()
+
+  #       uriTemplateReader = new UriTemplateReader templates
+
+  #       validation = new Validation req, uriTemplateReader, resource
+  #       if not validation.isValid()
+  #         res.status('400')
+  #         return
+
+  #     next()
+
   get: (uriTemplate, handler) =>
     @readRaml (router) ->
       router.resolveMethod 'get', uriTemplate, handler
@@ -51,16 +101,17 @@ class ApiKit
     @readRaml (router) ->
       router.resolveMethod 'head', uriTemplate, handler
 
-  path: (uriTemplate, handler) =>
+  patch: (uriTemplate, handler) =>
     @readRaml (router) ->
-      router.resolveMethod 'path', uriTemplate, handler
+      router.resolveMethod 'patch', uriTemplate, handler
 
   readRaml: (callback) =>
     parser.loadRaml @settings.ramlFile, (wrapper) =>
       resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       uriTemplateReader = new UriTemplateReader templates
+      router = new ApiKitRouter @apiPath, @context, resources, uriTemplateReader
 
-      callback new ApiKitRouter @apiPath, @context, resources, uriTemplateReader
+      callback router, uriTemplateReader, resources
 
 module.exports = ApiKit
