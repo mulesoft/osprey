@@ -18,16 +18,20 @@ app.set 'port', process.env.PORT || 3000
 #   enableMocks: true
 # })
 
+
+#TODO: fix validations
+#TODO: query params for mocks is not working
+
 apiKit.register '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   enableConsole: true,
   enableMocks: true,
-  enableValidations: true
+  enableValidations: false
 }
 
 # TODO: Throw an exception if the route is not present in the raml!
-apiKit.get '/teams/:teamId', (req, res) ->
-  res.send({ name: 'test' })
+# apiKit.get '/teams/:teamId', (req, res) ->
+#   res.send({ name: 'test' })
 
 unless module.parent
   app.listen app.get('port')

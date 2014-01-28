@@ -26,9 +26,9 @@ class ApiKitRouter extends ApiKitBase
 
   resolveMock: (req, res, next, enableMocks) =>
     uri = req.url.replace @apiPath, ''
+    uri = uri.split('?')[0]
     template = @uriTemplateReader.getTemplateFor uri
     method = req.method.toLowerCase()
-
     enableMocks = true unless enableMocks?
 
     if template? and not @routerExists method, req.url
