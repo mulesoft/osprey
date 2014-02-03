@@ -25,19 +25,22 @@ class ApiKitRouter extends ApiKitBase
       patch: new PatchMethod.Handler @apiPath, @context, @resources
 
   resolveMock: (req, res, next, enableMocks) =>
-    uri = req.url.replace @apiPath, ''
-    uri = uri.split('?')[0]
-    reqUrl = req.url.split('?')[0]
-    template = @uriTemplateReader.getTemplateFor uri
-    method = req.method.toLowerCase()
-    enableMocks = true unless enableMocks?
+    regex = new RegExp "^\\" + @apiPath + "(.*)"
+    urlPath = regex.exec req.url
 
-    if template? and not @routerExists method, reqUrl
-      methodInfo = @methodLookup @resources, method, template.uriTemplate
+    if urlPath and urlPath.length > 1
+      uri = urlPath[1].split('?')[0]
+      reqUrl = req.url.split('?')[0]
+      template = @uriTemplateReader.getTemplateFor uri
+      method = req.method.toLowerCase()
+      enableMocks = true unless enableMocks?
 
-      if methodInfo? and enableMocks
-        @mockMethodHandlers[method].resolve req, res, methodInfo
-        return
+      if template? and not @routerExists method, reqUrl
+        methodInfo = @methodLookup @resources, method, template.uriTemplate
+
+        if methodInfo? and enableMocks
+          @mockMethodHandlers[method].resolve req, res, methodInfo
+          return
 
     next()
 

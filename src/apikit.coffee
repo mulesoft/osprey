@@ -39,17 +39,21 @@ class ApiKit
   validations: () =>
     (req, res, next) =>
       @readRaml (router, uriTemplateReader, resources) =>
-        uri = req.url.replace @apiPath, ''
-        template = uriTemplateReader.getTemplateFor(uri)
+        regex = new RegExp "^\\" + @apiPath + "(.*)"
+        urlPath = regex.exec req.url
+        
+        if urlPath and urlPath.length > 1
+          uri = urlPath[1].split('?')[0]
+          template = uriTemplateReader.getTemplateFor(uri)
 
-        if template?
-          resource = resources[template.uriTemplate]
+          if template?
+            resource = resources[template.uriTemplate]
 
-          if resource?
-            validation = new Validation req, uriTemplateReader, resource, @apiPath
-            if req.path.indexOf(@apiPath) >= 0 and not validation.isValid()
-              console.log 'validation executed'
-              res.send 400
+            if resource?
+              validation = new Validation req, uriTemplateReader, resource, @apiPath
+              if req.path.indexOf(@apiPath) >= 0 and not validation.isValid()
+                res.send 400
+                return
           
         next()
 
