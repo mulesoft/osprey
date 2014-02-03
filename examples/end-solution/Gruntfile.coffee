@@ -51,7 +51,7 @@ module.exports = (grunt) ->
 
     watch:
       wait:
-        files: ['src/assets/raml/**/*.*', 'src/**/*.coffee', 'test/**/*.coffee']
+        files: ['src/assets/raml/**/*.*', 'src/**/*.coffee']
         tasks: ['wait']
       assets:
         files: ['src/assets/raml/**/*.*']
@@ -64,11 +64,11 @@ module.exports = (grunt) ->
         tasks: ['coffee', 'coffeelint']
         options:
           atBegin: true
-      test:
-        files: ['src/**/*.coffee', 'test/**/*.coffee']
-        tasks: ['mochaTest']
-        options:
-          atBegin: true
+      # test:
+      #   files: ['src/**/*.coffee', 'test/**/*.coffee']
+      #   tasks: ['mochaTest']
+      #   options:
+      #     atBegin: true
   )
 
   require('load-grunt-tasks') grunt

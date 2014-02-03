@@ -1,6 +1,7 @@
 UriTemplateReader = require './uri-template-reader'
 parser = require './wrapper'
 ApiKit = require './apikit'
+ValidationError = require './exceptions/validation-error'
 
 exports.register = (apiPath, context, settings) =>
   @apikit = new ApiKit(apiPath, context, settings)
@@ -13,6 +14,17 @@ exports.route = (apiPath, context, settings) ->
 exports.validations = (apiPath, context, settings) ->
   @apikit = new ApiKit(apiPath, context, settings)
   @apikit.validations()
+
+exports.exceptionHandler = (settings) ->
+  (err, req, res, next) ->
+    console.log settings[typeof err]
+    console.log 'test1'
+    console.log err
+    if err instanceof ValidationError
+      console.log err
+      res.send 400
+    else
+      next()
 
 exports.get = (uriTemplate, handler) =>
   @apikit.get uriTemplate, handler

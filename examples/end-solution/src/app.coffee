@@ -1,6 +1,7 @@
 express = require 'express'
 path = require 'path'
 apiKit = require 'apikit-node'
+ValidationError = require 'apikit-node/dist/exceptions/validation-error'
 
 app = module.exports = express()
 
@@ -18,6 +19,14 @@ app.set 'port', process.env.PORT || 3000
 # app.use apiKit.route '/api', app,
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
 #   enableMocks: false
+
+app.use (req, res, next) ->
+  console.log 'test2'
+  throw new ValidationError 'some exception'
+
+app.use apiKit.exceptionHandler {
+  "ValidationError": 400
+}
 
 apiKit.register '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
