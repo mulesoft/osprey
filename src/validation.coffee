@@ -113,6 +113,6 @@ class Validation
     true
 
   validateBoolean: (@reqParam) =>
-    true == reqParam or false == reqParam
+    "true" == reqParam or "false" == reqParam
 
 module.exports = Validation
