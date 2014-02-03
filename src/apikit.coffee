@@ -47,7 +47,6 @@ class ApiKit
 
           if resource?
             validation = new Validation req, uriTemplateReader, resource, @apiPath
-            console.log 'validation created'
             if req.path.indexOf(@apiPath) >= 0 and not validation.isValid()
               console.log 'validation executed'
               res.send 400

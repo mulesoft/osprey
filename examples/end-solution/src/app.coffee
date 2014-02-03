@@ -30,6 +30,9 @@ apiKit.register '/api', app, {
 # apiKit.get '/teams/:teamId', (req, res) ->
 #   res.send({ name: 'test' })
 
+apiKit.get '/teams', (req, res) ->
+  res.send({ name: 'test' })
+
 unless module.parent
   app.listen app.get('port')
   console.log 'listening on port 3000'
