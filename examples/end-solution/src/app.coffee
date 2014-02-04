@@ -34,5 +34,6 @@ apiKit.register '/api', app, {
 #   res.send({ name: 'test' })
 
 unless module.parent
-  app.listen app.get('port')
-  console.log 'listening on port 3000'
+  port = app.get('port')
+  app.listen port
+  console.log "listening on port #{port}"
