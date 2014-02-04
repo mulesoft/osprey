@@ -1,5 +1,9 @@
 (function() {
-  var HttpUtils;
+  var HttpUtils, InvalidAcceptTypeError, InvalidContentTypeError;
+
+  InvalidAcceptTypeError = require('../exceptions/invalid-accept-type-error');
+
+  InvalidContentTypeError = require('../exceptions/invalid-content-type-error');
 
   HttpUtils = (function() {
     function HttpUtils() {}
@@ -24,7 +28,7 @@
         }
       }
       if (!isValid) {
-        return res.send(415);
+        throw new InvalidContentTypeError;
       }
     };
 
@@ -42,7 +46,7 @@
         }
       }
       if (!isValid && (methodInfo.responses[statusCode].body != null)) {
-        res.send(406);
+        throw new InvalidAcceptTypeError;
       }
       if (customHandler) {
         return customHandler(req, res);

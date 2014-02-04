@@ -28,6 +28,12 @@ app.set 'port', process.env.PORT || 3000
 apiKit.register '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   exceptionHandler: {
+    InvalidAcceptTypeError: (err, req, res) ->
+      res.send 406
+
+    InvalidContentTypeError: (err, req, res) ->
+      res.send 415
+        
     Error: (err, req, res) ->
       res.send 400
   }

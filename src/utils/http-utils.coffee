@@ -1,3 +1,6 @@
+InvalidAcceptTypeError = require '../exceptions/invalid-accept-type-error'
+InvalidContentTypeError = require '../exceptions/invalid-content-type-error'
+
 class HttpUtils
   readStatusCode: (methodInfo) ->
     statusCode = 200
@@ -17,7 +20,8 @@ class HttpUtils
         return
 
     unless isValid
-      res.send 415
+      throw new InvalidContentTypeError
+      # res.send 415
 
   negotiateAcceptType: (req, res, methodInfo, customHandler) ->
     statusCode = @readStatusCode(methodInfo)
@@ -32,7 +36,8 @@ class HttpUtils
         break
 
     if not isValid && methodInfo.responses[statusCode].body?
-      res.send 406
+      throw new InvalidAcceptTypeError
+      # res.send 406
 
     if customHandler
       customHandler req, res
