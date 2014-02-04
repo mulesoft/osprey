@@ -14,7 +14,7 @@ To start using APIKit you'll need the following:
 1. Clone APIKit - `git clone git@github.com:mulesoft/apikit-node.git`
 2. Install APIKit in your project - `npm install /Users/{username}/Projects/apikit-node`
 
-Note: The npm package will be available in a near future.
+Optionally, you can use [Bower](http://bower.io/) - `bower install git@github.com:mulesoft/apikit-node.git`
 
 ### Initializing APIKit
 You can intialize APIKit as follow:
