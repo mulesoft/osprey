@@ -11,5 +11,8 @@
     "src",
     "test",
     "examples"
-  ]
+  ],
+  "dependencies": {
+    "api-console": "git@github.com:mulesoft/api-console.git"
+  }
 }
