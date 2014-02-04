@@ -1,5 +1,5 @@
-APIKit for Node
-===============
+APIKit Node
+===========
 
 ### Prerequisites
 
