@@ -20,10 +20,7 @@ Optionally, you can use [Bower](http://bower.io/) - `bower install git@github.co
 You can intialize APIKit as follow:
 ```javascript
 apiKit.register('/api', app, {
-  ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
-  enableConsole: true,
-  enableMocks: true,
-  enableValidations: true
+  ramlFile: path.join(__dirname, '/assets/raml/api.raml')
 });
 ```
 #####Options
@@ -37,6 +34,7 @@ apiKit.register('/api', app, {
 | enableConsole     | true           | Enables or disables the API console |
 | enableMocks       | true           | Enables or disables the mocks routes |
 | enableValidations | true           | Enables or disables the validations |
+| exceptionHandler  | {}             | Gives you the possibility to resuse exception handlers|
 
 ### Registering resources
 Register a resource is as easy as follow:
@@ -57,6 +55,31 @@ apiKit.get is always relative to the basePath defined in apiKit.register.
 * apiKit.delete
 * apiKit.head
 * apiKit.patch
+
+### Exception Handling
+
+APIKit gives you the posibility to handle exceptions in a very reusable way.
+
+First you have to setup the exceptionHandler module.
+
+```javascript
+apiKit.register('/api', app, {
+  ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
+  exceptionHandler: {
+    Error: (err, req, res) ->
+      //// Do something here!
+      res.send 400
+  }
+});
+```
+
+If a resource throws an error of type Error, the exception handler module will handle it.
+
+```javascript
+apiKit.get('/teams', function (req, res) {
+  throw new Error 'some exception'
+});
+```
 
 ### Example
 ```javascript
