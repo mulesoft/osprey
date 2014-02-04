@@ -15,16 +15,9 @@ exports.validations = (apiPath, context, settings) ->
   @apikit = new ApiKit(apiPath, context, settings)
   @apikit.validations()
 
-exports.exceptionHandler = (settings) ->
-  (err, req, res, next) ->
-    console.log settings[typeof err]
-    console.log 'test1'
-    console.log err
-    if err instanceof ValidationError
-      console.log err
-      res.send 400
-    else
-      next()
+exports.exceptionHandler = (apiPath, context, settings) ->
+  @apikit = new ApiKit(apiPath, context, settings)
+  @apikit.exceptionHandler settings
 
 exports.get = (uriTemplate, handler) =>
   @apikit.get uriTemplate, handler

@@ -32,16 +32,22 @@
     }
 
     ApiKit.prototype.register = function() {
+      if (this.settings.enableConsole == null) {
+        this.settings.enableConsole = true;
+      }
+      if (this.settings.enableValidations == null) {
+        this.settings.enableValidations = true;
+      }
       if (this.settings.enableValidations) {
         this.context.use(this.validations());
       }
       this.context.use(this.route(this.settings.enableMocks));
-      if (this.settings.enableConsole == null) {
-        this.settings.enableConsole = true;
-      }
       if (this.settings.enableConsole) {
         this.context.use("" + this.apiPath + "/console", express["static"](path.join(__dirname, '/assets/console')));
-        return this.context.get(this.apiPath, this.ramlHandler(this.settings.ramlFile));
+        this.context.get(this.apiPath, this.ramlHandler(this.settings.ramlFile));
+      }
+      if (this.settings.exceptionHandler) {
+        return this.context.use(this.exceptionHandler(this.settings.exceptionHandler));
       }
     };
 
@@ -62,6 +68,18 @@
           return _this.readRaml(function(router) {
             return router.resolveMock(req, res, next, _this.settings.enableMocks);
           });
+        } else {
+          return next();
+        }
+      };
+    };
+
+    ApiKit.prototype.exceptionHandler = function(settings) {
+      return function(err, req, res, next) {
+        var errorHandler;
+        errorHandler = settings[err.constructor.name];
+        if (errorHandler != null) {
+          return errorHandler(err, req, res);
         } else {
           return next();
         }

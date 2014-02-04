@@ -9,16 +9,20 @@ class ApiKit
   constructor: (@apiPath, @context, @settings) ->
 
   register: =>
+    @settings.enableConsole = true unless @settings.enableConsole?
+    @settings.enableValidations = true unless @settings.enableValidations?
+
     if @settings.enableValidations
       @context.use @validations()
 
     @context.use @route(@settings.enableMocks)
 
-    @settings.enableConsole = true unless @settings.enableConsole?
-
     if @settings.enableConsole
       @context.use "#{@apiPath}/console", express.static(path.join(__dirname, '/assets/console'))
       @context.get @apiPath, @ramlHandler(@settings.ramlFile)
+
+    if @settings.exceptionHandler
+      @context.use @exceptionHandler(@settings.exceptionHandler)
 
   ramlHandler: (ramlPath) ->
     return (req, res) ->
@@ -32,6 +36,15 @@ class ApiKit
       if req.path.indexOf(@apiPath) >= 0
         @readRaml (router) =>
           router.resolveMock req, res, next, @settings.enableMocks
+      else
+        next()
+
+  exceptionHandler: (settings) ->
+    (err, req, res, next) ->
+      errorHandler = settings[err.constructor.name]
+      
+      if errorHandler?
+        errorHandler err, req, res
       else
         next()
 

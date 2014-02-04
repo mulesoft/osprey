@@ -1,7 +1,7 @@
 express = require 'express'
 path = require 'path'
 apiKit = require 'apikit-node'
-ValidationError = require 'apikit-node/dist/exceptions/validation-error'
+CustomError = require './exceptions/custom-error'
 
 app = module.exports = express()
 
@@ -20,23 +20,16 @@ app.set 'port', process.env.PORT || 3000
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
 #   enableMocks: false
 
-app.use (req, res, next) ->
-  console.log 'test2'
-  throw new ValidationError 'some exception'
-
-app.use apiKit.exceptionHandler {
-  ValidationError: (err, req, res) ->
-    # My code here!
-}
+# app.use apiKit.exceptionHandler '/api', app,
+#   CustomError: (err, req, res) ->
+#     console.log 'CustomError'
+#     res.send 400
 
 apiKit.register '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
-  enableConsole: true,
-  enableMocks: true,
-  enableValidations: true
   exceptionHandler: {
-    ValidationError: (err, req, res) ->
-      # My code here!   
+    CustomError: (err, req, res) ->
+      res.send 400
   }
 }
 
@@ -45,7 +38,7 @@ apiKit.register '/api', app, {
 #   res.send({ name: 'test' })
 
 # apiKit.get '/teams', (req, res) ->
-#   res.send({ name: 'test' })
+#   throw new CustomError 'some exception'
 
 unless module.parent
   port = app.get('port')
