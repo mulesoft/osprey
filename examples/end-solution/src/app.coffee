@@ -25,7 +25,8 @@ app.use (req, res, next) ->
   throw new ValidationError 'some exception'
 
 app.use apiKit.exceptionHandler {
-  "ValidationError": 400
+  ValidationError: (err, req, res) ->
+    # My code here!
 }
 
 apiKit.register '/api', app, {
@@ -33,6 +34,10 @@ apiKit.register '/api', app, {
   enableConsole: true,
   enableMocks: true,
   enableValidations: true
+  exceptionHandler: {
+    ValidationError: (err, req, res) ->
+      # My code here!   
+  }
 }
 
 # TODO: Throw an exception if the route is not present in the raml!
