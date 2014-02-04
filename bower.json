@@ -1,5 +1,5 @@
 {
-  name: "apikit-node",
-  version: "0.0.1",
-  main: "dist/*"
+  "name": "apikit-node",
+  "version": "0.0.1",
+  "main": "dist/*"
 }
