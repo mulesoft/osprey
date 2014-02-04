@@ -21,14 +21,14 @@ app.set 'port', process.env.PORT || 3000
 #   enableMocks: false
 
 # app.use apiKit.exceptionHandler '/api', app,
-#   CustomError: (err, req, res) ->
+#   Error: (err, req, res) ->
 #     console.log 'CustomError'
 #     res.send 400
 
 apiKit.register '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   exceptionHandler: {
-    CustomError: (err, req, res) ->
+    Error: (err, req, res) ->
       res.send 400
   }
 }
@@ -37,8 +37,8 @@ apiKit.register '/api', app, {
 # apiKit.get '/teams/:teamId', (req, res) ->
 #   res.send({ name: 'test' })
 
-# apiKit.get '/teams', (req, res) ->
-#   throw new CustomError 'some exception'
+apiKit.get '/teams', (req, res) ->
+  throw new Error 'some exception'
 
 unless module.parent
   port = app.get('port')
