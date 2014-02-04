@@ -1,5 +1,13 @@
 {
   "name": "apikit-node",
   "version": "0.0.1",
-  "main": "dist/*"
+  "main": "dist/*",
+  "ignore": [
+    "**/*.coffee",
+    "package.json",
+    ".bower.json",
+    ".gitignore",
+    "src",
+    "test"
+  ],
 }
