@@ -1,0 +1,6 @@
+{
+  "name": "leagues",
+  "dependencies": {
+    "apikit-node": "git@github.com:mulesoft/apikit-node.git"
+  }
+}

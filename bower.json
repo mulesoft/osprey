@@ -1,0 +1,18 @@
+{
+  "name": "apikit-node",
+  "version": "0.0.1",
+  "main": "dist/*",
+  "private": true,
+  "ignore": [
+    "**/*.coffee",
+    "package.json",
+    "bower.json",
+    ".gitignore",
+    "src",
+    "test",
+    "examples"
+  ],
+  "dependencies": {
+    "api-console": "git@github.com:mulesoft/api-console.git"
+  }
+}
