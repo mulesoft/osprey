@@ -5,9 +5,10 @@
   "ignore": [
     "**/*.coffee",
     "package.json",
-    ".bower.json",
+    "bower.json",
     ".gitignore",
     "src",
-    "test"
+    "test",
+    "examples"
   ]
 }
