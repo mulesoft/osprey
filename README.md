@@ -19,7 +19,7 @@ Optionally, you can use [Bower](http://bower.io/) - `bower install git@github.co
 ### Initializing APIKit
 You can intialize APIKit as follow:
 ```javascript
-apiKit.register('/api', app, {
+api = apiKit.create('/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   enableConsole: true,
   enableMocks: true,
@@ -41,7 +41,7 @@ apiKit.register('/api', app, {
 ### Registering resources
 Register a resource is as easy as follow:
 ```javascript
-apiKit.get('/teams/:teamId', function(req, res) {
+api.get('/teams/:teamId', function(req, res) {
   //// Your business logic here!
   res.send({ name: 'test' })
 });
@@ -51,12 +51,12 @@ apiKit.get is always relative to the basePath defined in apiKit.register.
 
 #####Other supported methods
 
-* apiKit.get
-* apiKit.post
-* apiKit.put
-* apiKit.delete
-* apiKit.head
-* apiKit.patch
+* api.get
+* api.post
+* api.put
+* api.delete
+* api.head
+* api.patch
 
 ### Example
 ```javascript
@@ -73,7 +73,7 @@ apiKit.get is always relative to the basePath defined in apiKit.register.
   
   app.set('port', process.env.PORT || 3000));
 
-  apiKit.register('/api', app, {
+  var api = apiKit.create('/api', app, {
     ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
     enableConsole: true,
     enableMocks: true,
