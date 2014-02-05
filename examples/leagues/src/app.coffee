@@ -19,7 +19,7 @@ app.set 'port', process.env.PORT || 3000
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
 #   enableMocks: false
 
-apiKit.register '/api', app, {
+api = apiKit.create '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   enableConsole: true,
   enableMocks: true,
@@ -27,11 +27,11 @@ apiKit.register '/api', app, {
 }
 
 # TODO: Throw an exception if the route is not present in the raml!
-# apiKit.get '/teams/:teamId', (req, res) ->
+# api.get '/teams/:teamId', (req, res) ->
 #   res.send({ name: 'test' })
 
-# apiKit.get '/teams', (req, res) ->
-#   res.send({ name: 'test' })
+api.get '/teams', (req, res) ->
+  res.send({ name: 'leagues' })
 
 unless module.parent
   port = app.get('port')
