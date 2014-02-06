@@ -13,8 +13,7 @@ To start using Osprey you'll need the following:
 
 ### Getting started
 
-1. Clone Osprey - `git clone git@github.com:mulesoft/osprey.git`
-2. Install Osprey in your project - `npm install /Users/{username}/Projects/osprey`
+`npm install git+https://github.com/mulesoft/osprey.git`
 
 Optionally, you can use [Bower](http://bower.io/) - `bower install git@github.com:mulesoft/osprey.git`
 
