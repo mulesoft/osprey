@@ -1,11 +1,11 @@
 UriTemplateReader = require './uri-template-reader'
-ApiKitRouter = require './router'
+OspreyRouter = require './router'
 parser = require './wrapper'
 express = require 'express'
 path = require 'path'
 Validation = require './validation'
 
-class ApiKit
+class Osprey
   constructor: (@apiPath, @context, @settings) ->
 
   register: =>
@@ -86,8 +86,8 @@ class ApiKit
       resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       uriTemplateReader = new UriTemplateReader templates
-      router = new ApiKitRouter @apiPath, @context, resources, uriTemplateReader
+      router = new OspreyRouter @apiPath, @context, resources, uriTemplateReader
 
       callback router, uriTemplateReader, resources
 
-module.exports = ApiKit
+module.exports = Osprey

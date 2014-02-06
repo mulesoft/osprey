@@ -1,5 +1,5 @@
 (function() {
-  var ApiKitBase, ApiKitRouter, DeleteMethod, GetMethod, HeadMethod, PatchMethod, PostMethod, PutMethod,
+  var DeleteMethod, GetMethod, HeadMethod, OspreyBase, OspreyRouter, PatchMethod, PostMethod, PutMethod,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -16,12 +16,12 @@
 
   PatchMethod = require('./handlers/patch-handler');
 
-  ApiKitBase = require('./utils/base');
+  OspreyBase = require('./utils/base');
 
-  ApiKitRouter = (function(_super) {
-    __extends(ApiKitRouter, _super);
+  OspreyRouter = (function(_super) {
+    __extends(OspreyRouter, _super);
 
-    function ApiKitRouter(apiPath, context, resources, uriTemplateReader) {
+    function OspreyRouter(apiPath, context, resources, uriTemplateReader) {
       this.apiPath = apiPath;
       this.context = context;
       this.resources = resources;
@@ -47,7 +47,7 @@
       };
     }
 
-    ApiKitRouter.prototype.resolveMock = function(req, res, next, enableMocks) {
+    OspreyRouter.prototype.resolveMock = function(req, res, next, enableMocks) {
       var method, methodInfo, regex, reqUrl, template, uri, urlPath;
       regex = new RegExp("^\\" + this.apiPath + "(.*)");
       urlPath = regex.exec(req.url);
@@ -70,7 +70,7 @@
       return next();
     };
 
-    ApiKitRouter.prototype.routerExists = function(httpMethod, uri) {
+    OspreyRouter.prototype.routerExists = function(httpMethod, uri) {
       var result;
       if (this.context.routes[httpMethod] != null) {
         result = this.context.routes[httpMethod].filter(function(route) {
@@ -81,14 +81,14 @@
       return (result != null) && result.length === 1;
     };
 
-    ApiKitRouter.prototype.resolveMethod = function(httpMethod, uriTemplate, handler) {
+    OspreyRouter.prototype.resolveMethod = function(httpMethod, uriTemplate, handler) {
       return this.methodHandlers[httpMethod].resolve(uriTemplate, handler);
     };
 
-    return ApiKitRouter;
+    return OspreyRouter;
 
-  })(ApiKitBase);
+  })(OspreyBase);
 
-  module.exports = ApiKitRouter;
+  module.exports = OspreyRouter;
 
 }).call(this);

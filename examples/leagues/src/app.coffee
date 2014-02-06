@@ -1,6 +1,6 @@
 express = require 'express'
 path = require 'path'
-apiKit = require 'apikit-node'
+osprey = require 'osprey'
 
 app = module.exports = express()
 
@@ -11,15 +11,15 @@ app.use express.logger('dev')
 
 app.set 'port', process.env.PORT || 3000
 
-# APIKit Configuration
-# app.use apiKit.validations '/api', app,
+# Osprey Configuration
+# app.use osprey.validations '/api', app,
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml')
 
-# app.use apiKit.route '/api', app,
+# app.use osprey.route '/api', app,
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
 #   enableMocks: false
 
-api = apiKit.create '/api', app, {
+api = osprey.create '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   enableConsole: true,
   enableMocks: true,
@@ -29,9 +29,6 @@ api = apiKit.create '/api', app, {
 # TODO: Throw an exception if the route is not present in the raml!
 # api.get '/teams/:teamId', (req, res) ->
 #   res.send({ name: 'test' })
-
-api.get '/teams', (req, res) ->
-  res.send({ name: 'leagues' })
 
 unless module.parent
   port = app.get('port')

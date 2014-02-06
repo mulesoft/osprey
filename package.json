@@ -1,21 +1,21 @@
 {
-  "name": "apikit-node",
-  "description": "RAML APIKit Node",
+  "name": "osprey",
+  "description": "Osprey a RAML binding for Node Js",
   "version": "0.0.1",
   "author": "MuleSoft, Inc.",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git://github.com/mulesoft/apikit-node.git"
+    "url": "git://github.com/mulesoft/osprey.git"
   },
   "bugs": {
-    "url": "https://github.com/mulesoft/apikit-node/issues"
+    "url": "https://github.com/mulesoft/osprey/issues"
   },
   "licenses": [{
     "type": "Apache 2.0",
-    "url": "https://github.com/mulesoft/apikit-node/blob/master/LICENSE"
+    "url": "https://github.com/mulesoft/osprey/blob/master/LICENSE"
   }],
-  "main": "dist/apikit-node.js",
+  "main": "dist/lib.js",
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-coffee": "~0.7.0",

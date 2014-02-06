@@ -1,10 +1,10 @@
 (function() {
-  var ApiKit, ApiKitRouter, UriTemplateReader, Validation, express, parser, path,
+  var Osprey, OspreyRouter, UriTemplateReader, Validation, express, parser, path,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   UriTemplateReader = require('./uri-template-reader');
 
-  ApiKitRouter = require('./router');
+  OspreyRouter = require('./router');
 
   parser = require('./wrapper');
 
@@ -14,8 +14,8 @@
 
   Validation = require('./validation');
 
-  ApiKit = (function() {
-    function ApiKit(apiPath, context, settings) {
+  Osprey = (function() {
+    function Osprey(apiPath, context, settings) {
       this.apiPath = apiPath;
       this.context = context;
       this.settings = settings;
@@ -31,7 +31,7 @@
       this.register = __bind(this.register, this);
     }
 
-    ApiKit.prototype.register = function() {
+    Osprey.prototype.register = function() {
       if (this.settings.enableValidations) {
         this.context.use(this.validations());
       }
@@ -45,7 +45,7 @@
       }
     };
 
-    ApiKit.prototype.ramlHandler = function(ramlPath) {
+    Osprey.prototype.ramlHandler = function(ramlPath) {
       return function(req, res) {
         if (req.accepts('application/raml+yaml') != null) {
           return res.sendfile(ramlPath);
@@ -55,7 +55,7 @@
       };
     };
 
-    ApiKit.prototype.route = function(enableMocks) {
+    Osprey.prototype.route = function(enableMocks) {
       var _this = this;
       return function(req, res, next) {
         if (req.path.indexOf(_this.apiPath) >= 0) {
@@ -68,7 +68,7 @@
       };
     };
 
-    ApiKit.prototype.validations = function() {
+    Osprey.prototype.validations = function() {
       var _this = this;
       return function(req, res, next) {
         return _this.readRaml(function(router, uriTemplateReader, resources) {
@@ -94,58 +94,58 @@
       };
     };
 
-    ApiKit.prototype.get = function(uriTemplate, handler) {
+    Osprey.prototype.get = function(uriTemplate, handler) {
       return this.readRaml(function(router) {
         return router.resolveMethod('get', uriTemplate, handler);
       });
     };
 
-    ApiKit.prototype.post = function(uriTemplate, handler) {
+    Osprey.prototype.post = function(uriTemplate, handler) {
       return this.readRaml(function(router) {
         return router.resolveMethod('post', uriTemplate, handler);
       });
     };
 
-    ApiKit.prototype.put = function(uriTemplate, handler) {
+    Osprey.prototype.put = function(uriTemplate, handler) {
       return this.readRaml(function(router) {
         return router.resolveMethod('put', uriTemplate, handler);
       });
     };
 
-    ApiKit.prototype["delete"] = function(uriTemplate, handler) {
+    Osprey.prototype["delete"] = function(uriTemplate, handler) {
       return this.readRaml(function(router) {
         return router.resolveMethod('delete', uriTemplate, handler);
       });
     };
 
-    ApiKit.prototype.head = function(uriTemplate, handler) {
+    Osprey.prototype.head = function(uriTemplate, handler) {
       return this.readRaml(function(router) {
         return router.resolveMethod('head', uriTemplate, handler);
       });
     };
 
-    ApiKit.prototype.patch = function(uriTemplate, handler) {
+    Osprey.prototype.patch = function(uriTemplate, handler) {
       return this.readRaml(function(router) {
         return router.resolveMethod('patch', uriTemplate, handler);
       });
     };
 
-    ApiKit.prototype.readRaml = function(callback) {
+    Osprey.prototype.readRaml = function(callback) {
       var _this = this;
       return parser.loadRaml(this.settings.ramlFile, function(wrapper) {
         var resources, router, templates, uriTemplateReader;
         resources = wrapper.getResources();
         templates = wrapper.getUriTemplates();
         uriTemplateReader = new UriTemplateReader(templates);
-        router = new ApiKitRouter(_this.apiPath, _this.context, resources, uriTemplateReader);
+        router = new OspreyRouter(_this.apiPath, _this.context, resources, uriTemplateReader);
         return callback(router, uriTemplateReader, resources);
       });
     };
 
-    return ApiKit;
+    return Osprey;
 
   })();
 
-  module.exports = ApiKit;
+  module.exports = Osprey;
 
 }).call(this);

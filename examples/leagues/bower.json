@@ -1,6 +1,6 @@
 {
   "name": "leagues",
   "dependencies": {
-    "apikit-node": "git@github.com:mulesoft/apikit-node.git"
+    "osprey": "git@github.com:mulesoft/osprey.git"
   }
 }

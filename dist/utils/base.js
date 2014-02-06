@@ -1,19 +1,19 @@
 (function() {
-  var ApiKitBase, HttpUtils, _ref,
+  var HttpUtils, OspreyBase, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   HttpUtils = require('../utils/http-utils');
 
-  ApiKitBase = (function(_super) {
-    __extends(ApiKitBase, _super);
+  OspreyBase = (function(_super) {
+    __extends(OspreyBase, _super);
 
-    function ApiKitBase() {
-      _ref = ApiKitBase.__super__.constructor.apply(this, arguments);
+    function OspreyBase() {
+      _ref = OspreyBase.__super__.constructor.apply(this, arguments);
       return _ref;
     }
 
-    ApiKitBase.prototype.methodLookup = function(resources, httpMethod, uri) {
+    OspreyBase.prototype.methodLookup = function(resources, httpMethod, uri) {
       var methodInfo, _ref1;
       if (((_ref1 = resources[uri]) != null ? _ref1.methods : void 0) != null) {
         methodInfo = resources[uri].methods.filter(function(method) {
@@ -27,7 +27,7 @@
       }
     };
 
-    ApiKitBase.prototype.resourceLookup = function(routes, resources, req) {
+    OspreyBase.prototype.resourceLookup = function(routes, resources, req) {
       var result;
       return result = routes[req.method.toLowerCase()].filter(function(route) {
         var _ref1;
@@ -35,7 +35,7 @@
       });
     };
 
-    ApiKitBase.prototype.readStatusCode = function(methodInfo) {
+    OspreyBase.prototype.readStatusCode = function(methodInfo) {
       var key, statusCode;
       statusCode = 200;
       for (key in methodInfo.responses) {
@@ -45,10 +45,10 @@
       return Number(statusCode);
     };
 
-    return ApiKitBase;
+    return OspreyBase;
 
   })(HttpUtils);
 
-  module.exports = ApiKitBase;
+  module.exports = OspreyBase;
 
 }).call(this);

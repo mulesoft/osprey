@@ -1,5 +1,5 @@
 SchemaValidator = require('jsonschema').Validator
-ApiKitBase = require './utils/base'
+OspreyBase = require './utils/base'
 
 class Validation
   constructor: (@req, @uriTemplateReader, @resource, @apiPath) ->

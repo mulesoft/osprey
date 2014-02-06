@@ -4,9 +4,9 @@ PutMethod = require './handlers/put-handler'
 DeleteMethod = require './handlers/delete-handler'
 HeadMethod = require './handlers/head-handler'
 PatchMethod = require './handlers/patch-handler'
-ApiKitBase = require './utils/base'
+OspreyBase = require './utils/base'
 
-class ApiKitRouter extends ApiKitBase
+class OspreyRouter extends OspreyBase
   constructor: (@apiPath, @context, @resources, @uriTemplateReader) ->
     @mockMethodHandlers =
       get: new GetMethod.MockHandler
@@ -54,4 +54,4 @@ class ApiKitRouter extends ApiKitBase
   resolveMethod: (httpMethod, uriTemplate, handler) =>
     @methodHandlers[httpMethod].resolve uriTemplate, handler
 
-module.exports = ApiKitRouter
+module.exports = OspreyRouter

@@ -5,7 +5,7 @@ A [Node JS](http://nodejs.org/) binding for [RAML](raml.org).
 
 ### Prerequisites
 
-To start using APIKit you'll need the following:
+To start using Osprey you'll need the following:
 
 * [Node JS](http://nodejs.org/)
 * [NPM](https://npmjs.org/)
@@ -13,15 +13,15 @@ To start using APIKit you'll need the following:
 
 ### Getting started
 
-1. Clone APIKit - `git clone git@github.com:mulesoft/apikit-node.git`
-2. Install APIKit in your project - `npm install /Users/{username}/Projects/apikit-node`
+1. Clone Osprey - `git clone git@github.com:mulesoft/osprey.git`
+2. Install Osprey in your project - `npm install /Users/{username}/Projects/osprey`
 
-Optionally, you can use [Bower](http://bower.io/) - `bower install git@github.com:mulesoft/apikit-node.git`
+Optionally, you can use [Bower](http://bower.io/) - `bower install git@github.com:mulesoft/osprey.git`
 
-### Initializing APIKit
-You can intialize APIKit as follow:
+### Initializing Osprey
+You can intialize Osprey as follow:
 ```javascript
-api = apiKit.create('/api', app, {
+api = osprey.create('/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   enableConsole: true,
   enableMocks: true,
@@ -49,7 +49,7 @@ api.get('/teams/:teamId', function(req, res) {
 });
 ```
 
-apiKit.get is always relative to the basePath defined in apiKit.register.
+osprey.get is always relative to the basePath defined in osprey.register.
 
 #####Other supported methods
 
@@ -64,7 +64,7 @@ apiKit.get is always relative to the basePath defined in apiKit.register.
 ```javascript
   var express = require('express');
   var path = require('path');
-  var apiKit = require('apikit-node');
+  var osprey = require('osprey');
 
   var app = module.exports = express()
 
@@ -75,7 +75,7 @@ apiKit.get is always relative to the basePath defined in apiKit.register.
   
   app.set('port', process.env.PORT || 3000));
 
-  var api = apiKit.create('/api', app, {
+  var api = osprey.create('/api', app, {
     ramlFile: path.join(__dirname, '/assets/raml/api.raml')
   });
   
