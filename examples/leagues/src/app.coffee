@@ -1,7 +1,8 @@
 express = require 'express'
 path = require 'path'
-apiKit = require 'apikit-node'
+osprey = require 'osprey'
 CustomError = require './exceptions/custom-error'
+
 
 app = module.exports = express()
 
@@ -12,11 +13,11 @@ app.use express.logger('dev')
 
 app.set 'port', process.env.PORT || 3000
 
-# APIKit Configuration
-# app.use apiKit.validations '/api', app,
+# Osprey Configuration
+# app.use osprey.validations '/api', app,
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml')
 
-# app.use apiKit.route '/api', app,
+# app.use osprey.route '/api', app,
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
 #   enableMocks: false
 
@@ -25,7 +26,7 @@ app.set 'port', process.env.PORT || 3000
 #     console.log 'CustomError'
 #     res.send 400
 
-apiKit.register '/api', app, {
+api = osprey.create '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   exceptionHandler: {
     InvalidAcceptTypeError: (err, req, res) ->
@@ -43,7 +44,7 @@ apiKit.register '/api', app, {
 # apiKit.get '/teams/:teamId', (req, res) ->
 #   res.send({ name: 'test' })
 
-apiKit.get '/teams', (req, res) ->
+api.get '/teams', (req, res) ->
   throw new Error 'some exception'
 
 unless module.parent

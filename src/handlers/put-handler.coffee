@@ -1,12 +1,12 @@
 HttpUtils = require '../utils/http-utils'
-ApiKitBase = require '../utils/base'
+OspreyBase = require '../utils/base'
 
 class MockPutHandler extends HttpUtils
   resolve: (req, res, methodInfo) ->
     @negotiateContentType req, res, methodInfo
     @negotiateAcceptType req, res, methodInfo
 
-class PutHandler extends ApiKitBase
+class PutHandler extends OspreyBase
   constructor: (@apiPath, @context, @resources) ->
 
   resolve: (uriTemplate, handler) =>

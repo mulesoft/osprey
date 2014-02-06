@@ -1,6 +1,6 @@
 HttpUtils = require '../utils/http-utils'
 
-class ApiKitBase extends HttpUtils
+class OspreyBase extends HttpUtils
   methodLookup: (resources, httpMethod, uri) ->
     if resources[uri]?.methods?
       methodInfo = resources[uri].methods.filter (method) ->
@@ -21,4 +21,4 @@ class ApiKitBase extends HttpUtils
 
     Number statusCode
 
-module.exports = ApiKitBase
+module.exports = OspreyBase

@@ -1,5 +1,5 @@
 {
-  "name": "apikit-node",
+  "name": "osprey",
   "version": "0.0.1",
   "main": "dist/*",
   "private": true,

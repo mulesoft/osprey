@@ -1,9 +1,11 @@
-APIKit Node
-===========
+Osprey
+======
+
+A [Node JS](http://nodejs.org/) binding for [RAML](raml.org).
 
 ### Prerequisites
 
-To start using APIKit you'll need the following:
+To start using Osprey you'll need the following:
 
 * [Node JS](http://nodejs.org/)
 * [NPM](https://npmjs.org/)
@@ -11,16 +13,20 @@ To start using APIKit you'll need the following:
 
 ### Getting started
 
-1. Clone APIKit - `git clone git@github.com:mulesoft/apikit-node.git`
-2. Install APIKit in your project - `npm install /Users/{username}/Projects/apikit-node`
+1. Clone Osprey - `git clone git@github.com:mulesoft/osprey.git`
+2. Install Osprey in your project - `npm install /Users/{username}/Projects/osprey`
 
-Optionally, you can use [Bower](http://bower.io/) - `bower install git@github.com:mulesoft/apikit-node.git`
+Optionally, you can use [Bower](http://bower.io/) - `bower install git@github.com:mulesoft/osprey.git`
 
-### Initializing APIKit
-You can intialize APIKit as follow:
+### Initializing Osprey
+You can intialize Osprey as follow:
 ```javascript
-apiKit.register('/api', app, {
-  ramlFile: path.join(__dirname, '/assets/raml/api.raml')
+
+api = osprey.create('/api', app, {
+  ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
+  enableConsole: true,
+  enableMocks: true,
+  enableValidations: true
 });
 ```
 #####Options
@@ -39,22 +45,22 @@ apiKit.register('/api', app, {
 ### Registering resources
 Register a resource is as easy as follow:
 ```javascript
-apiKit.get('/teams/:teamId', function(req, res) {
+api.get('/teams/:teamId', function(req, res) {
   //// Your business logic here!
   res.send({ name: 'test' })
 });
 ```
 
-apiKit.get is always relative to the basePath defined in apiKit.register.
+osprey.get is always relative to the basePath defined in osprey.register.
 
 #####Other supported methods
 
-* apiKit.get
-* apiKit.post
-* apiKit.put
-* apiKit.delete
-* apiKit.head
-* apiKit.patch
+* api.get
+* api.post
+* api.put
+* api.delete
+* api.head
+* api.patch
 
 ### Exception Handling
 
@@ -63,7 +69,7 @@ APIKit gives you the posibility to handle exceptions in a very reusable way.
 First you have to setup the exceptionHandler module.
 
 ```javascript
-apiKit.register('/api', app, {
+api = osprey.create('/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   exceptionHandler: {
     Error: (err, req, res) ->
@@ -76,7 +82,7 @@ apiKit.register('/api', app, {
 If a resource throws an error of type Error, the exception handler module will handle it.
 
 ```javascript
-apiKit.get('/teams', function (req, res) {
+api.get('/teams', function (req, res) {
   throw new Error 'some exception'
 });
 ```
@@ -85,7 +91,7 @@ apiKit.get('/teams', function (req, res) {
 ```javascript
   var express = require('express');
   var path = require('path');
-  var apiKit = require('apikit-node');
+  var osprey = require('osprey');
 
   var app = module.exports = express()
 
@@ -96,11 +102,12 @@ apiKit.get('/teams', function (req, res) {
   
   app.set('port', process.env.PORT || 3000));
 
-  apiKit.register('/api', app, {
-    ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
-    enableConsole: true,
-    enableMocks: true,
-    enableValidations: true
+  var api = osprey.create('/api', app, {
+    ramlFile: path.join(__dirname, '/assets/raml/api.raml')
+  });
+  
+  api.get('/resource', function(req, res) {
+    //// Your business logic here!
   });
 
   if (!module.parent) {
