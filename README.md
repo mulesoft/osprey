@@ -1,5 +1,7 @@
-APIKit for Node
-===============
+Osprey
+======
+
+A [Node JS](http://nodejs.org/) binding for [RAML](raml.org).
 
 ### Prerequisites
 
@@ -74,10 +76,11 @@ apiKit.get is always relative to the basePath defined in apiKit.register.
   app.set('port', process.env.PORT || 3000));
 
   var api = apiKit.create('/api', app, {
-    ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
-    enableConsole: true,
-    enableMocks: true,
-    enableValidations: true
+    ramlFile: path.join(__dirname, '/assets/raml/api.raml')
+  });
+  
+  api.get('/resource', function(req, res) {
+    //// Your business logic here!
   });
 
   if (!module.parent) {
