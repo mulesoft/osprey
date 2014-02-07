@@ -1,5 +1,5 @@
 (function() {
-  var Osprey, OspreyRouter, UriTemplateReader, Validation, express, parser, path,
+  var Osprey, OspreyRouter, UriTemplateReader, Validation, express, logger, parser, path,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   UriTemplateReader = require('./uri-template-reader');
@@ -13,6 +13,8 @@
   path = require('path');
 
   Validation = require('./validation');
+
+  logger = require('caterpillar').createLogger();
 
   Osprey = (function() {
     function Osprey(apiPath, context, settings) {
@@ -134,6 +136,7 @@
       var _this = this;
       return parser.loadRaml(this.settings.ramlFile, function(wrapper) {
         var resources, router, templates, uriTemplateReader;
+        logger.log('info', 'RAML successfully loaded');
         resources = wrapper.getResources();
         templates = wrapper.getUriTemplates();
         uriTemplateReader = new UriTemplateReader(templates);

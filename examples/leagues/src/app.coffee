@@ -23,7 +23,8 @@ api = osprey.create '/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   enableConsole: true,
   enableMocks: true,
-  enableValidations: true
+  enableValidations: true,
+  logLevel: 'dev'
 }
 
 # TODO: Throw an exception if the route is not present in the raml!

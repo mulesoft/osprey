@@ -1,9 +1,41 @@
 (function() {
-  var ParserWrapper, async, clone, ramlLoader, ramlParser;
+  var ParserWrapper, async, clone, colors, logger, ramlLoader, ramlParser, winston;
 
   ramlParser = require('raml-parser');
 
   async = require('async');
+
+  winston = require('winston');
+
+  colors = require('colors');
+
+  colors.setTheme({
+    silly: 'rainbow',
+    input: 'grey',
+    verbose: 'cyan',
+    prompt: 'grey',
+    info: 'green',
+    data: 'grey',
+    help: 'cyan',
+    warn: 'yellow',
+    debug: 'blue',
+    error: 'red'
+  });
+
+  logger = new winston.Logger({
+    transports: [
+      new winston.transports.Console({
+        colorize: true
+      })
+    ],
+    levels: {
+      info: 2,
+      Osprey: 3
+    },
+    colors: {
+      Osprey: 'cyan'
+    }
+  });
 
   ParserWrapper = (function() {
     function ParserWrapper(data) {
@@ -120,9 +152,10 @@
 
   ramlLoader = function(filePath, callback) {
     return ramlParser.loadFile(filePath).then(function(data) {
+      logger.log('Osprey', 'RAML successfully loaded'.info);
       return callback(new ParserWrapper(data));
     }, function(error) {
-      return new Error("Error parsing: " + error);
+      return logger.log('Osprey', ("Error when parsing RAML. Message: " + error.message + ", Line: " + error.problem_mark.line + ", Column: " + error.problem_mark.column).error);
     });
   };
 

@@ -11,10 +11,12 @@
   "bugs": {
     "url": "https://github.com/mulesoft/osprey/issues"
   },
-  "licenses": [{
-    "type": "Apache 2.0",
-    "url": "https://github.com/mulesoft/osprey/blob/master/LICENSE"
-  }],
+  "licenses": [
+    {
+      "type": "Apache 2.0",
+      "url": "https://github.com/mulesoft/osprey/blob/master/LICENSE"
+    }
+  ],
   "main": "dist/lib.js",
   "devDependencies": {
     "grunt": "~0.4.2",
@@ -34,7 +36,9 @@
     "raml-parser": "0.8.4",
     "jsonschema": "0.4.0",
     "express": "3.4.4",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "winston": "~0.7.2",
+    "colors": "~0.6.2"
   },
   "files": [
     "dist"
