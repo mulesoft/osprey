@@ -14,10 +14,8 @@ class Osprey
 
     if @settings.enableValidations
       @context.use @validations(uriTemplateReader, resources)
-      logger.info 'Validations has been initialized successfully'
 
     @context.use @route(router, @settings.enableMocks)
-    logger.info 'RAML router has been initialized successfully'
 
     if @settings.enableConsole
       @context.use "#{@apiPath}/console", express.static(path.join(__dirname, '/assets/console'))

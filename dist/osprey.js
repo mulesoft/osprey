@@ -38,10 +38,8 @@
       }
       if (this.settings.enableValidations) {
         this.context.use(this.validations(uriTemplateReader, resources));
-        logger.info('Validations has been initialized successfully');
       }
       this.context.use(this.route(router, this.settings.enableMocks));
-      logger.info('RAML router has been initialized successfully');
       if (this.settings.enableConsole) {
         this.context.use("" + this.apiPath + "/console", express["static"](path.join(__dirname, '/assets/console')));
         this.context.get(this.apiPath, this.ramlHandler(this.settings.ramlFile));
