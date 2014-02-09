@@ -1,5 +1,6 @@
 SchemaValidator = require('jsonschema').Validator
 OspreyBase = require './utils/base'
+logger = require './utils/logger'
 
 class Validation
   constructor: (@req, @uriTemplateReader, @resource, @apiPath) ->
@@ -10,6 +11,7 @@ class Validation
     if method?
       false unless @validateSchema method
       return false if method.queryParameters? and not @validateQueryParams method
+      #TODO: Fix headers validation. Currently is not working due to the headers are being defined under the http status code
       return false if method.headers? and not @validateHeaders method
       return false if @isForm() and not @validateFormParams method
     true
@@ -30,9 +32,11 @@ class Validation
     true
 
   getMethod: () =>
-    for method in @resource.methods
-      if method.method == @req.method.toLowerCase()
-        return method
+    if @resource.methods?
+      for method in @resource.methods
+        if method.method == @req.method.toLowerCase()
+          return method
+
     return null
 
   validateUriParams: () =>
@@ -42,6 +46,8 @@ class Validation
 
     for key, ramlUriParameter of @resource.uriParameters
       if not @validate reqUriParameters[key], ramlUriParameter
+        logger.error "Invalid URI Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqUriParameters[key]}"
+        logger.data "Validation Info", ramlUriParameter
         return false
     true
 
@@ -49,6 +55,8 @@ class Validation
     for key, ramlFormParameter of method.body.formParameters
       reqFormParam = @req.body[key]
       if not @validate reqFormParam, ramlFormParameter
+        logger.error "Invalid Form Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqFormParam}"
+        logger.data "Validation Info", ramlFormParameter
         return false
     true
 
@@ -56,13 +64,18 @@ class Validation
     for key, ramlQueryParameter of method.queryParameters
       reqQueryParam = @req.query[key]
       if not @validate reqQueryParam, ramlQueryParameter
+        logger.error "Invalid Query Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqQueryParam}"
+        logger.data "Validation Info", ramlQueryParameter
         return false
     true
 
   validateHeaders: (@method) =>
     for key, ramlHeader of method.headers
       reqHeader = @req.headers[key]
-      return false if not @validate reqHeader, ramlHeader
+      if not @validate reqHeader, ramlHeader
+        logger.error "Invalid Header :#{key} - Request: #{@req.url}, Header value: #{reqHeader}"
+        logger.data "Validation Info", ramlHeader
+        return false
     true
 
   validate: (@reqParam, @ramlParam) =>

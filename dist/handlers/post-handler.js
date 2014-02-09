@@ -1,5 +1,5 @@
 (function() {
-  var HttpUtils, MockPostHandler, OspreyBase, PostHandler, _ref,
+  var HttpUtils, MockPostHandler, OspreyBase, PostHandler, logger, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -7,6 +7,8 @@
   HttpUtils = require('../utils/http-utils');
 
   OspreyBase = require('../utils/base');
+
+  logger = require('../utils/logger');
 
   MockPostHandler = (function(_super) {
     __extends(MockPostHandler, _super);
@@ -17,6 +19,7 @@
     }
 
     MockPostHandler.prototype.resolve = function(req, res, methodInfo) {
+      logger.debug("Mock resolved - POST " + req.url);
       this.negotiateContentType(req, res, methodInfo);
       return this.negotiateAcceptType(req, res, methodInfo);
     };

@@ -1,5 +1,5 @@
 (function() {
-  var HeadHandler, HttpUtils, MockHeadHandler, OspreyBase, _ref,
+  var HeadHandler, HttpUtils, MockHeadHandler, OspreyBase, logger, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -7,6 +7,8 @@
   HttpUtils = require('../utils/http-utils');
 
   OspreyBase = require('../utils/base');
+
+  logger = require('../utils/logger');
 
   MockHeadHandler = (function(_super) {
     __extends(MockHeadHandler, _super);
@@ -17,6 +19,7 @@
     }
 
     MockHeadHandler.prototype.resolve = function(req, res, methodInfo) {
+      logger.debug("Mock resolved - HEAD " + req.url);
       return res.send(this.readStatusCode(methodInfo));
     };
 

@@ -1,25 +1,26 @@
-UriTemplateReader = require './uri-template-reader'
-OspreyRouter = require './router'
-parser = require './wrapper'
 express = require 'express'
 path = require 'path'
 Validation = require './validation'
+logger = require './utils/logger'
 
 class Osprey
+  handlers: []
+
   constructor: (@apiPath, @context, @settings) ->
 
-  register: =>
-    @settings.enableConsole = true unless @settings.enableConsole?
+  register: (router, uriTemplateReader, resources) =>
     @settings.enableValidations = true unless @settings.enableValidations?
+    @settings.enableConsole = true unless @settings.enableConsole?
 
     if @settings.enableValidations
-      @context.use @validations()
+      @context.use @validations(uriTemplateReader, resources)
 
-    @context.use @route(@settings.enableMocks)
+    @context.use @route(router, @settings.enableMocks)
 
     if @settings.enableConsole
       @context.use "#{@apiPath}/console", express.static(path.join(__dirname, '/assets/console'))
       @context.get @apiPath, @ramlHandler(@settings.ramlFile)
+      logger.info 'API console has been initialized successfully'
 
     if @settings.exceptionHandler
       @context.use @exceptionHandler(@settings.exceptionHandler)
@@ -31,76 +32,65 @@ class Osprey
       else
         res.send 406
 
-  route: (enableMocks) =>
+  init: (router) =>
+    for handler in @handlers
+      router.resolveMethod handler
+
+  route: (router, enableMocks) =>
+    logger.info 'RAML router has been initialized successfully'
     (req, res, next) =>
       if req.path.indexOf(@apiPath) >= 0
-        @readRaml (router) =>
-          router.resolveMock req, res, next, @settings.enableMocks
+        router.resolveMock req, res, next, @settings.enableMocks
       else
         next()
 
   exceptionHandler: (settings) ->
     (err, req, res, next) ->
       errorHandler = settings[err.constructor.name]
-      
+
       if errorHandler?
         errorHandler err, req, res
       else
         next()
 
-  # TODO: refactor
-  validations: () =>
+  validations: (uriTemplateReader, resources) =>
+    logger.info 'Validations has been initialized successfully'
+
     (req, res, next) =>
-      @readRaml (router, uriTemplateReader, resources) =>
-        regex = new RegExp "^\\" + @apiPath + "(.*)"
-        urlPath = regex.exec req.url
-        
-        if urlPath and urlPath.length > 1
-          uri = urlPath[1].split('?')[0]
-          template = uriTemplateReader.getTemplateFor(uri)
+      regex = new RegExp "^\\" + @apiPath + "(.*)"
+      urlPath = regex.exec req.url
 
-          if template?
-            resource = resources[template.uriTemplate]
+      if urlPath and urlPath.length > 1
+        uri = urlPath[1].split('?')[0]
+        template = uriTemplateReader.getTemplateFor(uri)
 
-            if resource?
-              validation = new Validation req, uriTemplateReader, resource, @apiPath
-              if req.path.indexOf(@apiPath) >= 0 and not validation.isValid()
-                res.send 400
-                return
-          
-        next()
+        if template?
+          resource = resources[template.uriTemplate]
+
+          if resource?
+            validation = new Validation req, uriTemplateReader, resource, @apiPath
+            if req.path.indexOf(@apiPath) >= 0 and not validation.isValid()
+              res.send 400
+              return
+
+      next()
 
   get: (uriTemplate, handler) =>
-    @readRaml (router) ->
-      router.resolveMethod 'get', uriTemplate, handler
+    @handlers.push { method: 'get', template: uriTemplate, handler: handler }
 
   post: (uriTemplate, handler) =>
-    @readRaml (router) ->
-      router.resolveMethod 'post', uriTemplate, handler
+    @handlers.push { method: 'post', template: uriTemplate, handler: handler }
 
   put: (uriTemplate, handler) =>
-    @readRaml (router) ->
-      router.resolveMethod 'put', uriTemplate, handler
+    @handlers.push { method: 'put', template: uriTemplate, handler: handler }
 
   delete: (uriTemplate, handler) =>
-    @readRaml (router) ->
-      router.resolveMethod 'delete', uriTemplate, handler
+    @handlers.push { method: 'delete', template: uriTemplate, handler: handler }
 
   head: (uriTemplate, handler) =>
-    @readRaml (router) ->
-      router.resolveMethod 'head', uriTemplate, handler
+    @handlers.push { method: 'head', template: uriTemplate, handler: handler }
 
   patch: (uriTemplate, handler) =>
-    @readRaml (router) ->
-      router.resolveMethod 'patch', uriTemplate, handler
-
-  readRaml: (callback) =>
-    parser.loadRaml @settings.ramlFile, (wrapper) =>
-      resources = wrapper.getResources()
-      templates = wrapper.getUriTemplates()
-      uriTemplateReader = new UriTemplateReader templates
-      router = new OspreyRouter @apiPath, @context, resources, uriTemplateReader
-
-      callback router, uriTemplateReader, resources
+    @handlers.push { method: 'patch', template: uriTemplate, handler: handler }
 
 module.exports = Osprey

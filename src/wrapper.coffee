@@ -1,5 +1,6 @@
 ramlParser = require 'raml-parser'
 async = require 'async'
+logger = require './utils/logger'
 
 class ParserWrapper
   constructor: (data)->
@@ -72,12 +73,13 @@ clone = (obj) ->
 
   return newInstance
 
-ramlLoader = (filePath, callback) ->
+ramlLoader = (filePath, onSuccess) ->
   ramlParser.loadFile(filePath).then(
     (data) ->
-      callback(new ParserWrapper data)
+      logger.info 'RAML successfully loaded'
+      onSuccess(new ParserWrapper data)
     ,(error) ->
-      new Error "Error parsing: #{error}"
+      logger.error "Error when parsing RAML. Message: #{error.message}, Line: #{error.problem_mark.line}, Column: #{error.problem_mark.column}"
   )
 
 exports.loadRaml = async.memoize ramlLoader

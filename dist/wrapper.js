@@ -1,9 +1,11 @@
 (function() {
-  var ParserWrapper, async, clone, ramlLoader, ramlParser;
+  var ParserWrapper, async, clone, logger, ramlLoader, ramlParser;
 
   ramlParser = require('raml-parser');
 
   async = require('async');
+
+  logger = require('./utils/logger');
 
   ParserWrapper = (function() {
     function ParserWrapper(data) {
@@ -118,11 +120,12 @@
     return newInstance;
   };
 
-  ramlLoader = function(filePath, callback) {
+  ramlLoader = function(filePath, onSuccess) {
     return ramlParser.loadFile(filePath).then(function(data) {
-      return callback(new ParserWrapper(data));
+      logger.info('RAML successfully loaded');
+      return onSuccess(new ParserWrapper(data));
     }, function(error) {
-      return new Error("Error parsing: " + error);
+      return logger.error("Error when parsing RAML. Message: " + error.message + ", Line: " + error.problem_mark.line + ", Column: " + error.problem_mark.column);
     });
   };
 

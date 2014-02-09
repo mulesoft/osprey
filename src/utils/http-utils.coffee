@@ -28,14 +28,14 @@ class HttpUtils
     isValid = false
     response = null
 
-    for mimeType of methodInfo.responses[statusCode].body
+    for mimeType of methodInfo.responses?[statusCode]?.body
       if req.accepts(mimeType)
         res.set 'Content-Type', mimeType
-        response = methodInfo.responses[statusCode].body[mimeType].example
+        response = methodInfo.responses[statusCode].body[mimeType]?.example
         isValid = true
         break
 
-    if not isValid && methodInfo.responses[statusCode].body?
+    if not isValid && methodInfo.responses?[statusCode]?.body?
       throw new InvalidAcceptTypeError
       # res.send 406
 

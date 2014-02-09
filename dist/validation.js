@@ -1,11 +1,13 @@
 (function() {
-  var OspreyBase, SchemaValidator, Validation,
+  var OspreyBase, SchemaValidator, Validation, logger,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   SchemaValidator = require('jsonschema').Validator;
 
   OspreyBase = require('./utils/base');
+
+  logger = require('./utils/logger');
 
   Validation = (function() {
     function Validation(req, uriTemplateReader, resource, apiPath) {
@@ -78,11 +80,13 @@
 
     Validation.prototype.getMethod = function() {
       var method, _i, _len, _ref;
-      _ref = this.resource.methods;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        method = _ref[_i];
-        if (method.method === this.req.method.toLowerCase()) {
-          return method;
+      if (this.resource.methods != null) {
+        _ref = this.resource.methods;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          method = _ref[_i];
+          if (method.method === this.req.method.toLowerCase()) {
+            return method;
+          }
         }
       }
       return null;
@@ -96,6 +100,8 @@
       for (key in _ref) {
         ramlUriParameter = _ref[key];
         if (!this.validate(reqUriParameters[key], ramlUriParameter)) {
+          logger.error("Invalid URI Parameter :" + key + " - Request: " + this.req.url + ", Parameter value: " + reqUriParameters[key]);
+          logger.data("Validation Info", ramlUriParameter);
           return false;
         }
       }
@@ -110,6 +116,8 @@
         ramlFormParameter = _ref[key];
         reqFormParam = this.req.body[key];
         if (!this.validate(reqFormParam, ramlFormParameter)) {
+          logger.error("Invalid Form Parameter :" + key + " - Request: " + this.req.url + ", Parameter value: " + reqFormParam);
+          logger.data("Validation Info", ramlFormParameter);
           return false;
         }
       }
@@ -124,6 +132,8 @@
         ramlQueryParameter = _ref[key];
         reqQueryParam = this.req.query[key];
         if (!this.validate(reqQueryParam, ramlQueryParameter)) {
+          logger.error("Invalid Query Parameter :" + key + " - Request: " + this.req.url + ", Parameter value: " + reqQueryParam);
+          logger.data("Validation Info", ramlQueryParameter);
           return false;
         }
       }
@@ -138,6 +148,8 @@
         ramlHeader = _ref[key];
         reqHeader = this.req.headers[key];
         if (!this.validate(reqHeader, ramlHeader)) {
+          logger.error("Invalid Header :" + key + " - Request: " + this.req.url + ", Header value: " + reqHeader);
+          logger.data("Validation Info", ramlHeader);
           return false;
         }
       }
