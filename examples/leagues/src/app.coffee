@@ -24,17 +24,11 @@ api = osprey.create '/api', app,
   enableConsole: true,
   enableMocks: true,
   enableValidations: true,
-  logLevel: 'dev'
+  logLevel: 'debug' # off/debug/info
 
 # Example:
 # api.get '/teams/:teamId', (req, res) ->
 #   res.send({ name: 'test' })
-
-api.get '/teams/:teamId', (req, res) ->
-  res.send({ name: 'test' })
-
-api.get '/teams2', (req, res) ->
-  res.send({ name: 'test' })
 
 unless module.parent
   port = app.get('port')

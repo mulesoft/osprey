@@ -28,22 +28,29 @@ logger = new(winston.Logger)({
   }
 })
 
+logLevel = 'off'
+
+exports.setLevel = (level) ->
+  logLevel = level if level?
+
 exports.info = (message) ->
-  logger.log 'Osprey', message.info
+  if logLevel in ['info', 'debug']
+    logger.log 'Osprey', message.info
 
 exports.error = (message) ->
-  logger.log 'Osprey', message.error
+  if logLevel in ['info', 'debug']
+    logger.log 'Osprey', message.error
 
 exports.warn = (message) ->
-  logger.log 'Osprey', message.warn
-
-exports.help = (message) ->
-  logger.log 'Osprey', message.help
+  if logLevel in ['info', 'debug']
+    logger.log 'Osprey', message.warn
 
 exports.debug = (message) ->
-  logger.log 'Osprey', message.debug
+  if logLevel in ['debug']
+    logger.log 'Osprey', message.debug
 
 exports.data = (description, data) ->
-  logger.log 'Osprey', description.data
-  for key,value of data
-    logger.log 'Osprey', "  #{key}: #{value}".replace(/\n$/, '').data
+  if logLevel in ['debug']
+    logger.log 'Osprey', description.data
+    for key,value of data
+      logger.log 'Osprey', "  #{key}: #{value}".replace(/\n$/, '').data

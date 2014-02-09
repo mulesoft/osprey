@@ -1,12 +1,6 @@
 (function() {
-  var Osprey, OspreyRouter, UriTemplateReader, Validation, express, logger, parser, path,
+  var Osprey, Validation, express, logger, path,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-
-  UriTemplateReader = require('./uri-template-reader');
-
-  OspreyRouter = require('./router');
-
-  parser = require('./wrapper');
 
   express = require('express');
 

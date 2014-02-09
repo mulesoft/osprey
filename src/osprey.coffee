@@ -1,6 +1,3 @@
-UriTemplateReader = require './uri-template-reader'
-OspreyRouter = require './router'
-parser = require './wrapper'
 express = require 'express'
 path = require 'path'
 Validation = require './validation'
