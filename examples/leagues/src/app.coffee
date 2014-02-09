@@ -12,24 +12,29 @@ app.use express.logger('dev')
 app.set 'port', process.env.PORT || 3000
 
 # Osprey Configuration
-# app.use osprey.validations '/api', app,
+# osprey.validations '/api', app,
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml')
 
-# app.use osprey.route '/api', app,
+# router = osprey.route '/api', app,
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
-#   enableMocks: false
+#   enableMocks: true
 
-api = osprey.create '/api', app, {
+api = osprey.create '/api', app,
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   enableConsole: true,
   enableMocks: true,
   enableValidations: true,
   logLevel: 'dev'
-}
 
-# TODO: Throw an exception if the route is not present in the raml!
+# Example:
 # api.get '/teams/:teamId', (req, res) ->
 #   res.send({ name: 'test' })
+
+api.get '/teams/:teamId', (req, res) ->
+  res.send({ name: 'test' })
+
+api.get '/teams2', (req, res) ->
+  res.send({ name: 'test' })
 
 unless module.parent
   port = app.get('port')

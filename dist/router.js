@@ -1,5 +1,5 @@
 (function() {
-  var DeleteMethod, GetMethod, HeadMethod, OspreyBase, OspreyRouter, PatchMethod, PostMethod, PutMethod,
+  var DeleteMethod, GetMethod, HeadMethod, OspreyBase, OspreyRouter, PatchMethod, PostMethod, PutMethod, logger,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -17,6 +17,8 @@
   PatchMethod = require('./handlers/patch-handler');
 
   OspreyBase = require('./utils/base');
+
+  logger = require('./utils/logger');
 
   OspreyRouter = (function(_super) {
     __extends(OspreyRouter, _super);
@@ -81,8 +83,17 @@
       return (result != null) && result.length === 1;
     };
 
-    OspreyRouter.prototype.resolveMethod = function(httpMethod, uriTemplate, handler) {
-      return this.methodHandlers[httpMethod].resolve(uriTemplate, handler);
+    OspreyRouter.prototype.resolveMethod = function(config) {
+      var resourceExists, _ref, _ref1;
+      resourceExists = (_ref = this.resources[config.template]) != null ? (_ref1 = _ref.methods) != null ? _ref1.filter(function(info) {
+        return info.method === config.method;
+      }) : void 0 : void 0;
+      if (resourceExists != null) {
+        logger.debug("Overwritten resource - " + (config.method.toUpperCase()) + " " + config.template);
+        return this.methodHandlers[config.method].resolve(config.template, config.handler);
+      } else {
+        return logger.error("Resource to overwrite does not exists - " + (config.method.toUpperCase()) + " " + config.template);
+      }
     };
 
     return OspreyRouter;

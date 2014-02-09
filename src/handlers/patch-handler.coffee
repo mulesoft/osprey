@@ -1,8 +1,10 @@
 HttpUtils = require '../utils/http-utils'
 OspreyBase = require '../utils/base'
+logger = require '../utils/logger'
 
 class MockPatchHandler extends HttpUtils
   resolve: (req, res, methodInfo) ->
+    logger.debug "Mock resolved - PATCH #{req.url}"
     @negotiateContentType req, res, methodInfo
     @negotiateAcceptType req, res, methodInfo
 

@@ -5,6 +5,7 @@ DeleteMethod = require './handlers/delete-handler'
 HeadMethod = require './handlers/head-handler'
 PatchMethod = require './handlers/patch-handler'
 OspreyBase = require './utils/base'
+logger = require './utils/logger'
 
 class OspreyRouter extends OspreyBase
   constructor: (@apiPath, @context, @resources, @uriTemplateReader) ->
@@ -51,7 +52,13 @@ class OspreyRouter extends OspreyBase
 
     result? and result.length is 1
 
-  resolveMethod: (httpMethod, uriTemplate, handler) =>
-    @methodHandlers[httpMethod].resolve uriTemplate, handler
+  resolveMethod: (config) =>
+    resourceExists = @resources[config.template]?.methods?.filter (info) -> info.method == config.method
+
+    if resourceExists?
+      logger.debug "Overwritten resource - #{config.method.toUpperCase()} #{config.template}"
+      @methodHandlers[config.method].resolve config.template, config.handler
+    else
+      logger.error "Resource to overwrite does not exists - #{config.method.toUpperCase()} #{config.template}"
 
 module.exports = OspreyRouter

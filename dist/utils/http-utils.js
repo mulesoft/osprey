@@ -29,19 +29,19 @@
     };
 
     HttpUtils.prototype.negotiateAcceptType = function(req, res, methodInfo, customHandler) {
-      var isValid, mimeType, response, statusCode;
+      var isValid, mimeType, response, statusCode, _ref, _ref1, _ref2, _ref3, _ref4;
       statusCode = this.readStatusCode(methodInfo);
       isValid = false;
       response = null;
-      for (mimeType in methodInfo.responses[statusCode].body) {
+      for (mimeType in (_ref = methodInfo.responses) != null ? (_ref1 = _ref[statusCode]) != null ? _ref1.body : void 0 : void 0) {
         if (req.accepts(mimeType)) {
           res.set('Content-Type', mimeType);
-          response = methodInfo.responses[statusCode].body[mimeType].example;
+          response = (_ref2 = methodInfo.responses[statusCode].body[mimeType]) != null ? _ref2.example : void 0;
           isValid = true;
           break;
         }
       }
-      if (!isValid && (methodInfo.responses[statusCode].body != null)) {
+      if (!isValid && (((_ref3 = methodInfo.responses) != null ? (_ref4 = _ref3[statusCode]) != null ? _ref4.body : void 0 : void 0) != null)) {
         res.send(406);
       }
       if (customHandler) {
