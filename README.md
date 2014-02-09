@@ -24,7 +24,8 @@ api = osprey.create('/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   enableConsole: true,
   enableMocks: true,
-  enableValidations: true
+  enableValidations: true,
+  logLevel: 'debug'
 });
 ```
 #####Options
@@ -38,6 +39,7 @@ api = osprey.create('/api', app, {
 | enableConsole     | true           | Enables or disables the API console |
 | enableMocks       | true           | Enables or disables the mocks routes |
 | enableValidations | true           | Enables or disables the validations |
+| logLevel          | off            | Sets the logging level. ['off', 'info', 'debug'] |
 
 ### Registering resources
 Register a resource is as easy as follow:
