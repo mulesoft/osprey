@@ -10,12 +10,14 @@ class Osprey
 
   register: (router, uriTemplateReader, resources) =>
     @settings.enableValidations = true unless @settings.enableValidations?
-    @settings.enableConsole = true unless @settings.enableConsole?
-
+    
     if @settings.enableValidations
       @context.use @validations(uriTemplateReader, resources)
 
     @context.use @route(router, @settings.enableMocks)
+
+  registerConsole: () ->
+    @settings.enableConsole = true unless @settings.enableConsole?
 
     if @settings.enableConsole
       @context.use "#{@apiPath}/console", express.static(path.join(__dirname, '/assets/console'))

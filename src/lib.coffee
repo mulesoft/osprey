@@ -10,6 +10,8 @@ exports.create = (apiPath, context, settings) ->
 
   logger.setLevel settings.logLevel
 
+  osprey.registerConsole()
+
   parser.loadRaml settings.ramlFile, (wrapper) ->
     resources = wrapper.getResources()
     templates = wrapper.getUriTemplates()
