@@ -37,7 +37,8 @@ class ParserWrapper
     @raml
 
   _generateResources: ->
-    @_processResource x, @resources for x in @raml.resources
+    if @raml.resources?
+      @_processResource x, @resources for x in @raml.resources
 
   _processResource: (resource, resourceMap, uri) ->
     if not uri?

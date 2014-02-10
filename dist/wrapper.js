@@ -58,13 +58,15 @@
 
     ParserWrapper.prototype._generateResources = function() {
       var x, _i, _len, _ref, _results;
-      _ref = this.raml.resources;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        x = _ref[_i];
-        _results.push(this._processResource(x, this.resources));
+      if (this.raml.resources != null) {
+        _ref = this.raml.resources;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          x = _ref[_i];
+          _results.push(this._processResource(x, this.resources));
+        }
+        return _results;
       }
-      return _results;
     };
 
     ParserWrapper.prototype._processResource = function(resource, resourceMap, uri) {
