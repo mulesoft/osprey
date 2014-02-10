@@ -17,6 +17,7 @@
     var osprey;
     osprey = new Osprey(apiPath, context, settings);
     logger.setLevel(settings.logLevel);
+    osprey.registerConsole();
     parser.loadRaml(settings.ramlFile, function(wrapper) {
       var resources, router, templates, uriTemplateReader;
       resources = wrapper.getResources();

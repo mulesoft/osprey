@@ -33,13 +33,16 @@
       if (this.settings.enableValidations == null) {
         this.settings.enableValidations = true;
       }
-      if (this.settings.enableConsole == null) {
-        this.settings.enableConsole = true;
-      }
       if (this.settings.enableValidations) {
         this.context.use(this.validations(uriTemplateReader, resources));
       }
-      this.context.use(this.route(router, this.settings.enableMocks));
+      return this.context.use(this.route(router, this.settings.enableMocks));
+    };
+
+    Osprey.prototype.registerConsole = function() {
+      if (this.settings.enableConsole == null) {
+        this.settings.enableConsole = true;
+      }
       if (this.settings.enableConsole) {
         this.context.use("" + this.apiPath + "/console", express["static"](path.join(__dirname, '/assets/console')));
         this.context.get(this.apiPath, this.ramlHandler(this.settings.ramlFile));
