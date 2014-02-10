@@ -1,5 +1,5 @@
-InvalidAcceptTypeError = require '../exceptions/invalid-accept-type-error'
-InvalidContentTypeError = require '../exceptions/invalid-content-type-error'
+InvalidAcceptTypeError = require '../errors/invalid-accept-type-error'
+InvalidContentTypeError = require '../errors/invalid-content-type-error'
 
 class HttpUtils
   readStatusCode: (methodInfo) ->

@@ -1,20 +1,31 @@
 SchemaValidator = require('jsonschema').Validator
 OspreyBase = require './utils/base'
 logger = require './utils/logger'
+InvalidUriParameterError = require './errors/invalid-uri-parameter-error'
+InvalidFormParameterError = require './errors/invalid-form-parameter-error'
+InvalidQueryParameterError = require './errors/invalid-query-parameter-error'
+InvalidHeaderError = require './errors/invalid-header-error'
+InvalidBodyError = require './errors/invalid-body-error'
 
 class Validation
   constructor: (@req, @uriTemplateReader, @resource, @apiPath) ->
 
-  isValid: () =>
-    return false if @resource.uriParameters? and not @validateUriParams()
+  validate: () =>
     method = @getMethod()
+
+    @validateUriParams()
+
     if method?
-      false unless @validateSchema method
-      return false if method.queryParameters? and not @validateQueryParams method
+      @validateQueryParams method
+
       #TODO: Fix headers validation. Currently is not working due to the headers are being defined under the http status code
-      return false if method.headers? and not @validateHeaders method
-      return false if @isForm() and not @validateFormParams method
-    true
+      @validateHeaders method
+      
+      @validateFormParams method
+
+      unless @validateSchema method
+        #TODO: Add schema error context!
+        throw new InvalidBodyError {}
 
   isForm: () =>
     @req.headers['content-type'] in ['application/x-www-form-urlencoded', 'multipart/form-data']
@@ -39,46 +50,58 @@ class Validation
 
     return null
 
+  readValidationInfo: (key, value, validationDescriptor) ->
+    delete validationDescriptor.description
+    delete validationDescriptor.displayName
+    delete validationDescriptor.example
+
+    validationInfo =
+      parameter: key
+      value: value
+      validationRule: validationDescriptor
+
+    validationInfo
+
   validateUriParams: () =>
-    uri = @req.url.replace @apiPath, ''
+    if @resource.uriParameters?
+      uri = @req.url.replace @apiPath, ''
 
-    reqUriParameters = @uriTemplateReader.getUriParametersFor uri
+      reqUriParameters = @uriTemplateReader.getUriParametersFor uri
 
-    for key, ramlUriParameter of @resource.uriParameters
-      if not @validate reqUriParameters[key], ramlUriParameter
-        logger.error "Invalid URI Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqUriParameters[key]}"
-        logger.data "Validation Info", ramlUriParameter
-        return false
-    true
+      for key, ramlUriParameter of @resource.uriParameters
+        if not @isValid reqUriParameters[key], ramlUriParameter
+          logger.error "Invalid URI Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqUriParameters[key]}"
+          logger.data "Validation rule", ramlUriParameter
+          throw new InvalidUriParameterError @readValidationInfo(key, reqUriParameters[key], ramlUriParameter)
 
-  validateFormParams: (@method) =>
-    for key, ramlFormParameter of method.body.formParameters
-      reqFormParam = @req.body[key]
-      if not @validate reqFormParam, ramlFormParameter
-        logger.error "Invalid Form Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqFormParam}"
-        logger.data "Validation Info", ramlFormParameter
-        return false
-    true
+  validateFormParams: (method) =>
+    if @isForm()
+      for key, ramlFormParameter of method.body.formParameters
+        reqFormParam = @req.body[key]
+        if not @isValid reqFormParam, ramlFormParameter
+          logger.error "Invalid Form Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqFormParam}"
+          logger.data "Validation Info", ramlFormParameter
+          throw new InvalidFormParameterError @readValidationInfo(key, reqFormParam, ramlFormParameter)
 
-  validateQueryParams: (@method) =>
-    for key, ramlQueryParameter of method.queryParameters
-      reqQueryParam = @req.query[key]
-      if not @validate reqQueryParam, ramlQueryParameter
-        logger.error "Invalid Query Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqQueryParam}"
-        logger.data "Validation Info", ramlQueryParameter
-        return false
-    true
+  validateQueryParams: (method) =>
+    if method.queryParameters?
+      for key, ramlQueryParameter of method.queryParameters
+        reqQueryParam = @req.query[key]
+        if not @isValid reqQueryParam, ramlQueryParameter
+          logger.error "Invalid Query Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqQueryParam}"
+          logger.data "Validation Info", ramlQueryParameter
+          throw new InvalidQueryParameterError @readValidationInfo(key, reqQueryParam, ramlQueryParameter)
 
-  validateHeaders: (@method) =>
-    for key, ramlHeader of method.headers
-      reqHeader = @req.headers[key]
-      if not @validate reqHeader, ramlHeader
-        logger.error "Invalid Header :#{key} - Request: #{@req.url}, Header value: #{reqHeader}"
-        logger.data "Validation Info", ramlHeader
-        return false
-    true
+  validateHeaders: (method) =>
+    if method.headers?
+      for key, ramlHeader of method.headers
+        reqHeader = @req.headers[key]
+        if not @isValid reqHeader, ramlHeader
+          logger.error "Invalid Header :#{key} - Request: #{@req.url}, Header value: #{reqHeader}"
+          logger.data "Validation Info", ramlHeader
+          throw new InvalidHeaderError @readValidationInfo(key, reqHeader, ramlHeader)
 
-  validate: (@reqParam, @ramlParam) =>
+  isValid: (@reqParam, @ramlParam) =>
     (@validateRequired reqParam, ramlParam) and (@validateType reqParam, ramlParam)
 
   validateRequired: (@reqParam, @ramlParam) =>

@@ -1,5 +1,5 @@
 (function() {
-  var Osprey, Validation, express, logger, path,
+  var Osprey, Validation, errorDefaultSettings, express, logger, path,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   express = require('express');
@@ -9,6 +9,8 @@
   Validation = require('./validation');
 
   logger = require('./utils/logger');
+
+  errorDefaultSettings = require('./error-default-settings');
 
   Osprey = (function() {
     Osprey.prototype.handlers = [];
@@ -36,6 +38,7 @@
       if (this.settings.enableValidations) {
         this.context.use(this.validations(uriTemplateReader, resources));
       }
+      this.context.use(this.exceptionHandler(this.settings.exceptionHandler));
       return this.context.use(this.route(router, this.settings.enableMocks));
     };
 
@@ -46,10 +49,7 @@
       if (this.settings.enableConsole) {
         this.context.use("" + this.apiPath + "/console", express["static"](path.join(__dirname, '/assets/console')));
         this.context.get(this.apiPath, this.ramlHandler(this.settings.ramlFile));
-        logger.info('API console has been initialized successfully');
-      }
-      if (this.settings.exceptionHandler) {
-        return this.context.use(this.exceptionHandler(this.settings.exceptionHandler));
+        return logger.info('Osprey::APIConsole has been initialized successfully');
       }
     };
 
@@ -76,7 +76,7 @@
 
     Osprey.prototype.route = function(router, enableMocks) {
       var _this = this;
-      logger.info('RAML router has been initialized successfully');
+      logger.info('Osprey::Router has been initialized successfully');
       return function(req, res, next) {
         if (req.path.indexOf(_this.apiPath) >= 0) {
           return router.resolveMock(req, res, next, _this.settings.enableMocks);
@@ -87,11 +87,17 @@
     };
 
     Osprey.prototype.exceptionHandler = function(settings) {
+      var key, value;
+      logger.info('Osprey::ExceptionHandler has been initialized successfully');
+      for (key in settings) {
+        value = settings[key];
+        errorDefaultSettings[key] = value;
+      }
       return function(err, req, res, next) {
         var errorHandler;
-        errorHandler = settings[err.constructor.name];
+        errorHandler = errorDefaultSettings[err.constructor.name];
         if (errorHandler != null) {
-          return errorHandler(err, req, res);
+          return errorHandler(err, req, res, next);
         } else {
           return next();
         }
@@ -100,7 +106,7 @@
 
     Osprey.prototype.validations = function(uriTemplateReader, resources) {
       var _this = this;
-      logger.info('Validations has been initialized successfully');
+      logger.info('Osprey::Validations has been initialized successfully');
       return function(req, res, next) {
         var regex, resource, template, uri, urlPath, validation;
         regex = new RegExp("^\\" + _this.apiPath + "(.*)");
@@ -112,10 +118,7 @@
             resource = resources[template.uriTemplate];
             if (resource != null) {
               validation = new Validation(req, uriTemplateReader, resource, _this.apiPath);
-              if (req.path.indexOf(_this.apiPath) >= 0 && !validation.isValid()) {
-                res.send(400);
-                return;
-              }
+              validation.validate();
             }
           }
         }

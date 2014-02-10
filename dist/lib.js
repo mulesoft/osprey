@@ -59,8 +59,9 @@
   };
 
   exports.exceptionHandler = function(apiPath, context, settings) {
-    this.osprey = new Osprey(apiPath, context, settings);
-    return this.osprey.exceptionHandler(settings);
+    var osprey;
+    osprey = new Osprey(apiPath, context, settings);
+    return context.use(osprey.exceptionHandler(settings));
   };
 
 }).call(this);

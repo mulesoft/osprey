@@ -12,38 +12,38 @@ app.use express.logger('dev')
 
 app.set 'port', process.env.PORT || 3000
 
-# Osprey Configuration
+# Osprey Validations
 # osprey.validations '/api', app,
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml')
 
+# Osprey Router
 # router = osprey.route '/api', app,
 #   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
 #   enableMocks: true
 
-# app.use apiKit.exceptionHandler '/api', app,
-#   Error: (err, req, res) ->
-#     console.log 'CustomError'
+# Osprey Exception Handler
+# osprey.exceptionHandler '/api', app,
+#   CustomError: (err, req, res) ->
+#     console.log 'Custom Error'
 #     res.send 400
 
 api = osprey.create '/api', app,
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   logLevel: 'debug',
   exceptionHandler:
-    InvalidAcceptTypeError: (err, req, res) ->
-      res.send 406
-
-    InvalidContentTypeError: (err, req, res) ->
-      res.send 415
-
-    Error: (err, req, res) ->
+    InvalidUriParameterError: (err, req, res) ->
+      console.log 'Overwriting default implementation'
+      res.send 400
+    CustomError: (err, req, res) ->
+      console.log 'Custom Error'
       res.send 400
 
 # Example:
 # api.get '/teams/:teamId', (req, res) ->
 #   res.send({ name: 'test' })
 
-api.get '/teams', (req, res) ->
-  throw new Error 'some exception'
+app.get '/api/teams', (req, res) ->
+  throw new CustomError 'some exception'
 
 unless module.parent
   port = app.get('port')

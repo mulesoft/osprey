@@ -1,9 +1,9 @@
 (function() {
   var HttpUtils, InvalidAcceptTypeError, InvalidContentTypeError;
 
-  InvalidAcceptTypeError = require('../exceptions/invalid-accept-type-error');
+  InvalidAcceptTypeError = require('../errors/invalid-accept-type-error');
 
-  InvalidContentTypeError = require('../exceptions/invalid-content-type-error');
+  InvalidContentTypeError = require('../errors/invalid-content-type-error');
 
   HttpUtils = (function() {
     function HttpUtils() {}

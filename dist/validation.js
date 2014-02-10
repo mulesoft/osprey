@@ -1,5 +1,5 @@
 (function() {
-  var OspreyBase, SchemaValidator, Validation, logger,
+  var InvalidBodyError, InvalidFormParameterError, InvalidHeaderError, InvalidQueryParameterError, InvalidUriParameterError, OspreyBase, SchemaValidator, Validation, logger,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -8,6 +8,16 @@
   OspreyBase = require('./utils/base');
 
   logger = require('./utils/logger');
+
+  InvalidUriParameterError = require('./errors/invalid-uri-parameter-error');
+
+  InvalidFormParameterError = require('./errors/invalid-form-parameter-error');
+
+  InvalidQueryParameterError = require('./errors/invalid-query-parameter-error');
+
+  InvalidHeaderError = require('./errors/invalid-header-error');
+
+  InvalidBodyError = require('./errors/invalid-body-error');
 
   Validation = (function() {
     function Validation(req, uriTemplateReader, resource, apiPath) {
@@ -21,7 +31,7 @@
       this.validateString = __bind(this.validateString, this);
       this.validateType = __bind(this.validateType, this);
       this.validateRequired = __bind(this.validateRequired, this);
-      this.validate = __bind(this.validate, this);
+      this.isValid = __bind(this.isValid, this);
       this.validateHeaders = __bind(this.validateHeaders, this);
       this.validateQueryParams = __bind(this.validateQueryParams, this);
       this.validateFormParams = __bind(this.validateFormParams, this);
@@ -30,30 +40,21 @@
       this.validateSchema = __bind(this.validateSchema, this);
       this.isJson = __bind(this.isJson, this);
       this.isForm = __bind(this.isForm, this);
-      this.isValid = __bind(this.isValid, this);
+      this.validate = __bind(this.validate, this);
     }
 
-    Validation.prototype.isValid = function() {
+    Validation.prototype.validate = function() {
       var method;
-      if ((this.resource.uriParameters != null) && !this.validateUriParams()) {
-        return false;
-      }
       method = this.getMethod();
+      this.validateUriParams();
       if (method != null) {
+        this.validateQueryParams(method);
+        this.validateHeaders(method);
+        this.validateFormParams(method);
         if (!this.validateSchema(method)) {
-          false;
-        }
-        if ((method.queryParameters != null) && !this.validateQueryParams(method)) {
-          return false;
-        }
-        if ((method.headers != null) && !this.validateHeaders(method)) {
-          return false;
-        }
-        if (this.isForm() && !this.validateFormParams(method)) {
-          return false;
+          throw new InvalidBodyError({});
         }
       }
-      return true;
     };
 
     Validation.prototype.isForm = function() {
@@ -92,71 +93,101 @@
       return null;
     };
 
+    Validation.prototype.readValidationInfo = function(key, value, validationDescriptor) {
+      var validationInfo;
+      delete validationDescriptor.description;
+      delete validationDescriptor.displayName;
+      delete validationDescriptor.example;
+      validationInfo = {
+        parameter: key,
+        value: value,
+        validationRule: validationDescriptor
+      };
+      return validationInfo;
+    };
+
     Validation.prototype.validateUriParams = function() {
-      var key, ramlUriParameter, reqUriParameters, uri, _ref;
-      uri = this.req.url.replace(this.apiPath, '');
-      reqUriParameters = this.uriTemplateReader.getUriParametersFor(uri);
-      _ref = this.resource.uriParameters;
-      for (key in _ref) {
-        ramlUriParameter = _ref[key];
-        if (!this.validate(reqUriParameters[key], ramlUriParameter)) {
-          logger.error("Invalid URI Parameter :" + key + " - Request: " + this.req.url + ", Parameter value: " + reqUriParameters[key]);
-          logger.data("Validation Info", ramlUriParameter);
-          return false;
+      var key, ramlUriParameter, reqUriParameters, uri, _ref, _results;
+      if (this.resource.uriParameters != null) {
+        uri = this.req.url.replace(this.apiPath, '');
+        reqUriParameters = this.uriTemplateReader.getUriParametersFor(uri);
+        _ref = this.resource.uriParameters;
+        _results = [];
+        for (key in _ref) {
+          ramlUriParameter = _ref[key];
+          if (!this.isValid(reqUriParameters[key], ramlUriParameter)) {
+            logger.error("Invalid URI Parameter :" + key + " - Request: " + this.req.url + ", Parameter value: " + reqUriParameters[key]);
+            logger.data("Validation rule", ramlUriParameter);
+            throw new InvalidUriParameterError(this.readValidationInfo(key, reqUriParameters[key], ramlUriParameter));
+          } else {
+            _results.push(void 0);
+          }
         }
+        return _results;
       }
-      return true;
     };
 
     Validation.prototype.validateFormParams = function(method) {
-      var key, ramlFormParameter, reqFormParam, _ref;
-      this.method = method;
-      _ref = method.body.formParameters;
-      for (key in _ref) {
-        ramlFormParameter = _ref[key];
-        reqFormParam = this.req.body[key];
-        if (!this.validate(reqFormParam, ramlFormParameter)) {
-          logger.error("Invalid Form Parameter :" + key + " - Request: " + this.req.url + ", Parameter value: " + reqFormParam);
-          logger.data("Validation Info", ramlFormParameter);
-          return false;
+      var key, ramlFormParameter, reqFormParam, _ref, _results;
+      if (this.isForm()) {
+        _ref = method.body.formParameters;
+        _results = [];
+        for (key in _ref) {
+          ramlFormParameter = _ref[key];
+          reqFormParam = this.req.body[key];
+          if (!this.isValid(reqFormParam, ramlFormParameter)) {
+            logger.error("Invalid Form Parameter :" + key + " - Request: " + this.req.url + ", Parameter value: " + reqFormParam);
+            logger.data("Validation Info", ramlFormParameter);
+            throw new InvalidFormParameterError(this.readValidationInfo(key, reqFormParam, ramlFormParameter));
+          } else {
+            _results.push(void 0);
+          }
         }
+        return _results;
       }
-      return true;
     };
 
     Validation.prototype.validateQueryParams = function(method) {
-      var key, ramlQueryParameter, reqQueryParam, _ref;
-      this.method = method;
-      _ref = method.queryParameters;
-      for (key in _ref) {
-        ramlQueryParameter = _ref[key];
-        reqQueryParam = this.req.query[key];
-        if (!this.validate(reqQueryParam, ramlQueryParameter)) {
-          logger.error("Invalid Query Parameter :" + key + " - Request: " + this.req.url + ", Parameter value: " + reqQueryParam);
-          logger.data("Validation Info", ramlQueryParameter);
-          return false;
+      var key, ramlQueryParameter, reqQueryParam, _ref, _results;
+      if (method.queryParameters != null) {
+        _ref = method.queryParameters;
+        _results = [];
+        for (key in _ref) {
+          ramlQueryParameter = _ref[key];
+          reqQueryParam = this.req.query[key];
+          if (!this.isValid(reqQueryParam, ramlQueryParameter)) {
+            logger.error("Invalid Query Parameter :" + key + " - Request: " + this.req.url + ", Parameter value: " + reqQueryParam);
+            logger.data("Validation Info", ramlQueryParameter);
+            throw new InvalidQueryParameterError(this.readValidationInfo(key, reqQueryParam, ramlQueryParameter));
+          } else {
+            _results.push(void 0);
+          }
         }
+        return _results;
       }
-      return true;
     };
 
     Validation.prototype.validateHeaders = function(method) {
-      var key, ramlHeader, reqHeader, _ref;
-      this.method = method;
-      _ref = method.headers;
-      for (key in _ref) {
-        ramlHeader = _ref[key];
-        reqHeader = this.req.headers[key];
-        if (!this.validate(reqHeader, ramlHeader)) {
-          logger.error("Invalid Header :" + key + " - Request: " + this.req.url + ", Header value: " + reqHeader);
-          logger.data("Validation Info", ramlHeader);
-          return false;
+      var key, ramlHeader, reqHeader, _ref, _results;
+      if (method.headers != null) {
+        _ref = method.headers;
+        _results = [];
+        for (key in _ref) {
+          ramlHeader = _ref[key];
+          reqHeader = this.req.headers[key];
+          if (!this.isValid(reqHeader, ramlHeader)) {
+            logger.error("Invalid Header :" + key + " - Request: " + this.req.url + ", Header value: " + reqHeader);
+            logger.data("Validation Info", ramlHeader);
+            throw new InvalidHeaderError(this.readValidationInfo(key, reqHeader, ramlHeader));
+          } else {
+            _results.push(void 0);
+          }
         }
+        return _results;
       }
-      return true;
     };
 
-    Validation.prototype.validate = function(reqParam, ramlParam) {
+    Validation.prototype.isValid = function(reqParam, ramlParam) {
       this.reqParam = reqParam;
       this.ramlParam = ramlParam;
       return (this.validateRequired(reqParam, ramlParam)) && (this.validateType(reqParam, ramlParam));

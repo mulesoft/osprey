@@ -51,5 +51,5 @@ exports.validations = (apiPath, context, settings) ->
     context.use osprey.validations uriTemplateReader, resources
 
 exports.exceptionHandler = (apiPath, context, settings) ->
-  @osprey = new Osprey(apiPath, context, settings)
-  @osprey.exceptionHandler settings
+  osprey = new Osprey(apiPath, context, settings)
+  context.use osprey.exceptionHandler(settings)
