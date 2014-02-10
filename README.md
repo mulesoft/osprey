@@ -9,7 +9,6 @@ To start using Osprey you'll need the following:
 
 * [Node JS](http://nodejs.org/)
 * [NPM](https://npmjs.org/)
-* [Grunt](http://gruntjs.com/)
 
 ### Getting started
 
@@ -37,10 +36,10 @@ api = osprey.create('/api', app, {
 | Name         | Default Value  | Description  |
 |:------------------|:---------------|:---------------|
 | ramlFile          | null           | Indicates where the RAML file is being stored|
-| enableConsole     | true           | Enables or disables the API console |
+| enableConsole     | true           | Enables or disables the [API console](https://github.com/mulesoft/api-console) |
 | enableMocks       | true           | Enables or disables the mocks routes |
 | enableValidations | true           | Enables or disables the validations |
-| exceptionHandler  | {}             | Gives you the possibility to resuse exception handlers|
+| exceptionHandler  | {}             | Gives you the possibility to reuse exception handlers|
 | logLevel          | off            | Sets the logging level. ['off', 'info', 'debug'] |
 
 ### Registering resources
@@ -52,7 +51,7 @@ api.get('/teams/:teamId', function(req, res) {
 });
 ```
 
-osprey.get is always relative to the basePath defined in osprey.register.
+`osprey.get` is always relative to the basePath defined in `osprey.create`.
 
 #####Other supported methods
 
@@ -65,7 +64,7 @@ osprey.get is always relative to the basePath defined in osprey.register.
 
 ### Exception Handling
 
-APIKit gives you the posibility to handle exceptions in a very reusable way.
+Osprey gives you the posibility to handle exceptions in a very reusable way.
 
 First you have to setup the exceptionHandler module.
 
@@ -73,20 +72,33 @@ First you have to setup the exceptionHandler module.
 api = osprey.create('/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   exceptionHandler: {
-    Error: (err, req, res) ->
+    InvalidUriParameterError: (err, req, res) ->
+      // Overwriting the default implementation
+      res.send 400
+    CustomError: (err, req, res) ->
       //// Do something here!
       res.send 400
   }
 });
 ```
 
-If a resource throws an error of type Error, the exception handler module will handle it.
+If a resource throws an error of type CustomError, the exception handler module will handle it.
 
 ```javascript
 api.get('/teams', function (req, res) {
-  throw new Error 'some exception'
+  throw new CustomError 'some exception'
 });
 ```
+##### Default Errors
+| Name                       | HTTP Status| Description  |
+|:---------------------------|:----|:---------------|
+| InvalidAcceptTypeError     | 406 | It will be thrown when the Accept type is not supported by the API |
+| InvalidContentTypeError    | 415 | It will be thrown when the Content type is not supported by the API |
+| InvalidUriParameterError   | 400 | It will be thrown if a URI parameter is invalid according to the validation rules |
+| InvalidFormParameterError  | 400 | It will be thrown if a Form parameter is invalid according to the validation rules |
+| InvalidQueryParameterError | 400 | It will be thrown if a Query parameter is invalid according to the validation rules |
+| InvalidHeaderError         | 400 | It will be thrown if a Header is invalid according to the validation rules |
+| InvalidBodyError           | 400 | It will be thrown if a body is invalid according to the validation schemas |
 
 ### Example
 ```javascript
