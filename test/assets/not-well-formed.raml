@@ -1,0 +1,27 @@
+#%RAML 0.8
+---
+title: La Liga
+version: 1.0
+protocols: [ HTTP, HTTPS ]
+baseUri: http://localhost:3000/api
+documentation:
+  - title: Getting Started
+    content: |
+      This sample API has been created as part of your Osprey project. It is located in src/main/api. Feel free to poke around.
+  /teams:
+  displayName: Teams
+  #description: |
+  #  A collection of teams that are participating in La Liga. Teams API allow you add, remove and retrieve individual team information from La Liga.
+  get:
+    description: Obtain information from a collection of teams simultaneously
+    queryParameters:
+      city:
+        description: |
+          Filter the list of teams by home city.
+        type: string
+        required: false
+        example: Barcelona
+    responses:
+      200:
+        body:
+          application/json:

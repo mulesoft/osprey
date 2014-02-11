@@ -1,5 +1,5 @@
 (function() {
-  var Osprey, Validation, errorDefaultSettings, express, logger, path,
+  var Osprey, Validation, errorDefaultSettings, express, path,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   express = require('express');
@@ -8,17 +8,16 @@
 
   Validation = require('./validation');
 
-  logger = require('./utils/logger');
-
   errorDefaultSettings = require('./error-default-settings');
 
   Osprey = (function() {
     Osprey.prototype.handlers = [];
 
-    function Osprey(apiPath, context, settings) {
+    function Osprey(apiPath, context, settings, logger) {
       this.apiPath = apiPath;
       this.context = context;
       this.settings = settings;
+      this.logger = logger;
       this.patch = __bind(this.patch, this);
       this.head = __bind(this.head, this);
       this["delete"] = __bind(this["delete"], this);
@@ -29,6 +28,9 @@
       this.route = __bind(this.route, this);
       this.init = __bind(this.init, this);
       this.register = __bind(this.register, this);
+      if (this.settings == null) {
+        this.settings = {};
+      }
     }
 
     Osprey.prototype.register = function(router, uriTemplateReader, resources) {
@@ -49,7 +51,7 @@
       if (this.settings.enableConsole) {
         this.context.use("" + this.apiPath + "/console", express["static"](path.join(__dirname, '/assets/console')));
         this.context.get(this.apiPath, this.ramlHandler(this.settings.ramlFile));
-        return logger.info('Osprey::APIConsole has been initialized successfully');
+        return this.logger.info('Osprey::APIConsole has been initialized successfully');
       }
     };
 
@@ -76,7 +78,7 @@
 
     Osprey.prototype.route = function(router, enableMocks) {
       var _this = this;
-      logger.info('Osprey::Router has been initialized successfully');
+      this.logger.info('Osprey::Router has been initialized successfully');
       return function(req, res, next) {
         if (req.path.indexOf(_this.apiPath) >= 0) {
           return router.resolveMock(req, res, next, _this.settings.enableMocks);
@@ -88,7 +90,7 @@
 
     Osprey.prototype.exceptionHandler = function(settings) {
       var key, value;
-      logger.info('Osprey::ExceptionHandler has been initialized successfully');
+      this.logger.info('Osprey::ExceptionHandler has been initialized successfully');
       for (key in settings) {
         value = settings[key];
         errorDefaultSettings[key] = value;
@@ -106,7 +108,7 @@
 
     Osprey.prototype.validations = function(uriTemplateReader, resources) {
       var _this = this;
-      logger.info('Osprey::Validations has been initialized successfully');
+      this.logger.info('Osprey::Validations has been initialized successfully');
       return function(req, res, next) {
         var regex, resource, template, uri, urlPath, validation;
         regex = new RegExp("^\\" + _this.apiPath + "(.*)");

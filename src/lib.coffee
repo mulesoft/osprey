@@ -6,13 +6,13 @@ OspreyRouter = require './router'
 logger = require './utils/logger'
 
 exports.create = (apiPath, context, settings) ->
-  osprey = new Osprey apiPath, context, settings
+  osprey = new Osprey apiPath, context, settings, logger
 
   logger.setLevel settings.logLevel
 
   osprey.registerConsole()
 
-  parser.loadRaml settings.ramlFile, (wrapper) ->
+  parser.loadRaml settings.ramlFile, logger, (wrapper) ->
     resources = wrapper.getResources()
     templates = wrapper.getUriTemplates()
     uriTemplateReader = new UriTemplateReader templates
@@ -24,11 +24,11 @@ exports.create = (apiPath, context, settings) ->
   osprey
 
 exports.route = (apiPath, context, settings) ->
-  osprey = new Osprey(apiPath, context, settings)
+  osprey = new Osprey apiPath, context, settings, logger
 
   logger.setLevel settings.logLevel
 
-  parser.loadRaml settings.ramlFile, (wrapper) ->
+  parser.loadRaml settings.ramlFile, logger, (wrapper) ->
     resources = wrapper.getResources()
     templates = wrapper.getUriTemplates()
     uriTemplateReader = new UriTemplateReader templates
@@ -42,12 +42,12 @@ exports.route = (apiPath, context, settings) ->
 exports.validations = (apiPath, context, settings) ->
   logger.setLevel settings.logLevel
 
-  parser.loadRaml settings.ramlFile, (wrapper) ->
+  parser.loadRaml settings.ramlFile, logger, (wrapper) ->
     resources = wrapper.getResources()
     templates = wrapper.getUriTemplates()
     uriTemplateReader = new UriTemplateReader templates
 
-    osprey = new Osprey(apiPath, context, settings)
+    osprey = new Osprey apiPath, context, settings, logger
     context.use osprey.validations uriTemplateReader, resources
 
 exports.exceptionHandler = (apiPath, context, settings) ->

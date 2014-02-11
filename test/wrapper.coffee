@@ -1,13 +1,14 @@
 parser = require '../src/wrapper'
 should = require 'should'
+Logger = require './mocks/logger'
 
-describe 'TOOLKIT PARSER', ->
+describe 'WRAPPER', ->
   before (done) ->
-    parser.loadRaml "./test/assets/api.raml", (wrapper) =>
+    parser.loadRaml './test/assets/api.raml', new Logger, (wrapper) =>
       @parsedRaml = wrapper
       done()
 
-  describe 'RAML PARSER DATA ELEMENT', ->
+  describe 'RAML WRAPPER DATA ELEMENT', ->
     it 'Should contain at least base properties: title,version,baseUri', (done)->
       # Act
       raml = @parsedRaml.getRaml()
@@ -81,3 +82,31 @@ describe 'TOOLKIT PARSER', ->
       protocols.should.include 'HTTP'
 
       done()
+
+  describe 'LOGGING', ->    
+    it 'Should make a log entry informing that the RAML file was successfully loaded', (done) =>        
+      # Arrange
+      logger = new Logger
+
+      # Act
+      parser.load(useCache = false) './test/assets/well-formed.raml', logger, (wrapper) ->
+        # Assert
+        logger.infoMessages.should.have.lengthOf 1
+        logger.infoMessages[0].should.eql 'RAML successfully loaded'
+
+        done()
+
+    it 'Should make a log entry informing that the RAML file has an error', (done) =>        
+      # Arrange
+      logger = new Logger
+
+      # Act
+      parser.load(useCache = false) './test/assets/not-well-formed.raml', logger, null, (error) ->
+        # Assert
+        logger.errorMessages.should.have.lengthOf 1
+        logger.errorMessages[0].should.contain 'Error when parsing RAML'
+        logger.errorMessages[0].should.contain 'Message:'
+        logger.errorMessages[0].should.contain 'Column:'
+        logger.errorMessages[0].should.contain 'Line:'
+
+        done()

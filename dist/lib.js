@@ -15,10 +15,10 @@
 
   exports.create = function(apiPath, context, settings) {
     var osprey;
-    osprey = new Osprey(apiPath, context, settings);
+    osprey = new Osprey(apiPath, context, settings, logger);
     logger.setLevel(settings.logLevel);
     osprey.registerConsole();
-    parser.loadRaml(settings.ramlFile, function(wrapper) {
+    parser.loadRaml(settings.ramlFile, logger, function(wrapper) {
       var resources, router, templates, uriTemplateReader;
       resources = wrapper.getResources();
       templates = wrapper.getUriTemplates();
@@ -32,9 +32,9 @@
 
   exports.route = function(apiPath, context, settings) {
     var osprey;
-    osprey = new Osprey(apiPath, context, settings);
+    osprey = new Osprey(apiPath, context, settings, logger);
     logger.setLevel(settings.logLevel);
-    parser.loadRaml(settings.ramlFile, function(wrapper) {
+    parser.loadRaml(settings.ramlFile, logger, function(wrapper) {
       var resources, router, templates, uriTemplateReader;
       resources = wrapper.getResources();
       templates = wrapper.getUriTemplates();
@@ -48,12 +48,12 @@
 
   exports.validations = function(apiPath, context, settings) {
     logger.setLevel(settings.logLevel);
-    return parser.loadRaml(settings.ramlFile, function(wrapper) {
+    return parser.loadRaml(settings.ramlFile, logger, function(wrapper) {
       var osprey, resources, templates, uriTemplateReader;
       resources = wrapper.getResources();
       templates = wrapper.getUriTemplates();
       uriTemplateReader = new UriTemplateReader(templates);
-      osprey = new Osprey(apiPath, context, settings);
+      osprey = new Osprey(apiPath, context, settings, logger);
       return context.use(osprey.validations(uriTemplateReader, resources));
     });
   };

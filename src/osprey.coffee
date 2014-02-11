@@ -1,13 +1,14 @@
 express = require 'express'
 path = require 'path'
 Validation = require './validation'
-logger = require './utils/logger'
 errorDefaultSettings = require './error-default-settings'
 
 class Osprey
   handlers: []
 
-  constructor: (@apiPath, @context, @settings) ->
+  constructor: (@apiPath, @context, @settings, @logger) ->
+    unless @settings?
+      @settings = {}
 
   register: (router, uriTemplateReader, resources) =>
     @settings.enableValidations = true unless @settings.enableValidations?
@@ -25,7 +26,7 @@ class Osprey
     if @settings.enableConsole
       @context.use "#{@apiPath}/console", express.static(path.join(__dirname, '/assets/console'))
       @context.get @apiPath, @ramlHandler(@settings.ramlFile)
-      logger.info 'Osprey::APIConsole has been initialized successfully'
+      @logger.info 'Osprey::APIConsole has been initialized successfully'
 
   ramlHandler: (ramlPath) ->
     return (req, res) ->
@@ -39,7 +40,7 @@ class Osprey
       router.resolveMethod handler
 
   route: (router, enableMocks) =>
-    logger.info 'Osprey::Router has been initialized successfully'
+    @logger.info 'Osprey::Router has been initialized successfully'
     (req, res, next) =>
       if req.path.indexOf(@apiPath) >= 0
         router.resolveMock req, res, next, @settings.enableMocks
@@ -47,7 +48,7 @@ class Osprey
         next()
 
   exceptionHandler: (settings) ->
-    logger.info 'Osprey::ExceptionHandler has been initialized successfully'
+    @logger.info 'Osprey::ExceptionHandler has been initialized successfully'
 
     for key,value of settings
       errorDefaultSettings[key] = value
@@ -61,7 +62,7 @@ class Osprey
         next()
 
   validations: (uriTemplateReader, resources) =>
-    logger.info 'Osprey::Validations has been initialized successfully'
+    @logger.info 'Osprey::Validations has been initialized successfully'
 
     (req, res, next) =>
       regex = new RegExp "^\\" + @apiPath + "(.*)"
