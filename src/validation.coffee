@@ -119,20 +119,24 @@ class Validation
     else
       true
 
-  validateString: (@reqParam, @ramlParam) =>
-    if ramlParam.pattern? and reqParam.match(ramlParam.pattern)
-      return false
+  validateString: (reqParam, ramlParam) ->
+    if ramlParam.pattern?
+      matcher = new RegExp ramlParam.pattern, 'ig'
+      unless matcher.test(reqParam)
+        return false
     if ramlParam.minLength? and reqParam.length < ramlParam.minLength
       return false
     if ramlParam.maxLength? and reqParam.length > ramlParam.maxLength
       return false
-    if ramlParam.enumeration? and not ramlParam.enumeration in ramlParam.enumeration
+    if ramlParam.enum? and not (reqParam in ramlParam.enum)
       return false
     true
 
   validateNumber: (@reqParam, @ramlParam) =>
-    try number = parseFloat reqParam
-    catch e then false
+    number = parseFloat reqParam
+
+    return false if isNaN(number)
+
     if ramlParam.minimum? and number < ramlParam.minimum
       return false
     if ramlParam.maximum? and number > ramlParam.maximum
@@ -140,8 +144,10 @@ class Validation
     true
 
   validateInt: (@reqParam, @ramlParam) =>
-    try number = parseInt reqParam
-    catch e then false
+    number = parseInt reqParam
+
+    return false if isNaN(number)
+
     if ramlParam.minimum? and number < ramlParam.minimum
       return false
     if ramlParam.maximum? and number > ramlParam.maximum

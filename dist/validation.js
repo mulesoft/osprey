@@ -28,7 +28,6 @@
       this.validateBoolean = __bind(this.validateBoolean, this);
       this.validateInt = __bind(this.validateInt, this);
       this.validateNumber = __bind(this.validateNumber, this);
-      this.validateString = __bind(this.validateString, this);
       this.validateType = __bind(this.validateType, this);
       this.validateRequired = __bind(this.validateRequired, this);
       this.isValid = __bind(this.isValid, this);
@@ -216,11 +215,12 @@
     };
 
     Validation.prototype.validateString = function(reqParam, ramlParam) {
-      var _ref;
-      this.reqParam = reqParam;
-      this.ramlParam = ramlParam;
-      if ((ramlParam.pattern != null) && reqParam.match(ramlParam.pattern)) {
-        return false;
+      var matcher;
+      if (ramlParam.pattern != null) {
+        matcher = new RegExp(ramlParam.pattern, 'ig');
+        if (!matcher.test(reqParam)) {
+          return false;
+        }
       }
       if ((ramlParam.minLength != null) && reqParam.length < ramlParam.minLength) {
         return false;
@@ -228,21 +228,19 @@
       if ((ramlParam.maxLength != null) && reqParam.length > ramlParam.maxLength) {
         return false;
       }
-      if ((ramlParam.enumeration != null) && (_ref = !ramlParam.enumeration, __indexOf.call(ramlParam.enumeration, _ref) >= 0)) {
+      if ((ramlParam["enum"] != null) && !(__indexOf.call(ramlParam["enum"], reqParam) >= 0)) {
         return false;
       }
       return true;
     };
 
     Validation.prototype.validateNumber = function(reqParam, ramlParam) {
-      var e, number;
+      var number;
       this.reqParam = reqParam;
       this.ramlParam = ramlParam;
-      try {
-        number = parseFloat(reqParam);
-      } catch (_error) {
-        e = _error;
-        false;
+      number = parseFloat(reqParam);
+      if (isNaN(number)) {
+        return false;
       }
       if ((ramlParam.minimum != null) && number < ramlParam.minimum) {
         return false;
@@ -254,14 +252,12 @@
     };
 
     Validation.prototype.validateInt = function(reqParam, ramlParam) {
-      var e, number;
+      var number;
       this.reqParam = reqParam;
       this.ramlParam = ramlParam;
-      try {
-        number = parseInt(reqParam);
-      } catch (_error) {
-        e = _error;
-        false;
+      number = parseInt(reqParam);
+      if (isNaN(number)) {
+        return false;
       }
       if ((ramlParam.minimum != null) && number < ramlParam.minimum) {
         return false;

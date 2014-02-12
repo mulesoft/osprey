@@ -42,11 +42,14 @@ class ResponseMock
 class RequestMock
   constructor: (@method, @url, @accept, @contentType) ->
     @accept = '*/*' unless @accept?
+    @headers = {}
   accepts: (mimetype) ->
     return true if @accept == '*/*'
     @accept == mimetype
   is: (mimetype) ->
     @contentType == mimetype
+  addHeader: (key, value) =>
+    @headers[key] = value
 
 class MiddlewareMock
   nextCounter: 0
