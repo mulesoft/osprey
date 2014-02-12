@@ -11,6 +11,8 @@ class HeadHandler extends OspreyBase
   constructor: (@apiPath, @context, @resources) ->
 
   resolve: (uriTemplate, handler) =>
+    template = "#{@apiPath}#{uriTemplate}"
+    
     @context.head template, (req, res) ->
       handler req, res
 

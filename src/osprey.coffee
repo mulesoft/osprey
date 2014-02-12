@@ -35,12 +35,12 @@ class Osprey
       else
         res.send 406
 
-  init: (router) =>
+  route: (router, enableMocks) =>
+    @logger.info 'Osprey::Router has been initialized successfully'
+
     for handler in @handlers
       router.resolveMethod handler
 
-  route: (router, enableMocks) =>
-    @logger.info 'Osprey::Router has been initialized successfully'
     (req, res, next) =>
       if req.path.indexOf(@apiPath) >= 0
         router.resolveMock req, res, next, @settings.enableMocks

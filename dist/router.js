@@ -1,5 +1,5 @@
 (function() {
-  var DeleteMethod, GetMethod, HeadMethod, OspreyBase, OspreyRouter, PatchMethod, PostMethod, PutMethod, logger,
+  var DeleteMethod, GetMethod, HeadMethod, OspreyBase, OspreyRouter, PatchMethod, PostMethod, PutMethod,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -18,16 +18,15 @@
 
   OspreyBase = require('./utils/base');
 
-  logger = require('./utils/logger');
-
   OspreyRouter = (function(_super) {
     __extends(OspreyRouter, _super);
 
-    function OspreyRouter(apiPath, context, resources, uriTemplateReader) {
+    function OspreyRouter(apiPath, context, resources, uriTemplateReader, logger) {
       this.apiPath = apiPath;
       this.context = context;
       this.resources = resources;
       this.uriTemplateReader = uriTemplateReader;
+      this.logger = logger;
       this.resolveMethod = __bind(this.resolveMethod, this);
       this.routerExists = __bind(this.routerExists, this);
       this.resolveMock = __bind(this.resolveMock, this);
@@ -88,11 +87,11 @@
       resourceExists = (_ref = this.resources[config.template]) != null ? (_ref1 = _ref.methods) != null ? _ref1.filter(function(info) {
         return info.method === config.method;
       }) : void 0 : void 0;
-      if (resourceExists != null) {
-        logger.debug("Overwritten resource - " + (config.method.toUpperCase()) + " " + config.template);
+      if ((resourceExists != null) && resourceExists.length > 0) {
+        this.logger.debug("Overwritten resource - " + (config.method.toUpperCase()) + " " + config.template);
         return this.methodHandlers[config.method].resolve(config.template, config.handler);
       } else {
-        return logger.error("Resource to overwrite does not exists - " + (config.method.toUpperCase()) + " " + config.template);
+        return this.logger.error("Resource to overwrite does not exists - " + (config.method.toUpperCase()) + " " + config.template);
       }
     };
 

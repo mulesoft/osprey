@@ -1,20 +1,41 @@
 #%RAML 0.8
 ---
-title: La Liga
+title: well-formed-example
 version: 1.0
 protocols: [ HTTP, HTTPS ]
 baseUri: http://localhost:3000/api
-/teams:
+securitySchemes:
+  - oauth_2_0:
+      type: OAuth 2.0
+      describedBy:
+          headers:
+              Authorization:
+                  type: string
+          queryParameters:
+              access_token:
+                  type: string
+          responses:
+              401:
+              403:
+      settings:
+        authorizationUri: https://www.dropbox.com/1/oauth2/authorize
+        accessTokenUri: https://api.dropbox.com/1/oauth2/token
+        authorizationGrants: [ code, token ]
+/resource:
   get:
-    description: Obtain information from a collection of teams simultaneously
-    queryParameters:
-      city:
-        description: |
-          Filter the list of teams by home city.
-        type: string
-        required: false
-        example: Barcelona
-    responses:
-      200:
-        body:
-          application/json:
+  post:
+  put:
+  delete:
+  head:
+  patch:
+  /{resourceId}:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                [{
+                  "id": "example"
+                }]
+/resource2:

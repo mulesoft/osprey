@@ -23,9 +23,8 @@
       resources = wrapper.getResources();
       templates = wrapper.getUriTemplates();
       uriTemplateReader = new UriTemplateReader(templates);
-      router = new OspreyRouter(apiPath, context, resources, uriTemplateReader);
-      osprey.register(router, uriTemplateReader, resources);
-      return osprey.init(router);
+      router = new OspreyRouter(apiPath, context, resources, uriTemplateReader, logger);
+      return osprey.register(router, uriTemplateReader, resources);
     });
     return osprey;
   };
@@ -39,9 +38,8 @@
       resources = wrapper.getResources();
       templates = wrapper.getUriTemplates();
       uriTemplateReader = new UriTemplateReader(templates);
-      router = new OspreyRouter(apiPath, context, resources, uriTemplateReader);
-      context.use(osprey.route(router, settings.enableMocks));
-      return osprey.init(router);
+      router = new OspreyRouter(apiPath, context, resources, uriTemplateReader, logger);
+      return context.use(osprey.route(router, settings.enableMocks));
     });
     return osprey;
   };

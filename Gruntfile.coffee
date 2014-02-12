@@ -84,7 +84,7 @@ module.exports = (grunt) ->
 
     watch:
       development:
-        files: ['src/**/*.coffee', 'test/**/*.coffee'],
+        files: ['src/**/*.coffee', 'test/**/*.coffee', 'test/**/*.raml'],
         tasks: ['coffeelint', 'mochaTest'],
         options:
           atBegin: true

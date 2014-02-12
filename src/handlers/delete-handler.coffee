@@ -11,6 +11,8 @@ class DeleteHandler extends OspreyBase
   constructor: (@apiPath, @context, @resources) ->
 
   resolve: (uriTemplate, handler) =>
+    template = "#{@apiPath}#{uriTemplate}"
+    
     @context.delete template, (req, res) ->
       handler req, res
 

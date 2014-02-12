@@ -42,8 +42,11 @@ api = osprey.create '/api', app,
 # api.get '/teams/:teamId', (req, res) ->
 #   res.send({ name: 'test' })
 
-app.get '/api/teams', (req, res) ->
+api.get '/teams', (req, res) ->
   throw new CustomError 'some exception'
+
+api.get '/teamss', (req, res) ->
+  res.send 200
 
 unless module.parent
   port = app.get('port')

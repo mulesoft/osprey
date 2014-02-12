@@ -4,7 +4,7 @@ Logger = require './mocks/logger'
 
 describe 'WRAPPER', ->
   before (done) ->
-    parser.loadRaml './test/assets/api.raml', new Logger, (wrapper) =>
+    parser.loadRaml './test/assets/well-formed.raml', new Logger, (wrapper) =>
       @parsedRaml = wrapper
       done()
 
@@ -14,45 +14,32 @@ describe 'WRAPPER', ->
       raml = @parsedRaml.getRaml()
 
       # Assert
-      raml.should.have.property 'title', 'La Liga'
+      raml.should.have.property 'title', 'well-formed-example'
       raml.should.have.property 'version', '1.0'
       raml.should.have.property 'baseUri', 'http://localhost:3000/api'
 
       done()
-    it 'Should contain 3 parent resources and 1st resources shoud have 2 methods', (done)->
-      # Act
-      raml = @parsedRaml.getRaml()
-
-      # Assert
-      raml.should.have.property('resources').with.a.lengthOf(3)
-      raml.resources[0].should.have.property('methods').with.a.lengthOf(2)
-
-      done()
 
   describe 'RESOURCES MAP', ->
-    it 'Should have 5 resources', (done) ->
+    it 'Should read resources as a map', (done) ->
       # Act
       resources = @parsedRaml.getResources()
 
       # Assert
       resources.should.be.an.instanceOf Object
-      resources.should.have.properties '/teams', '/teams/:teamId', '/positions',
-        '/fixture', '/fixture/:homeTeamId/:awayTeamId'
+      resources.should.have.properties '/resource'
 
       done()
 
   describe 'RESOURCES LIST', ->
-    it 'Should have 5 resources', (done) ->
+    it 'Should read resources as a list', (done) ->
       # Act
       resources = @parsedRaml.getResourcesList()
 
       # Assert
       resources.should.be.an.instanceOf Object
-      resources[0].should.have.property 'uri', '/teams/:teamId'
-      resources[1].should.have.property 'uri', '/teams'
-      resources[2].should.have.property 'uri', '/positions'
-      resources[3].should.have.property 'uri', '/fixture/:homeTeamId/:awayTeamId'
-      resources[4].should.have.property 'uri', '/fixture'
+      resources[0].should.have.property 'uri', '/resource/:resourceId'
+      resources[1].should.have.property 'uri', '/resource'
 
       done()
 

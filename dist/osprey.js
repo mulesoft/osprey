@@ -26,7 +26,6 @@
       this.get = __bind(this.get, this);
       this.validations = __bind(this.validations, this);
       this.route = __bind(this.route, this);
-      this.init = __bind(this.init, this);
       this.register = __bind(this.register, this);
       if (this.settings == null) {
         this.settings = {};
@@ -65,20 +64,15 @@
       };
     };
 
-    Osprey.prototype.init = function(router) {
-      var handler, _i, _len, _ref, _results;
+    Osprey.prototype.route = function(router, enableMocks) {
+      var handler, _i, _len, _ref,
+        _this = this;
+      this.logger.info('Osprey::Router has been initialized successfully');
       _ref = this.handlers;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         handler = _ref[_i];
-        _results.push(router.resolveMethod(handler));
+        router.resolveMethod(handler);
       }
-      return _results;
-    };
-
-    Osprey.prototype.route = function(router, enableMocks) {
-      var _this = this;
-      this.logger.info('Osprey::Router has been initialized successfully');
       return function(req, res, next) {
         if (req.path.indexOf(_this.apiPath) >= 0) {
           return router.resolveMock(req, res, next, _this.settings.enableMocks);

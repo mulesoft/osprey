@@ -16,10 +16,9 @@ exports.create = (apiPath, context, settings) ->
     resources = wrapper.getResources()
     templates = wrapper.getUriTemplates()
     uriTemplateReader = new UriTemplateReader templates
-    router = new OspreyRouter apiPath, context, resources, uriTemplateReader
+    router = new OspreyRouter apiPath, context, resources, uriTemplateReader, logger
 
     osprey.register router, uriTemplateReader, resources
-    osprey.init router
 
   osprey
 
@@ -32,10 +31,9 @@ exports.route = (apiPath, context, settings) ->
     resources = wrapper.getResources()
     templates = wrapper.getUriTemplates()
     uriTemplateReader = new UriTemplateReader templates
-    router = new OspreyRouter apiPath, context, resources, uriTemplateReader
+    router = new OspreyRouter apiPath, context, resources, uriTemplateReader, logger
 
     context.use osprey.route router, settings.enableMocks
-    osprey.init router
 
   osprey
 
