@@ -1,5 +1,5 @@
 (function() {
-  var InvalidBodyError, InvalidFormParameterError, InvalidHeaderError, InvalidQueryParameterError, InvalidUriParameterError, OspreyBase, SchemaValidator, Validation, logger,
+  var InvalidBodyError, InvalidFormParameterError, InvalidHeaderError, InvalidQueryParameterError, InvalidUriParameterError, OspreyBase, SchemaValidator, Validation, logger, moment,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -19,15 +19,14 @@
 
   InvalidBodyError = require('./errors/invalid-body-error');
 
+  moment = require('moment');
+
   Validation = (function() {
     function Validation(req, uriTemplateReader, resource, apiPath) {
       this.req = req;
       this.uriTemplateReader = uriTemplateReader;
       this.resource = resource;
       this.apiPath = apiPath;
-      this.validateBoolean = __bind(this.validateBoolean, this);
-      this.validateInt = __bind(this.validateInt, this);
-      this.validateNumber = __bind(this.validateNumber, this);
       this.validateType = __bind(this.validateType, this);
       this.validateRequired = __bind(this.validateRequired, this);
       this.isValid = __bind(this.isValid, this);
@@ -209,6 +208,8 @@
         return this.validateInt(reqParam, ramlParam);
       } else if ('boolean' === ramlParam.type) {
         return this.validateBoolean(reqParam);
+      } else if ('date' === ramlParam.type) {
+        return this.validateDate(reqParam);
       } else {
         return true;
       }
@@ -236,8 +237,6 @@
 
     Validation.prototype.validateNumber = function(reqParam, ramlParam) {
       var number;
-      this.reqParam = reqParam;
-      this.ramlParam = ramlParam;
       number = parseFloat(reqParam);
       if (isNaN(number)) {
         return false;
@@ -253,8 +252,6 @@
 
     Validation.prototype.validateInt = function(reqParam, ramlParam) {
       var number;
-      this.reqParam = reqParam;
-      this.ramlParam = ramlParam;
       number = parseInt(reqParam);
       if (isNaN(number)) {
         return false;
@@ -269,8 +266,11 @@
     };
 
     Validation.prototype.validateBoolean = function(reqParam) {
-      this.reqParam = reqParam;
       return "true" === reqParam || "false" === reqParam;
+    };
+
+    Validation.prototype.validateDate = function(reqParam) {
+      return moment(reqParam).isValid();
     };
 
     return Validation;

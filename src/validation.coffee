@@ -6,6 +6,7 @@ InvalidFormParameterError = require './errors/invalid-form-parameter-error'
 InvalidQueryParameterError = require './errors/invalid-query-parameter-error'
 InvalidHeaderError = require './errors/invalid-header-error'
 InvalidBodyError = require './errors/invalid-body-error'
+moment = require 'moment'
 
 class Validation
   constructor: (@req, @uriTemplateReader, @resource, @apiPath) ->
@@ -116,6 +117,8 @@ class Validation
       @validateInt reqParam, ramlParam
     else if 'boolean' == ramlParam.type
       @validateBoolean reqParam
+    else if 'date' == ramlParam.type
+      @validateDate reqParam
     else
       true
 
@@ -132,7 +135,7 @@ class Validation
       return false
     true
 
-  validateNumber: (@reqParam, @ramlParam) =>
+  validateNumber: (reqParam, ramlParam) ->
     number = parseFloat reqParam
 
     return false if isNaN(number)
@@ -143,7 +146,7 @@ class Validation
       return false
     true
 
-  validateInt: (@reqParam, @ramlParam) =>
+  validateInt: (reqParam, ramlParam) ->
     number = parseInt reqParam
 
     return false if isNaN(number)
@@ -154,7 +157,10 @@ class Validation
       return false
     true
 
-  validateBoolean: (@reqParam) =>
+  validateBoolean: (reqParam) ->
     "true" == reqParam or "false" == reqParam
+
+  validateDate: (reqParam) ->
+    moment(reqParam).isValid()
 
 module.exports = Validation

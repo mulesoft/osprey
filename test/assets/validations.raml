@@ -5,6 +5,21 @@ version: 1.0
 baseUri: http://localhost:3000/api
 /string:
   get:
+    queryParameters:
+      param:
+        type: string
+        minLength: 3
+        maxLength: 3
+  post:
+    queryParameters:
+      param:
+        type: string
+        enum: [AAA, BBB]
+  put:
+    queryParameters:
+      param:
+        type: string
+        pattern: '[a-z]'
   /{id}:
     uriParameters:
       id:
@@ -12,14 +27,12 @@ baseUri: http://localhost:3000/api
         minLength: 3
         maxLength: 3
 /stringWithEnum:
-  get:
   /{id}:
     uriParameters:
       id:
         type: string
         enum: [AAA, BBB]
 /stringWithPattern:
-  get:
   /{id}:
     uriParameters:
       id:
@@ -27,6 +40,11 @@ baseUri: http://localhost:3000/api
         pattern: '[a-z]'
 /integer:
   get:
+    queryParameters:
+      param:
+        type: integer
+        minimum: 10
+        maximum: 10
   /{id}:
     uriParameters:
       id:
@@ -35,12 +53,20 @@ baseUri: http://localhost:3000/api
         maximum: 10
 /integerType:
   get:
+    queryParameters:
+      param:
+        type: integer
   /{id}:
     uriParameters:
       id:
         type: integer
 /number:
   get:
+    queryParameters:
+      param:
+        type: number
+        minimum: 10
+        maximum: 10
   /{id}:
     uriParameters:
       id:
@@ -49,7 +75,28 @@ baseUri: http://localhost:3000/api
         maximum: 10
 /numberType:
   get:
+    queryParameters:
+      param:
+        type: number
   /{id}:
     uriParameters:
       id:
         type: number
+/boolean:
+  get:
+    queryParameters:
+      param:
+        type: boolean
+  /{id}:
+    uriParameters:
+      id:
+        type: boolean
+/date:
+  get:
+    queryParameters:
+      param:
+        type: date
+  /{id}:
+    uriParameters:
+      id:
+        type: date
