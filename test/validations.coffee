@@ -356,6 +356,34 @@ describe 'OSPREY VALIDATIONS', =>
       done()    
 
   describe 'QUERY PARAMETER VALIDATIONS', =>    
+    it 'Should be correctly validated if the parameter is present - STRING', (done) =>
+      # Arrange
+      resource = @resources['/string']
+      req = new Request 'DELETE', '/api/string?param=a'
+      validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+      req.addQueryParameter 'param', 'a'
+
+      # Assert
+      ( ->
+        validation.validate()
+      ).should.not.throw();
+
+      done()
+
+    it 'Should throw an exception if the parameter is not present - STRING', (done) =>
+      # Arrange
+      resource = @resources['/string']
+      req = new Request 'DELETE', '/api/string'
+      validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+      # Assert
+      ( ->
+        validation.validate()
+      ).should.throw();
+
+      done()
+
     it 'Should be correctly validated if min-length is valid - STRING', (done) =>
       # Arrange
       resource = @resources['/string']
@@ -478,6 +506,34 @@ describe 'OSPREY VALIDATIONS', =>
 
       done()  
 
+    it 'Should be correctly validated if the parameter is present - INTEGER', (done) =>
+      # Arrange
+      resource = @resources['/integer']
+      req = new Request 'DELETE', '/api/integer?param=1'
+      validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+      req.addQueryParameter 'param', '1'
+
+      # Assert
+      ( ->
+        validation.validate()
+      ).should.not.throw();
+
+      done()
+
+    it 'Should throw an exception if the parameter is not present - INTEGER', (done) =>
+      # Arrange
+      resource = @resources['/integer']
+      req = new Request 'DELETE', '/api/integer'
+      validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+      # Assert
+      ( ->
+        validation.validate()
+      ).should.throw();
+
+      done()
+
     it 'Should throw an exception if the value type is incorrect - INTEGER', (done) =>
       # Arrange
       resource = @resources['/integerType']
@@ -564,6 +620,34 @@ describe 'OSPREY VALIDATIONS', =>
       validation = new Validation req, @uriTemplateReader, resource, '/api'
 
       req.addQueryParameter 'param', '11'
+
+      # Assert
+      ( ->
+        validation.validate()
+      ).should.throw();
+
+      done()
+
+    it 'Should be correctly validated if the parameter is present - NUMBER', (done) =>
+      # Arrange
+      resource = @resources['/number']
+      req = new Request 'DELETE', '/api/number?param=1'
+      validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+      req.addQueryParameter 'param', '1'
+
+      # Assert
+      ( ->
+        validation.validate()
+      ).should.not.throw();
+
+      done()
+
+    it 'Should throw an exception if the parameter is not present - NUMBER', (done) =>
+      # Arrange
+      resource = @resources['/number']
+      req = new Request 'DELETE', '/api/number'
+      validation = new Validation req, @uriTemplateReader, resource, '/api'
 
       # Assert
       ( ->
@@ -666,6 +750,34 @@ describe 'OSPREY VALIDATIONS', =>
 
       done()
 
+    it 'Should be correctly validated if the parameter is present - BOOLEAN', (done) =>
+      # Arrange
+      resource = @resources['/boolean']
+      req = new Request 'DELETE', '/api/boolean?param=true'
+      validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+      req.addQueryParameter 'param', 'true'
+
+      # Assert
+      ( ->
+        validation.validate()
+      ).should.not.throw();
+
+      done()
+
+    it 'Should throw an exception if the parameter is not present - BOOLEAN', (done) =>
+      # Arrange
+      resource = @resources['/boolean']
+      req = new Request 'DELETE', '/api/boolean'
+      validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+      # Assert
+      ( ->
+        validation.validate()
+      ).should.throw();
+
+      done()
+
     it 'Should throw an exception if the value type is incorrect - BOOLEAN', (done) =>
       # Arrange
       resource = @resources['/boolean']
@@ -697,6 +809,34 @@ describe 'OSPREY VALIDATIONS', =>
       ).should.not.throw();
 
       done()    
+
+    it 'Should be correctly validated if the parameter is present - DATE', (done) =>
+      # Arrange
+      resource = @resources['/date']
+      req = new Request 'DELETE', '/api/date?param=Sun, 06 Nov 1994 08:49:37 GMT'
+      validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+      req.addQueryParameter 'param', 'Sun, 06 Nov 1994 08:49:37 GMT'
+
+      # Assert
+      ( ->
+        validation.validate()
+      ).should.not.throw();
+
+      done()
+
+    it 'Should throw an exception if the parameter is not present - DATE', (done) =>
+      # Arrange
+      resource = @resources['/date']
+      req = new Request 'DELETE', '/api/date'
+      validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+      # Assert
+      ( ->
+        validation.validate()
+      ).should.throw();
+
+      done()
 
     it 'Should throw an exception if the value type is incorrect - DATE', (done) =>
       # Arrange

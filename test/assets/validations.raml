@@ -20,6 +20,11 @@ baseUri: http://localhost:3000/api
       param:
         type: string
         pattern: '[a-z]'
+  delete:
+    queryParameters:
+      param:
+        type: string
+        required: true
   /{id}:
     uriParameters:
       id:
@@ -45,6 +50,11 @@ baseUri: http://localhost:3000/api
         type: integer
         minimum: 10
         maximum: 10
+  delete:
+    queryParameters:
+      param:
+        type: integer
+        required: true
   /{id}:
     uriParameters:
       id:
@@ -67,6 +77,11 @@ baseUri: http://localhost:3000/api
         type: number
         minimum: 10
         maximum: 10
+  delete:
+    queryParameters:
+      param:
+        type: number
+        required: true
   /{id}:
     uriParameters:
       id:
@@ -87,6 +102,11 @@ baseUri: http://localhost:3000/api
     queryParameters:
       param:
         type: boolean
+  delete:
+    queryParameters:
+      param:
+        type: boolean
+        required: true
   /{id}:
     uriParameters:
       id:
@@ -96,6 +116,11 @@ baseUri: http://localhost:3000/api
     queryParameters:
       param:
         type: date
+  delete:
+    queryParameters:
+      param:
+        type: date
+        required: true
   /{id}:
     uriParameters:
       id:
