@@ -21,7 +21,6 @@ class HttpUtils
 
     unless isValid
       throw new InvalidContentTypeError
-      # res.send 415
 
   negotiateAcceptType: (req, res, methodInfo, customHandler) ->
     statusCode = @readStatusCode(methodInfo)
@@ -37,7 +36,6 @@ class HttpUtils
 
     if not isValid && methodInfo.responses?[statusCode]?.body?
       throw new InvalidAcceptTypeError
-      # res.send 406
 
     if customHandler
       customHandler req, res

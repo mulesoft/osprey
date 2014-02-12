@@ -40,9 +40,13 @@ class ResponseMock
     @value = value
 
 class RequestMock
-  constructor: (@method, @url) ->
+  constructor: (@method, @url, @accept, @contentType) ->
+    @accept = '*/*' unless @accept?
   accepts: (mimetype) ->
-    true
+    return true if @accept == '*/*'
+    @accept == mimetype
+  is: (mimetype) ->
+    @contentType == mimetype
 
 class MiddlewareMock
   nextCounter: 0

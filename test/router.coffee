@@ -160,6 +160,87 @@ describe 'OSPREY ROUTER', =>
 
       done() 
 
+  describe 'CONTENT NEGOTIATION', =>  
+    it 'Should response with the correct mime type if the accept type is supported', (done) =>  
+      # Arrange
+      context = new Express
+      logger = new Logger
+      res = new Response
+      req = new Request 'GET', '/api/resource/1', 'application/xml'
+      router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, logger
+
+      # Act
+      router.resolveMock req, res, null, true
+
+      # Assert
+      res.key.should.be.eql 'Content-Type'
+      res.value.should.be.eql 'application/xml'
+
+      done() 
+
+    it 'Should response with the first defined mime type if the accept type is */*', (done) =>  
+      # Arrange
+      context = new Express
+      logger = new Logger
+      res = new Response
+      req = new Request 'GET', '/api/resource/1'
+      router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, logger
+
+      # Act
+      router.resolveMock req, res, null, true
+
+      # Assert
+      res.key.should.be.eql 'Content-Type'
+      res.value.should.be.eql 'application/json'
+
+      done() 
+
+    it 'Should throw an exception if the accept type is not supported', (done) =>  
+      # Arrange
+      context = new Express
+      logger = new Logger
+      res = new Response
+      req = new Request 'GET', '/api/resource/1', 'text/plain'
+      router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, logger
+
+      # Assert
+      ( ->
+        router.resolveMock req, res, null, true
+      ).should.throw();
+
+      done() 
+
+    it 'Should response 200 if the content type is supported', (done) =>  
+      # Arrange
+      context = new Express
+      logger = new Logger
+      res = new Response
+      req = new Request 'POST', '/api/resource', 'application/json', 'application/json'
+      router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, logger
+
+      # Act
+      router.resolveMock req, res, null, true
+
+      # Assert
+      res.response.should.be.eql 200
+
+      done() 
+
+    it 'Should throw an exception if the content type is not supported', (done) =>  
+      # Arrange
+      context = new Express
+      logger = new Logger
+      res = new Response
+      req = new Request 'POST', '/api/resource', 'text/plain'
+      router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, logger
+
+      # Assert
+      ( ->
+        router.resolveMock req, res, null, true
+      ).should.throw();
+
+      done() 
+
   describe 'LOGGING', =>  
     it 'Should make a log entry informing which resource was overwritten', (done) =>  
       # Arrange

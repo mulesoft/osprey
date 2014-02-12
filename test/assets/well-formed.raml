@@ -24,6 +24,15 @@ securitySchemes:
 /resource:
   get:
   post:
+    body:
+      application/json:
+        example: |
+          {
+            "name": "Barcelona",
+            "id": "BAR",
+            "homeCity": "Barcelona",
+            "stadium": "Camp Nou"
+          }
   put:
   delete:
   head:
@@ -38,4 +47,5 @@ securitySchemes:
                 [{
                   "id": "example"
                 }]
+            application/xml:
 /resource2:
