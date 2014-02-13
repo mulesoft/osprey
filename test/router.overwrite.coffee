@@ -8,7 +8,7 @@ Request = require('./mocks/server').request
 Middleware = require('./mocks/server').middleware
 Logger = require './mocks/logger'
 
-describe 'OSPREY ROUTER', =>
+describe 'OSPREY ROUTER - OVERWRITE', =>
   before (done) =>
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
@@ -16,54 +16,41 @@ describe 'OSPREY ROUTER', =>
       @uriTemplateReader = new UriTemplateReader templates
       done()
 
-  it 'Should return false if the resource was not registered on express', (done) =>        
+  it 'Should be able to overwrite a valid resource', (done) =>        
     # Arrange
     context = new Express
     router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, new Logger
 
     # Act
-    result = router.routerExists 'GET', '/resource'
+    router.resolveMethod method: 'get', template: '/resource', handler: null
 
     # Assert
-    result.should.be.eql false
+    context.getMethods[0].should.be.eql '/api/resource'
 
     done()
 
-  it 'Should return true if the resource already exists in express', (done) =>        
+  it 'Should not be able to overwrite a resource which does not exists in the RAML file', (done) =>        
     # Arrange
     context = new Express
-
-    context.routes = 
-      GET: [
-        regexp: /^\/resource\/?$/i
-      ]
-
     router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, new Logger
 
     # Act
-    result = router.routerExists 'GET', '/resource'
+    router.resolveMethod method: 'get', template: '/no-existing', handler: null
 
     # Assert
-    result.should.be.eql true
+    context.getMethods.length.should.be.eql 0
 
-    done()
+    done() 
 
-  it 'Should be able to resolve a resource with uri parameters', (done) =>        
+  it 'Should not fail if a resource does not have method defined', (done) =>        
     # Arrange
     context = new Express
-
-    context.routes = 
-      GET: [
-        regexp:  /^\/resource\/(?:([^\/]+?))\/?$/i
-      ]
-
     router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, new Logger
 
     # Act
-    result = router.routerExists 'GET', '/resource/1'
+    router.resolveMethod method: 'get', template: '/resource2', handler: null
 
     # Assert
-    result.should.be.eql true
+    context.getMethods.length.should.be.eql 0
 
-    done()
-
+    done()   

@@ -8,105 +8,102 @@ describe 'URI TEMPLATE READER', ->
       @uriTemplates = wrapper.getUriTemplates()
       done()
 
-  describe 'GENERATE URI MATCHERS', ->
-    it 'Should correctly generate uri matchers', (done) ->
-      # Arrange
-      uriTemplateReader = new UriTemplateReader @uriTemplates
+  it 'Should correctly generate uri matchers', (done) ->
+    # Arrange
+    uriTemplateReader = new UriTemplateReader @uriTemplates
 
-      # Act
-      result = uriTemplateReader.generateUriMatchers @uriTemplates
+    # Act
+    result = uriTemplateReader.generateUriMatchers @uriTemplates
 
-      # Assert
-      result.should.not.eql null
-      result.should.have.lengthOf 3
+    # Assert
+    result.should.not.eql null
+    result.should.have.lengthOf 3
 
-      done()
+    done()
 
-  describe 'GET URI TEMPLATE', ->
-    it 'Should correctly read an uri template', (done) ->
-      # Arrange
-      uriTemplateReader = new UriTemplateReader @uriTemplates
+  it 'Should correctly read an uri template', (done) ->
+    # Arrange
+    uriTemplateReader = new UriTemplateReader @uriTemplates
 
-      # Act
-      result = uriTemplateReader.getTemplateFor '/resource/1'
-      
-      # Assert
-      result.should.not.eql null
-      result.should.have.property 'uriTemplate', '/resource/:resourceId'
-      result.should.have.property 'regexp'
+    # Act
+    result = uriTemplateReader.getTemplateFor '/resource/1'
+    
+    # Assert
+    result.should.not.eql null
+    result.should.have.property 'uriTemplate', '/resource/:resourceId'
+    result.should.have.property 'regexp'
 
-      done()
+    done()
 
-    it 'Should read a null value if uri template does not exists', (done) ->
-      # Arrange
-      uriTemplateReader = new UriTemplateReader @uriTemplates
+  it 'Should read a null value if uri template does not exists', (done) ->
+    # Arrange
+    uriTemplateReader = new UriTemplateReader @uriTemplates
 
-      # Act
-      result = uriTemplateReader.getTemplateFor '/'
+    # Act
+    result = uriTemplateReader.getTemplateFor '/'
 
-      # Assert
-      should(result).eql null
+    # Assert
+    should(result).eql null
 
-      done()
+    done()
 
-    it 'Should read a null value if uri template is empty', (done) ->
-      # Arrange
-      uriTemplateReader = new UriTemplateReader @uriTemplates
+  it 'Should read a null value if uri template is empty', (done) ->
+    # Arrange
+    uriTemplateReader = new UriTemplateReader @uriTemplates
 
-      # Act
-      result = uriTemplateReader.getTemplateFor ''
+    # Act
+    result = uriTemplateReader.getTemplateFor ''
 
-      # Assert
-      should(result).eql null
+    # Assert
+    should(result).eql null
 
-      done()
+    done()
 
-  describe 'GET URI PARAMETERS', ->
-    it 'Should correctly read uri parameters for a given uri', (done) ->
-      # Arrange
-      uriTemplateReader = new UriTemplateReader @uriTemplates
+  it 'Should correctly read uri parameters for a given uri', (done) ->
+    # Arrange
+    uriTemplateReader = new UriTemplateReader @uriTemplates
 
-      # Act
-      result = uriTemplateReader.getUriParametersFor '/resource/1'
+    # Act
+    result = uriTemplateReader.getUriParametersFor '/resource/1'
 
-      # Assert
-      result.should.not.eql null
-      result.should.have.property 'resourceId', '1'
+    # Assert
+    result.should.not.eql null
+    result.should.have.property 'resourceId', '1'
 
-      done()
+    done()
 
-    it 'Should read a null value if uri does not have parameters', (done) ->
-      # Arrange
-      uriTemplateReader = new UriTemplateReader @uriTemplates
+  it 'Should read a null value if uri does not have parameters', (done) ->
+    # Arrange
+    uriTemplateReader = new UriTemplateReader @uriTemplates
 
-      # Act
-      result = uriTemplateReader.getUriParametersFor '/resource'
+    # Act
+    result = uriTemplateReader.getUriParametersFor '/resource'
 
-      # Assert
-      should(result).eql null
+    # Assert
+    should(result).eql null
 
-      done()
+    done()
 
-    it 'Should read a null value if uri does not exists', (done) ->
-      # Arrange
-      uriTemplateReader = new UriTemplateReader @uriTemplates
+  it 'Should read a null value if uri does not exists', (done) ->
+    # Arrange
+    uriTemplateReader = new UriTemplateReader @uriTemplates
 
-      # Act
-      result = uriTemplateReader.getUriParametersFor '/'
+    # Act
+    result = uriTemplateReader.getUriParametersFor '/'
 
-      # Assert
-      should(result).eql null
+    # Assert
+    should(result).eql null
 
-      done()
+    done()
 
-    it 'Should read a null value if uri is empty', (done) ->
-      # Arrange
-      uriTemplateReader = new UriTemplateReader @uriTemplates
+  it 'Should read a null value if uri is empty', (done) ->
+    # Arrange
+    uriTemplateReader = new UriTemplateReader @uriTemplates
 
-      # Act
-      result = uriTemplateReader.getUriParametersFor ''
+    # Act
+    result = uriTemplateReader.getUriParametersFor ''
 
-      # Assert
-      should(result).eql null
+    # Assert
+    should(result).eql null
 
-      done()
+    done()
