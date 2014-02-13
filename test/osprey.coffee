@@ -26,7 +26,7 @@ describe 'OSPREY', =>
       osprey.register @router, @uriTemplateReader, @resources
 
       # Assert
-      context.middlewares.should.have.lengthOf 3
+      context.middlewares.should.have.lengthOf 2
 
       done()
 
@@ -70,7 +70,7 @@ describe 'OSPREY', =>
       osprey.register @router, @uriTemplateReader, @resources
 
       # Assert
-      context.middlewares.should.have.lengthOf 3
+      context.middlewares.should.have.lengthOf 2
 
       done()
 
@@ -83,7 +83,7 @@ describe 'OSPREY', =>
       osprey.register @router, @uriTemplateReader, @resources
 
       # Assert
-      context.middlewares.should.have.lengthOf 3
+      context.middlewares.should.have.lengthOf 2
 
       done()
 

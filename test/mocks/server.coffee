@@ -1,6 +1,7 @@
 class ExpressMock
   constructor: ->
     @middlewares = []
+    @allHandlers = []
     @routes = {}
     @getMethods = []
     @postMethods = []
@@ -11,6 +12,9 @@ class ExpressMock
     
   use: (content) =>
     @middlewares.push content
+
+  all: (content) =>
+    @allHandlers.push content
 
   get: (content) =>
     @getMethods.push content

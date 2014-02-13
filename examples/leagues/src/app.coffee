@@ -12,24 +12,10 @@ app.use express.logger('dev')
 
 app.set 'port', process.env.PORT || 3000
 
-# Osprey Validations
-# osprey.validations '/api', app,
-#   ramlFile: path.join(__dirname, '/assets/raml/api.raml')
-
-# Osprey Router
-# router = osprey.route '/api', app,
-#   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
-#   enableMocks: true
-
-# Osprey Exception Handler
-# osprey.exceptionHandler '/api', app,
-#   CustomError: (err, req, res) ->
-#     console.log 'Custom Error'
-#     res.send 400
-
 api = osprey.create '/api', app,
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   logLevel: 'debug',
+  enableMocks: true
   exceptionHandler:
     InvalidUriParameterError: (err, req, res) ->
       console.log 'Overwriting default implementation'
@@ -39,8 +25,8 @@ api = osprey.create '/api', app,
       res.send 400
 
 # Example:
-# api.get '/teams/:teamId', (req, res) ->
-#   res.send({ name: 'test' })
+api.get '/teams/:teamId', (req, res) ->
+  res.send({ name: 'test' })
 
 api.get '/teams', (req, res) ->
   throw new CustomError 'some exception'

@@ -14,7 +14,7 @@ class Osprey
     @settings.enableValidations = true unless @settings.enableValidations?
     
     if @settings.enableValidations
-      @context.use @validations(uriTemplateReader, resources)
+      @context.all '*', @validations(uriTemplateReader, resources)
 
     @context.use @exceptionHandler(@settings.exceptionHandler)
 
