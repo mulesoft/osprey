@@ -19,7 +19,6 @@ class Validation
     if method?
       @validateQueryParams method
 
-      #TODO: Fix headers validation. Currently is not working due to the headers are being defined under the http status code
       @validateHeaders method
       
       @validateFormParams method

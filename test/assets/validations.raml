@@ -31,6 +31,28 @@ baseUri: http://localhost:3000/api
         type: string
         minLength: 3
         maxLength: 3
+/stringWithHeaders:
+  get:
+    headers:
+      Header:
+        type: string
+        minLength: 3
+        maxLength: 3
+  post:
+    headers:
+      Header:
+        type: string
+        enum: [AAA, BBB]
+  put:
+    headers:
+      Header:
+        type: string
+        pattern: '[a-z]'
+  delete:
+    headers:
+      Header:
+        type: string
+        required: true
 /stringWithEnum:
   /{id}:
     uriParameters:
@@ -50,6 +72,12 @@ baseUri: http://localhost:3000/api
         type: integer
         minimum: 10
         maximum: 10
+  post:
+    headers:
+      Header:
+        type: integer
+        minimum: 10
+        maximum: 10
   delete:
     queryParameters:
       param:
@@ -65,6 +93,10 @@ baseUri: http://localhost:3000/api
   get:
     queryParameters:
       param:
+        type: integer
+  post:
+    headers:
+      Header:
         type: integer
   /{id}:
     uriParameters:
@@ -88,10 +120,26 @@ baseUri: http://localhost:3000/api
         type: number
         minimum: 10
         maximum: 10
+/numberWithHeaders:
+  get:
+    headers:
+      Header:
+        type: number
+        minimum: 10
+        maximum: 10
+  delete:
+    headers:
+      Header:
+        type: number
+        required: true      
 /numberType:
   get:
     queryParameters:
       param:
+        type: number
+  post:
+    headers:
+      Header:
         type: number
   /{id}:
     uriParameters:
@@ -102,6 +150,11 @@ baseUri: http://localhost:3000/api
     queryParameters:
       param:
         type: boolean
+  post:
+    headers:
+      Header:
+        type: boolean
+        required: true
   delete:
     queryParameters:
       param:
@@ -116,6 +169,11 @@ baseUri: http://localhost:3000/api
     queryParameters:
       param:
         type: date
+  post:
+    headers:
+      Header:
+        type: date
+        required: true
   delete:
     queryParameters:
       param:
