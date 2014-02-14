@@ -24,11 +24,16 @@ module.exports = (grunt) ->
           level: 'ignore'
 
     mochaTest:
-      test:
+      spec:
         options:
-          reporter: 'spec',
+          reporter: 'spec'
           require: 'coffee-script'
-        src: ['test/**/*.coffee']
+        src: ['test/spec/**/*.coffee']
+      integration:
+        options:
+          reporter: 'spec'
+          require: 'coffee-script'
+        src: ['test/integration/**/test.coffee']
 
     clean:
       build: ['dist']
@@ -88,10 +93,16 @@ module.exports = (grunt) ->
         tasks: ['coffeelint', 'mochaTest'],
         options:
           atBegin: true
+      integration:
+        files: ['src/**/*.coffee', 'test/integration/**/test.coffee', 'test/**/*.raml'],
+        tasks: ['coffeelint', 'mochaTest:integration'],
+        options:
+          atBegin: true
   )
 
   require('load-grunt-tasks') grunt
 
   #TODO: Add https://github.com/vojtajina/grunt-npm for npm publishing
-  grunt.registerTask 'default', ['clean:build', 'watch']
+  grunt.registerTask 'default', ['clean:build', 'watch:development']
+  grunt.registerTask 'integration', ['clean:build', 'watch:integration']
   grunt.registerTask 'release', ['clean', 'bower:install', 'coffeelint', 'coffee', 'mochaTest', 'copy', 'clean:bower']

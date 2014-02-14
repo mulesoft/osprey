@@ -1,0 +1,56 @@
+#%RAML 0.8
+---
+title: scenario-1
+version: 1.0
+baseUri: http://localhost:3001/api
+/resources:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            example: |
+              [{
+                "id": "1",
+                "description": "description"
+              },
+              {
+                "id": "2",
+                "description": "description"
+              }]
+  post:
+    body:
+      application/json:
+    responses:
+      201:
+        body:
+          application/json:
+            example: |
+              {
+                "description": "description"
+              }
+  put:
+    body:
+      application/json:
+    responses:
+      204:
+        body:
+          application/json:
+            example: |
+              {
+                "description": "description"
+              }
+  delete:
+    responses:
+      204:
+  /{id}:
+    get: 
+      responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "id": "1",
+                  "description": "description"
+                }

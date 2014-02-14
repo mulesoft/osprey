@@ -4,7 +4,7 @@ Logger = require '../mocks/logger'
 
 describe 'WRAPPER', ->
   before (done) ->
-    parser.loadRaml './test/assets/well-formed.raml', new Logger, (wrapper) =>
+    parser.loadRaml './test/assets/well-formed.raml', (wrapper) =>
       @parsedRaml = wrapper
       done()
 

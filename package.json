@@ -11,12 +11,10 @@
   "bugs": {
     "url": "https://github.com/mulesoft/osprey/issues"
   },
-  "licenses": [
-    {
-      "type": "Apache 2.0",
-      "url": "https://github.com/mulesoft/osprey/blob/master/LICENSE"
-    }
-  ],
+  "licenses": [{
+    "type": "Apache 2.0",
+    "url": "https://github.com/mulesoft/osprey/blob/master/LICENSE"
+  }],
   "main": "dist/lib.js",
   "devDependencies": {
     "grunt": "~0.4.2",
@@ -30,7 +28,8 @@
     "load-grunt-tasks": "~0.2.1",
     "mocha": "1.15.1",
     "should": "2.1.1",
-    "grunt-bower-task": "~0.3.4"
+    "grunt-bower-task": "~0.3.4",
+    "supertest": "~0.9.0"
   },
   "dependencies": {
     "raml-parser": "0.8.4",

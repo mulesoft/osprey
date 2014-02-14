@@ -1,0 +1,7 @@
+{
+  "name": "integration-tests",
+  "private": true,
+  "devDependencies": {
+    "osprey": "git+ssh://git@github.com:mulesoft/osprey.git"
+  }
+}
