@@ -1,0 +1,51 @@
+#%RAML 0.8
+---
+title: validations-query-parameters
+version: 1.0
+baseUri: http://localhost:3000/api
+/string:
+  get:
+    queryParameters:
+      param:
+        type: string
+        required: true
+        minLength: 3
+        maxLength: 3
+  /enum:
+    get:
+      queryParameters:
+        param:
+          type: string
+          enum: [AAA, BBB]
+  /pattern:
+    get:
+      queryParameters:
+        param:
+          type: string
+          pattern: '[a-z]'    
+/integer:
+  get:
+    queryParameters:
+      param:
+        type: integer
+        minimum: 10
+        maximum: 10
+/number:
+  get:
+    queryParameters:
+      param:
+        type: number
+        minimum: 10
+        maximum: 10
+/boolean:
+  get:
+    queryParameters:
+      param:
+        type: boolean
+        required: true
+/date:
+  get:
+    queryParameters:
+      param:
+        type: date
+        required: true
