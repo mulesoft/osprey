@@ -48,6 +48,7 @@ class RequestMock
     @accept = '*/*' unless @accept?
     @headers = {}
     @query = {}
+    @body = {}
   accepts: (mimetype) ->
     return true if @accept == '*/*'
     @accept == mimetype
@@ -57,6 +58,8 @@ class RequestMock
     @headers[key] = value
   addQueryParameter: (key, value) =>
     @query[key] = value
+  addBodyParameter: (key, value) =>
+    @body[key] = value
 
 class MiddlewareMock
   nextCounter: 0

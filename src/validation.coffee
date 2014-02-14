@@ -18,11 +18,11 @@ class Validation
 
     if method?
       @validateQueryParams method
-
+      
       @validateHeaders method
       
       @validateFormParams method
-
+      
       unless @validateSchema method
         #TODO: Add schema error context!
         throw new InvalidBodyError {}
@@ -32,7 +32,7 @@ class Validation
 
   isJson: () =>
     # TODO: Fixme. If any content-type is defined it should be defaulted to the first content-type defined in the raml file
-    @req.headers['content-type'] == 'application/json' or @req.headers['content-type'].endsWith '+json'
+    @req.headers['content-type'] == 'application/json' or @req.headers['content-type'].match '\\+json$'
 
   validateSchema: (@method) =>
     if method.body? and @isJson()
@@ -76,7 +76,11 @@ class Validation
 
   validateFormParams: (method) =>
     if @isForm()
-      for key, ramlFormParameter of method.body.formParameters
+      formParameters = method.body['multipart/form-data']
+      formParameters = method.body['application/x-www-form-urlencoded'] unless formParameters?
+      formParameters = formParameters.formParameters
+
+      for key, ramlFormParameter of formParameters
         reqFormParam = @req.body[key]
         if not @isValid reqFormParam, ramlFormParameter
           logger.error "Invalid Form Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqFormParam}"

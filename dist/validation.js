@@ -61,7 +61,7 @@
     };
 
     Validation.prototype.isJson = function() {
-      return this.req.headers['content-type'] === 'application/json' || this.req.headers['content-type'].endsWith('+json');
+      return this.req.headers['content-type'] === 'application/json' || this.req.headers['content-type'].match('\\+json$');
     };
 
     Validation.prototype.validateSchema = function(method) {
@@ -126,12 +126,16 @@
     };
 
     Validation.prototype.validateFormParams = function(method) {
-      var key, ramlFormParameter, reqFormParam, _ref, _results;
+      var formParameters, key, ramlFormParameter, reqFormParam, _results;
       if (this.isForm()) {
-        _ref = method.body.formParameters;
+        formParameters = method.body['multipart/form-data'];
+        if (formParameters == null) {
+          formParameters = method.body['application/x-www-form-urlencoded'];
+        }
+        formParameters = formParameters.formParameters;
         _results = [];
-        for (key in _ref) {
-          ramlFormParameter = _ref[key];
+        for (key in formParameters) {
+          ramlFormParameter = formParameters[key];
           reqFormParam = this.req.body[key];
           if (!this.isValid(reqFormParam, ramlFormParameter)) {
             logger.error("Invalid Form Parameter :" + key + " - Request: " + this.req.url + ", Parameter value: " + reqFormParam);
