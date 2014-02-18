@@ -20,6 +20,7 @@
 
     MockGetHandler.prototype.resolve = function(req, res, methodInfo) {
       logger.debug("Mock resolved - GET " + req.url);
+      this.setDefaultHeaders(res, methodInfo);
       return this.negotiateAcceptType(req, res, methodInfo);
     };
 

@@ -5,6 +5,7 @@ logger = require '../utils/logger'
 class MockPatchHandler extends HttpUtils
   resolve: (req, res, methodInfo) ->
     logger.debug "Mock resolved - PATCH #{req.url}"
+    @setDefaultHeaders res, methodInfo
     @negotiateContentType req, res, methodInfo
     @negotiateAcceptType req, res, methodInfo
 

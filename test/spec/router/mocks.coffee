@@ -28,7 +28,7 @@ describe 'OSPREY ROUTER - MOCKS', =>
     router.resolveMock req, res, null, true
 
     # Assert
-    res.response.should.be.eql 200
+    res.status.should.be.eql 200
 
     done() 
 

@@ -20,6 +20,7 @@
 
     MockHeadHandler.prototype.resolve = function(req, res, methodInfo) {
       logger.debug("Mock resolved - HEAD " + req.url);
+      this.setDefaultHeaders(res, methodInfo);
       return res.send(this.readStatusCode(methodInfo));
     };
 

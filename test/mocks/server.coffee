@@ -42,6 +42,9 @@ class ResponseMock
   set: (key, value) ->
     @key = key
     @value = value
+  status: (status) ->
+    @status = status
+    this
 
 class RequestMock
   constructor: (@method, @url, @accept, @contentType) ->

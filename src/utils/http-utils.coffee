@@ -11,6 +11,12 @@ class HttpUtils
 
     Number statusCode
 
+  setDefaultHeaders: (res, methodInfo) ->
+    statusCode = @readStatusCode methodInfo
+    for name, value of methodInfo.responses?[statusCode]?.headers
+      if value.default?
+        res.set name, value.default
+
   negotiateContentType: (req, res, methodInfo) ->
     isValid = false
 
@@ -25,7 +31,7 @@ class HttpUtils
   negotiateAcceptType: (req, res, methodInfo, customHandler) ->
     statusCode = @readStatusCode(methodInfo)
     isValid = false
-    response = null
+    response = {}
 
     for mimeType of methodInfo.responses?[statusCode]?.body
       if req.accepts(mimeType)
@@ -40,6 +46,6 @@ class HttpUtils
     if customHandler
       customHandler req, res
     else
-      res.send(response || statusCode)
+      res.status(statusCode).send(response)
 
 module.exports = HttpUtils

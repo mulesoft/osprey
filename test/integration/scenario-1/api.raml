@@ -7,6 +7,9 @@ baseUri: http://localhost:3001/api
   get:
     responses:
       200:
+        headers:
+          header:
+            default: GET
         body:
           application/json:
             example: |
@@ -18,35 +21,55 @@ baseUri: http://localhost:3001/api
                 "id": "2",
                 "description": "description"
               }]
+      500:
   post:
     body:
       application/json:
     responses:
       201:
+        headers:
+          header:
+            default: POST
         body:
           application/json:
             example: |
               {
                 "description": "description"
               }
+      500:
   put:
     body:
       application/json:
     responses:
       204:
-        body:
-          application/json:
-            example: |
-              {
-                "description": "description"
-              }
-  delete:
+        headers:
+          header:
+            default: PUT
+      500:
+  head:
     responses:
       204:
+        headers:
+          header:
+            default: HEAD
+          header2:
+      500:
+  patch:
+    body:
+      application/json:
+    responses:
+      204:
+        headers:
+          header:
+            default: PATCH
+      500:
   /{id}:
     get: 
       responses:
         200:
+          headers:
+            header:
+              default: GET
           body:
             application/json:
               example: |
@@ -54,3 +77,17 @@ baseUri: http://localhost:3001/api
                   "id": "1",
                   "description": "description"
                 }
+        500:
+    delete:
+      responses:
+        204:
+          headers:
+            header:
+              default: DELETE
+    head:
+      responses:
+        204:
+          headers:
+            header:
+              default: HEAD
+        500:

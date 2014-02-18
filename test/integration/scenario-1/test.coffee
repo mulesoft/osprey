@@ -6,77 +6,251 @@ app.listen 8000
 apiPath = 'http://localhost:8000/api'
 
 describe 'SCENARIO 1 - RAML BASED MOCKS', ->
-  describe 'GET /resources', ->
-    it 'Should support GET', (done) ->
-      request(apiPath)
-        .get('/resources')
-        .set('Accept', 'application/json')
-        .end((err, res) ->
-          # HTTP
-          res.headers['content-type'].should.be.eql 'application/json'
-          res.status.should.be.eql 200
+  describe 'ROOT RESOURCE', ->
+    describe 'GET /resources', ->
+      it 'Should use the first status code defined in RAML (200)', (done) ->
+        request(apiPath)
+          .get('/resources')
+          .set('Accept', 'application/json')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 200
 
-          # DATA
-          res.body.should.have.lengthOf 2
-          res.body[0].id.should.eql 1
-          res.body[0].description.should.eql 'description'
-          res.body[1].id.should.eql 2
-          res.body[1].description.should.eql 'description'
+            done()
+          )
 
-          done()
-        )
+      it 'Should response with the example defined in RAML', (done) ->
+        request(apiPath)
+          .get('/resources')
+          .set('Accept', 'application/json')
+          .end((err, res) ->
+            # Assert
+            res.body.should.have.lengthOf 2
+            res.body[0].id.should.eql 1
+            res.body[0].description.should.eql 'description'
+            res.body[1].id.should.eql 2
+            res.body[1].description.should.eql 'description'
 
-    it 'Should support POST', (done) ->
-      request(apiPath)
-        .post('/resources')
-        .end((err, res) ->
-          # HTTP
-          res.headers['content-type'].should.be.eql 'application/json'
-          res.status.should.be.eql 200 # It should be 201
+            done()
+          )
 
-          # DATA
-          res.body.description.should.eql 'description'
-        
-          done()
-        )
+      it 'Should have response headers if they have default values in RAML', (done) ->
+        request(apiPath)
+          .get('/resources')
+          .set('Accept', 'application/json')
+          .end((err, res) ->
+            # Assert
+            res.headers['header'] .should.be.eql 'GET'
 
-    it 'Should support PUT', (done) ->
-      request(apiPath)
-        .put('/resources')
-        .end((err, res) ->
-          # HTTP
-          res.headers['content-type'].should.be.eql 'application/json'
-          res.status.should.be.eql 200 # It should be 204
+            done()
+          )
 
-          # DATA
-          res.body.description.should.eql 'description'
-        
-          done()
-        )
+      it 'Should return application/json as a content-type', (done) ->
+        request(apiPath)
+          .get('/resources')
+          .set('Accept', 'application/json')
+          .end((err, res) ->
+            # Assert
+            res.headers['content-type'].should.be.eql 'application/json'
 
-    it 'Should support DELETE', (done) ->
-      request(apiPath)
-        .del('/resources')
-        .end((err, res) ->
-          # HTTP
-          res.status.should.be.eql 204
-        
-          done()
-        )
+            done()
+          )
 
-  describe 'GET /resources/:id', ->
-    it 'respond with json', (done) ->
-      request(apiPath)
-        .get('/resources/1')
-        .set('Accept', 'application/json')
-        .end((err, res) ->
-          # HTTP
-          res.headers['content-type'].should.be.eql 'application/json'
-          res.status.should.be.eql 200
+    describe 'POST /resources', ->
+      it 'Should use the first status code defined in RAML (201)', (done) ->
+        request(apiPath)
+          .post('/resources')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 201
+            res.body.description.should.eql 'description'
+          
+            done()
+          )
 
-          # DATA
-          res.body.id.should.eql 1
-          res.body.description.should.eql 'description'
+      it 'Should response with the example defined in RAML', (done) ->
+        request(apiPath)
+          .post('/resources')
+          .end((err, res) ->
+            # Assert
+            res.body.description.should.eql 'description'
+          
+            done()
+          )
 
-          done()
-        )
+      it 'Should have response headers if they have default values in RAML', (done) ->
+        request(apiPath)
+          .post('/resources')
+          .end((err, res) ->
+            # Assert
+            res.headers['header'] .should.be.eql 'POST'
+          
+            done()
+          )
+
+      it 'Should return application/json as a content-type', (done) ->
+        request(apiPath)
+          .post('/resources')
+          .end((err, res) ->
+            # Assert
+            res.headers['content-type'].should.be.eql 'application/json'
+          
+            done()
+          )
+
+    describe 'PUT /resources', ->
+      it 'Should use the first status code defined in RAML (204)', (done) ->
+        request(apiPath)
+          .put('/resources')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 204
+            res.body.should.eql {}
+          
+            done()
+          )
+
+      it 'Should have response headers if they have default values in RAML', (done) ->
+        request(apiPath)
+          .put('/resources')
+          .end((err, res) ->
+            # Assert
+            res.headers['header'] .should.be.eql 'PUT'
+            res.body.should.eql {}
+          
+            done()
+          )
+
+    describe 'HEAD /resources', ->
+      it 'Should use the first status code defined in RAML (204)', (done) ->
+        request(apiPath)
+          .head('/resources')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 204
+
+            done()
+          )
+
+      it 'Should have response headers if they have default values in RAML', (done) ->
+        request(apiPath)
+          .head('/resources')
+          .end((err, res) ->
+            # Assert
+            res.headers['header'] .should.be.eql 'HEAD'
+
+            done()
+          )
+
+    describe 'PATCH /resources', ->
+      it 'Should use the first status code defined in RAML (204)', (done) ->
+        request(apiPath)
+          .patch('/resources')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 204
+            res.body.should.eql {}
+          
+            done()
+          )
+
+      it 'Should have response headers if they have default values in RAML', (done) ->
+        request(apiPath)
+          .patch('/resources')
+          .end((err, res) ->
+            # Assert
+            res.headers['header'] .should.be.eql 'PATCH'
+            res.body.should.eql {}
+          
+            done()
+          )
+
+  describe 'NESTED RESOURCE', ->
+    describe 'GET /resources/:id', ->
+      it 'Should use the first status code defined in RAML (200)', (done) ->
+        request(apiPath)
+          .get('/resources/1')
+          .set('Accept', 'application/json')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 200
+
+            done()
+          )
+
+      it 'Should response with the example defined in RAML', (done) ->
+        request(apiPath)
+          .get('/resources/1')
+          .set('Accept', 'application/json')
+          .end((err, res) ->
+            # Assert
+            res.body.id.should.eql 1
+            res.body.description.should.eql 'description'
+
+            done()
+          )
+
+      it 'Should have response headers if they have default values in RAML', (done) ->
+        request(apiPath)
+          .get('/resources/1')
+          .set('Accept', 'application/json')
+          .end((err, res) ->
+            # Assert
+            res.headers['header'] .should.be.eql 'GET'
+
+            done()
+          )
+
+      it 'Should return application/json as a content-type', (done) ->
+        request(apiPath)
+          .get('/resources/1')
+          .set('Accept', 'application/json')
+          .end((err, res) ->
+            # Assert
+            res.headers['content-type'].should.be.eql 'application/json'
+
+            done()
+          )
+
+    describe 'DELETE /resources/:id', ->
+      it 'Should use the first status code defined in RAML (204)', (done) ->
+        request(apiPath)
+          .del('/resources/1')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 204
+          
+            done()
+          )
+
+      it 'Should have response headers if they have default values in RAML', (done) ->
+        request(apiPath)
+          .del('/resources/1')
+          .end((err, res) ->
+            # Assert
+            res.headers['header'] .should.be.eql 'DELETE'
+          
+            done()
+          )
+
+    describe 'HEAD /resources/:id', ->
+      it 'Should use the first status code defined in RAML (204)', (done) ->
+        request(apiPath)
+          .head('/resources/1')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 204
+            res.headers['header'] .should.be.eql 'HEAD'
+
+            done()
+          )
+
+      it 'Should have response headers if they have default values in RAML', (done) ->
+        request(apiPath)
+          .head('/resources/1')
+          .end((err, res) ->
+            # Assert
+            res.headers['header'] .should.be.eql 'HEAD'
+
+            done()
+          )

@@ -20,6 +20,7 @@
 
     MockPatchHandler.prototype.resolve = function(req, res, methodInfo) {
       logger.debug("Mock resolved - PATCH " + req.url);
+      this.setDefaultHeaders(res, methodInfo);
       this.negotiateContentType(req, res, methodInfo);
       return this.negotiateAcceptType(req, res, methodInfo);
     };

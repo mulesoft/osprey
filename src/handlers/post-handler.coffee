@@ -5,6 +5,7 @@ logger = require '../utils/logger'
 class MockPostHandler extends HttpUtils
   resolve: (req, res, methodInfo) ->
     logger.debug "Mock resolved - POST #{req.url}"
+    @setDefaultHeaders res, methodInfo
     @negotiateContentType req, res, methodInfo
     @negotiateAcceptType req, res, methodInfo
 
