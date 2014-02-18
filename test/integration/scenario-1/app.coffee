@@ -1,6 +1,6 @@
 express = require 'express'
 path = require 'path'
-osprey = require 'osprey'
+osprey = require '../../../src/lib'
 
 app = express()
 

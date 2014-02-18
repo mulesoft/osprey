@@ -5,7 +5,7 @@ app = require './app'
 app.listen 8000
 apiPath = 'http://localhost:8000/api'
 
-describe 'SCENARIO 1', ->
+describe 'SCENARIO 1 - RAML BASED MOCKS', ->
   describe 'GET /resources', ->
     it 'Should support GET', (done) ->
       request(apiPath)
