@@ -7,7 +7,6 @@
       return res.send(415);
     },
     InvalidUriParameterError: function(err, req, res) {
-      console.log(err);
       return res.send(400);
     },
     InvalidFormParameterError: function(err, req, res) {

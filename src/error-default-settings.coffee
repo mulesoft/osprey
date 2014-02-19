@@ -6,7 +6,6 @@ module.exports =
     res.send 415
 
   InvalidUriParameterError: (err, req, res) ->
-    console.log err
     res.send 400
 
   InvalidFormParameterError: (err, req, res) ->

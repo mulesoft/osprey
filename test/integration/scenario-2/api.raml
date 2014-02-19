@@ -1,35 +1,16 @@
 #%RAML 0.8
 ---
-title: scenario-1
+title: scenario-2
 version: 1.0
-baseUri: http://localhost:3001/api
+baseUri: http://localhost:8000/api
 /resources:
   get:
     queryParameters:
       param:
         type: string
         required: true
-    responses:
-      200:
-        body:
-          application/json:
-            example: |
-              [{
-                "id": "1",
-                "description": "GET"
-              },
-              {
-                "id": "2",
-                "description": "GET"
-              }]
   post:
     body:
-      application/json:
-        example: |
-          {
-            "id": "1",
-            "description": "POST"
-          }
       application/x-www-form-urlencoded:
         formParameters:
           param:
@@ -37,47 +18,15 @@ baseUri: http://localhost:3001/api
             required: true
             minLength: 3
             maxLength: 3
-    responses:
-      201:
-        body:
-          application/json:
-            example: |
-              {
-                "description": "POST"
-              }
   put:
     headers:
       header:
         type: string
         enum: [a, b]
-    body:
-      application/json:
-        example: |
-          {
-            "description": "PUT"
-          }
-    responses:
-      204:
-  delete:
-    responses:
-      204:
   /{id}:
     uriParameters:
       id:
         type: number
         minimum: 10
         maximum: 10
-    get: 
-      responses:
-        200:
-          body:
-            application/json:
-              example: |
-                [{
-                  "id": "1",
-                  "description": "GET"
-                },
-                {
-                  "id": "2",
-                  "description": "GET"
-                }]
+    get:
