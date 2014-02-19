@@ -16,9 +16,9 @@ class Osprey
     if @settings.enableValidations
       @context.all '*', @validations(uriTemplateReader, resources)
 
-    @context.all '*', @exceptionHandler(@settings.exceptionHandler)
-
     @context.all '*', @route(router, @settings.enableMocks)
+
+    @context.all '*', @exceptionHandler(@settings.exceptionHandler)
 
   registerConsole: () ->
     @settings.enableConsole = true unless @settings.enableConsole?
@@ -54,7 +54,6 @@ class Osprey
       errorDefaultSettings[key] = value
 
     (err, req, res, next) ->
-      console.log 'exceptions'
       errorHandler = errorDefaultSettings[err.constructor.name]
 
       if errorHandler?

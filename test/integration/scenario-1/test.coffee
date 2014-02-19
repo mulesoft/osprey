@@ -56,6 +56,16 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
             done()
           )
 
+      it 'Should return 406 if required accept-type is not supported', (done) ->
+        request(apiPath)
+          .get('/resources')
+          .set('Accept', 'application/xml')
+          .end((err, res) ->
+            res.status.should.be.eql 406
+            done()
+          )
+
+
     describe 'POST /resources', ->
       it 'Should use the first status code defined in RAML (201)', (done) ->
         request(apiPath)
@@ -98,6 +108,24 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
             done()
           )
 
+      it 'Should return 406 if required accept-type is not supported', (done) ->
+        request(apiPath)
+          .post('/resources')
+          .set('Accept', 'application/xml')
+          .end((err, res) ->
+            res.status.should.be.eql 406
+            done()
+          )
+
+      it 'Should return 415 if required content-type is not supported', (done) ->
+        request(apiPath)
+          .post('/resources')
+          .set('Content-Type', 'application/xml')
+          .end((err, res) ->
+            res.status.should.be.eql 415
+            done()
+          )
+
     describe 'PUT /resources', ->
       it 'Should use the first status code defined in RAML (204)', (done) ->
         request(apiPath)
@@ -118,6 +146,15 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
             res.headers['header'] .should.be.eql 'PUT'
             res.body.should.eql {}
           
+            done()
+          )
+
+      it 'Should return 415 if required content-type is not supported', (done) ->
+        request(apiPath)
+          .put('/resources')
+          .set('Content-Type', 'application/xml')
+          .end((err, res) ->
+            res.status.should.be.eql 415
             done()
           )
 
@@ -164,6 +201,16 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
           
             done()
           )
+
+      it 'Should return 415 if required content-type is not supported', (done) ->
+        request(apiPath)
+          .patch('/resources')
+          .set('Content-Type', 'application/xml')
+          .end((err, res) ->
+            res.status.should.be.eql 415
+            done()
+          )
+
 
   describe 'NESTED RESOURCE', ->
     describe 'GET /resources/:id', ->
@@ -212,6 +259,16 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
             done()
           )
 
+
+      it 'Should return 406 if required accept-type is not supported', (done) ->
+        request(apiPath)
+          .get('/resources/1')
+          .set('Accept', 'application/xml')
+          .end((err, res) ->
+            res.status.should.be.eql 406
+            done()
+          )
+
     describe 'DELETE /resources/:id', ->
       it 'Should use the first status code defined in RAML (204)', (done) ->
         request(apiPath)
@@ -254,3 +311,58 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
 
             done()
           )
+
+  describe 'RESOURCE WITHOUT EXAMPLE', ->
+    describe 'GET /empty', ->
+      it 'Should use the first status code defined in RAML (200)', (done) ->
+        request(apiPath)
+          .get('/empty')
+          .set('Accept', 'application/json')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 200
+
+            done()
+          )
+
+      it 'Should response with the example defined in RAML', (done) ->
+          request(apiPath)
+            .get('/empty')
+            .set('Accept', 'application/json')
+            .end((err, res) ->
+              # Assert
+              res.body.should.be.eql {}
+
+              done()
+            )
+
+        it 'Should have response headers if they have default values in RAML', (done) ->
+          request(apiPath)
+            .get('/empty')
+            .set('Accept', 'application/json')
+            .end((err, res) ->
+              # Assert
+              res.headers['header'] .should.be.eql 'GET'
+
+              done()
+            )
+
+        it 'Should return application/json as a content-type', (done) ->
+          request(apiPath)
+            .get('/resources')
+            .set('Accept', 'application/json')
+            .end((err, res) ->
+              # Assert
+              res.headers['content-type'].should.be.eql 'application/json'
+
+              done()
+            )
+
+        it 'Should turn off content negotiation if there is no body defined in RAML', (done) ->
+          request(apiPath)
+            .get('/empty')
+            .set('Accept', 'application/xml')
+            .end((err, res) ->
+              res.status.should.be.eql 200
+              done()
+            )
