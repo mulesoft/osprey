@@ -39,8 +39,8 @@
       if (this.settings.enableValidations) {
         this.context.all('*', this.validations(uriTemplateReader, resources));
       }
-      this.context.use(this.exceptionHandler(this.settings.exceptionHandler));
-      return this.context.use(this.route(router, this.settings.enableMocks));
+      this.context.all('*', this.exceptionHandler(this.settings.exceptionHandler));
+      return this.context.all('*', this.route(router, this.settings.enableMocks));
     };
 
     Osprey.prototype.registerConsole = function() {
@@ -91,6 +91,7 @@
       }
       return function(err, req, res, next) {
         var errorHandler;
+        console.log('exceptions');
         errorHandler = errorDefaultSettings[err.constructor.name];
         if (errorHandler != null) {
           return errorHandler(err, req, res, next);

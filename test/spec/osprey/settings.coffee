@@ -25,7 +25,7 @@ describe 'OSPREY - SETTINGS', =>
     osprey.register @router, @uriTemplateReader, @resources
 
     # Assert
-    context.middlewares.should.have.lengthOf 2
+    context.allHandlers.should.have.lengthOf 3
 
     done()
 
@@ -40,7 +40,7 @@ describe 'OSPREY - SETTINGS', =>
     osprey.register @router, @uriTemplateReader, @resources
 
     # Assert
-    context.middlewares.should.have.lengthOf 2
+    context.allHandlers.should.have.lengthOf 2
 
     done()
 
@@ -69,7 +69,7 @@ describe 'OSPREY - SETTINGS', =>
     osprey.register @router, @uriTemplateReader, @resources
 
     # Assert
-    context.middlewares.should.have.lengthOf 2
+    context.allHandlers.should.have.lengthOf 3
 
     done()
 
@@ -82,6 +82,6 @@ describe 'OSPREY - SETTINGS', =>
     osprey.register @router, @uriTemplateReader, @resources
 
     # Assert
-    context.middlewares.should.have.lengthOf 2
+    context.allHandlers.should.have.lengthOf 3
 
     done()
