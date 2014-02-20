@@ -9,7 +9,7 @@ describe 'SCENARIO 2 - RAML BASED MOCKS + VALIDATIONS', ->
   describe 'QUERY PARAMETER - VALIDATIONS', ->
     it 'Should response 200 if the query parameter is valid', (done) ->
       request(apiPath)
-        .get('/resources')
+        .get('/validations')
         .query('param=GET')
         .set('Accept', 'application/json')
         .end((err, res) ->
@@ -21,7 +21,7 @@ describe 'SCENARIO 2 - RAML BASED MOCKS + VALIDATIONS', ->
 
     it 'Should response 400 if the query parameter is invalid', (done) ->
       request(apiPath)
-        .get('/resources')
+        .get('/validations')
         .set('Accept', 'application/json')
         .end((err, res) ->
           # Assert
@@ -33,7 +33,7 @@ describe 'SCENARIO 2 - RAML BASED MOCKS + VALIDATIONS', ->
   describe 'URI PARAMETER - VALIDATIONS', ->
     it 'Should response 200 if the query parameter is valid', (done) ->
       request(apiPath)
-        .get('/resources/10')
+        .get('/validations/10')
         .set('Accept', 'application/json')
         .end((err, res) ->
           # Assert
@@ -44,7 +44,7 @@ describe 'SCENARIO 2 - RAML BASED MOCKS + VALIDATIONS', ->
 
     it 'Should response 400 if the query parameter is invalid', (done) ->
       request(apiPath)
-        .get('/resources/1')
+        .get('/validations/1')
         .set('Accept', 'application/json')
         .end((err, res) ->
           # Assert
@@ -56,7 +56,7 @@ describe 'SCENARIO 2 - RAML BASED MOCKS + VALIDATIONS', ->
   describe 'FORM PARAMETER - VALIDATIONS', ->
     it 'Should response 200 if the query parameter is valid', (done) ->
       request(apiPath)
-        .post('/resources')
+        .post('/validations')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .send({ param: 'val' })
         .end((err, res) ->
@@ -68,7 +68,7 @@ describe 'SCENARIO 2 - RAML BASED MOCKS + VALIDATIONS', ->
 
     it 'Should response 400 if the query parameter is invalid', (done) ->
       request(apiPath)
-        .post('/resources')
+        .post('/validations')
         .set('Content-Type', 'application/x-www-form-urlencoded')
         .end((err, res) ->
           # Assert
@@ -80,7 +80,7 @@ describe 'SCENARIO 2 - RAML BASED MOCKS + VALIDATIONS', ->
   describe 'HEADER - VALIDATIONS', ->
     it 'Should response 400 if the query parameter is invalid', (done) ->
       request(apiPath)
-        .put('/resources')
+        .put('/validations')
         .end((err, res) ->
           # Assert
           res.status.should.be.eql 400

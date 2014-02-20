@@ -211,7 +211,6 @@ describe 'SCENARIO 1 - RAML BASED MOCKS', ->
             done()
           )
 
-
   describe 'NESTED RESOURCE', ->
     describe 'GET /resources/:id', ->
       it 'Should use the first status code defined in RAML (200)', (done) ->
