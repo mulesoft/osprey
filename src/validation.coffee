@@ -23,9 +23,10 @@ class Validation
       
       @validateFormParams method
       
-      unless @validateSchema method
-        #TODO: Add schema error context!
-        throw new InvalidBodyError {}
+      # TODO: Fix schema validation!
+      # unless @validateSchema method
+      #   #TODO: Add schema error context!
+      #   throw new InvalidBodyError {}
 
   isForm: () =>
     @req.headers['content-type'] in ['application/x-www-form-urlencoded', 'multipart/form-data']

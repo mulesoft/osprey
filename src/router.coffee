@@ -53,7 +53,6 @@ class OspreyRouter extends OspreyBase
 
   resolveMethod: (config) =>
     resourceExists = @resources[config.template]?.methods?.filter (info) -> info.method == config.method
-
     if resourceExists? and resourceExists.length > 0
       @logger.debug "Overwritten resource - #{config.method.toUpperCase()} #{config.template}"
       @methodHandlers[config.method].resolve config.template, config.handler

@@ -5,7 +5,7 @@ app = require './app'
 app.listen 8002
 apiPath = 'http://localhost:8002/api'
 
-describe 'SCENARIO 3 - OVERWRITING RESOURCES', ->
+describe 'SCENARIO 3 - OVERWRITE RESOURCES', ->
   describe 'OVERWRITE A ROOT RESOURCE', ->
     describe 'GET /overwrite', ->
       it 'Should response with the overwrite handler', (done) ->

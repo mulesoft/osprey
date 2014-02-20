@@ -36,6 +36,8 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - BOOLEAN', =>
     req = new Request 'POST', '/api/boolean'
     validation = new Validation req, @uriTemplateReader, resource, '/api'
 
+    req.addHeader 'content-type', 'application/x-www-form-urlencoded'
+    
     # Assert
     ( ->
       validation.validate()

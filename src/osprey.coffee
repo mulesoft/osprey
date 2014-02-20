@@ -14,11 +14,11 @@ class Osprey
     @settings.enableValidations = true unless @settings.enableValidations?
     
     if @settings.enableValidations
-      @context.all '*', @validations(uriTemplateReader, resources)
+      @context.use @validations(uriTemplateReader, resources)
 
-    @context.all '*', @route(router, @settings.enableMocks)
+    @context.use @route(router, @settings.enableMocks)
 
-    @context.all '*', @exceptionHandler(@settings.exceptionHandler)
+    @context.use @exceptionHandler(@settings.exceptionHandler)
 
   registerConsole: () ->
     @settings.enableConsole = true unless @settings.enableConsole?

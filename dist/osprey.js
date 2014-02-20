@@ -37,10 +37,10 @@
         this.settings.enableValidations = true;
       }
       if (this.settings.enableValidations) {
-        this.context.all('*', this.validations(uriTemplateReader, resources));
+        this.context.use(this.validations(uriTemplateReader, resources));
       }
-      this.context.all('*', this.route(router, this.settings.enableMocks));
-      return this.context.all('*', this.exceptionHandler(this.settings.exceptionHandler));
+      this.context.use(this.route(router, this.settings.enableMocks));
+      return this.context.use(this.exceptionHandler(this.settings.exceptionHandler));
     };
 
     Osprey.prototype.registerConsole = function() {

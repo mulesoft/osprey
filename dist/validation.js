@@ -48,10 +48,7 @@
       if (method != null) {
         this.validateQueryParams(method);
         this.validateHeaders(method);
-        this.validateFormParams(method);
-        if (!this.validateSchema(method)) {
-          throw new InvalidBodyError({});
-        }
+        return this.validateFormParams(method);
       }
     };
 
