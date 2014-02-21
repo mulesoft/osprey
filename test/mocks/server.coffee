@@ -63,6 +63,8 @@ class RequestMock
     @query[key] = value
   addBodyParameter: (key, value) =>
     @body[key] = value
+  addJsonBody: (body) =>
+    @body = body
 
 class MiddlewareMock
   nextCounter: 0

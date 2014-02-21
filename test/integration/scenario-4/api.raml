@@ -22,6 +22,21 @@ baseUri: http://localhost:8002/api
             required: true
             minLength: 3
             maxLength: 3
+      application/json:
+        schema: |
+          {
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": {
+              "id": {
+                "description": "Identifier",
+                "maxLength": 3,
+                "minLength": 3,
+                "type": "string"
+              }
+            },
+            "type": "object",
+            "name": "resource"
+          }
     responses:
       201:
         body:

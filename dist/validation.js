@@ -28,7 +28,6 @@
       this.resource = resource;
       this.apiPath = apiPath;
       this.validateType = __bind(this.validateType, this);
-      this.validateRequired = __bind(this.validateRequired, this);
       this.isValid = __bind(this.isValid, this);
       this.validateHeaders = __bind(this.validateHeaders, this);
       this.validateQueryParams = __bind(this.validateQueryParams, this);
@@ -48,7 +47,10 @@
       if (method != null) {
         this.validateQueryParams(method);
         this.validateHeaders(method);
-        return this.validateFormParams(method);
+        this.validateFormParams(method);
+        if (!this.validateSchema(method)) {
+          throw new InvalidBodyError({});
+        }
       }
     };
 
@@ -58,15 +60,17 @@
     };
 
     Validation.prototype.isJson = function() {
-      return this.req.headers['content-type'] === 'application/json' || this.req.headers['content-type'].match('\\+json$');
+      var _ref;
+      if (((_ref = this.req.headers) != null ? _ref['content-type'] : void 0) != null) {
+        return this.req.headers['content-type'] === 'application/json' || this.req.headers['content-type'].match('\\+json$');
+      }
     };
 
     Validation.prototype.validateSchema = function(method) {
       var contentType, schemaValidator;
-      this.method = method;
       if ((method.body != null) && this.isJson()) {
         contentType = method.body[this.req.headers['content-type']];
-        if ((contentType != null) && (contentType.schema != null)) {
+        if ((contentType != null ? contentType.schema : void 0) != null) {
           schemaValidator = new SchemaValidator();
           return !(schemaValidator.validate(this.req.body, JSON.parse(contentType.schema))).errors.length;
         }
@@ -187,20 +191,14 @@
     };
 
     Validation.prototype.isValid = function(reqParam, ramlParam) {
-      this.reqParam = reqParam;
-      this.ramlParam = ramlParam;
       return (this.validateRequired(reqParam, ramlParam)) && (this.validateType(reqParam, ramlParam));
     };
 
     Validation.prototype.validateRequired = function(reqParam, ramlParam) {
-      this.reqParam = reqParam;
-      this.ramlParam = ramlParam;
       return !ramlParam.required || (reqParam != null);
     };
 
     Validation.prototype.validateType = function(reqParam, ramlParam) {
-      this.reqParam = reqParam;
-      this.ramlParam = ramlParam;
       if ('string' === ramlParam.type) {
         return this.validateString(reqParam, ramlParam);
       } else if ('number' === ramlParam.type) {

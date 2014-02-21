@@ -271,6 +271,31 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             done()
           )
 
+    describe 'JSON SCHEMA - VALIDATION', ->
+      it 'Should response 201 if the request body is valid', (done) ->
+        request(apiPath)
+          .post('/all')
+          .set('Content-Type', 'application/json')
+          .send({ id: 'aaa' })
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 201
+
+            done()
+          )
+
+      it 'Should response 400 if the request body is invalid', (done) ->
+        request(apiPath)
+          .post('/all')
+          .set('Content-Type', 'application/json')
+          .send({ id: 'a' })
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 400
+
+            done()
+          )
+
   describe 'MOCK RESOURCES', ->
 
     describe 'ROOT RESOURCE', ->
@@ -657,12 +682,37 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
           )
 
     describe 'HEADER VALIDATION', ->
-    it 'Should response 400 if the query parameter is invalid', (done) ->
-      request(apiPath)
-        .put('/mocks')
-        .end((err, res) ->
-          # Assert
-          res.status.should.be.eql 400
+      it 'Should response 400 if the query parameter is invalid', (done) ->
+        request(apiPath)
+          .put('/mocks')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 400
 
-          done()
-        )
+            done()
+          )
+
+    describe 'JSON SCHEMA - VALIDATION', ->
+      it 'Should response 201 if the request body is valid', (done) ->
+        request(apiPath)
+          .post('/mocks')
+          .set('Content-Type', 'application/json')
+          .send({ id: 'aaa' })
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 201
+
+            done()
+          )
+
+      it 'Should response 400 if the request body is invalid', (done) ->
+        request(apiPath)
+          .post('/mocks')
+          .set('Content-Type', 'application/json')
+          .send({ id: 'a' })
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 400
+
+            done()
+          )

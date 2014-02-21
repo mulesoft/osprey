@@ -87,3 +87,28 @@ describe 'SCENARIO 4 - OVERWRITE RESOURCES + VALIDATIONS', ->
 
           done()
         )
+
+  describe 'JSON SCHEMA - VALIDATIONS', ->
+    it 'Should response 201 if the request body is valid', (done) ->
+      request(apiPath)
+        .post('/overwrite-validations')
+        .set('Content-Type', 'application/json')
+        .send({ id: 'aaa' })
+        .end((err, res) ->
+          # Assert
+          res.status.should.be.eql 201
+
+          done()
+        )
+
+    it 'Should response 400 if the request body is invalid', (done) ->
+      request(apiPath)
+        .post('/overwrite-validations')
+        .set('Content-Type', 'application/json')
+        .send({ id: 'a' })
+        .end((err, res) ->
+          # Assert
+          res.status.should.be.eql 400
+
+          done()
+        )

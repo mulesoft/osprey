@@ -23,24 +23,26 @@ class Validation
       
       @validateFormParams method
       
-      # TODO: Fix schema validation!
-      # unless @validateSchema method
-      #   #TODO: Add schema error context!
-      #   throw new InvalidBodyError {}
+      unless @validateSchema method
+        throw new InvalidBodyError {}
 
   isForm: () =>
     @req.headers['content-type'] in ['application/x-www-form-urlencoded', 'multipart/form-data']
 
   isJson: () =>
     # TODO: Fixme. If any content-type is defined it should be defaulted to the first content-type defined in the raml file
-    @req.headers['content-type'] == 'application/json' or @req.headers['content-type'].match '\\+json$'
+    if @req.headers?['content-type']?
+      @req.headers['content-type'] == 'application/json' or @req.headers['content-type'].match '\\+json$'
 
-  validateSchema: (@method) =>
+  validateSchema: (method) =>
     if method.body? and @isJson()
       contentType =  method.body[@req.headers['content-type']]
-      if contentType? and contentType.schema?
+
+      if contentType?.schema?
         schemaValidator = new SchemaValidator()
+
         return not (schemaValidator.validate @req.body, JSON.parse contentType.schema).errors.length
+
     true
 
   getMethod: () =>
@@ -106,13 +108,13 @@ class Validation
           logger.data "Validation Info", ramlHeader
           throw new InvalidHeaderError @readValidationInfo(key, reqHeader, ramlHeader)
 
-  isValid: (@reqParam, @ramlParam) =>
+  isValid: (reqParam, ramlParam) =>
     (@validateRequired reqParam, ramlParam) and (@validateType reqParam, ramlParam)
 
-  validateRequired: (@reqParam, @ramlParam) =>
+  validateRequired: (reqParam, ramlParam) ->
     not ramlParam.required or reqParam?
 
-  validateType: (@reqParam, @ramlParam) =>
+  validateType: (reqParam, ramlParam) =>
     if 'string' == ramlParam.type
       @validateString reqParam, ramlParam
     else if 'number' == ramlParam.type

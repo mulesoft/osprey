@@ -93,6 +93,11 @@ module.exports = (grunt) ->
         tasks: ['coffeelint', 'mochaTest'],
         options:
           atBegin: true
+      test:
+        files: ['src/**/*.coffee', 'test/spec/**/*.coffee', 'test/**/*.raml'],
+        tasks: ['coffeelint', 'mochaTest:spec'],
+        options:
+          atBegin: true
       integration:
         files: ['src/**/*.coffee', 'test/integration/**/*.coffee', 'test/**/*.raml'],
         tasks: ['coffeelint', 'mochaTest:integration'],
