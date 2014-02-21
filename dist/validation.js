@@ -1,5 +1,5 @@
 (function() {
-  var InvalidBodyError, InvalidFormParameterError, InvalidHeaderError, InvalidQueryParameterError, InvalidUriParameterError, OspreyBase, SchemaValidator, Validation, logger, moment,
+  var InvalidBodyError, InvalidFormParameterError, InvalidHeaderError, InvalidQueryParameterError, InvalidUriParameterError, OspreyBase, SchemaValidator, Validation, logger, moment, xml,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -21,6 +21,8 @@
 
   moment = require('moment');
 
+  xml = require('libxmljs');
+
   Validation = (function() {
     function Validation(req, uriTemplateReader, resource, apiPath) {
       this.req = req;
@@ -35,6 +37,7 @@
       this.validateUriParams = __bind(this.validateUriParams, this);
       this.getMethod = __bind(this.getMethod, this);
       this.validateSchema = __bind(this.validateSchema, this);
+      this.isXml = __bind(this.isXml, this);
       this.isJson = __bind(this.isJson, this);
       this.isForm = __bind(this.isForm, this);
       this.validate = __bind(this.validate, this);
@@ -66,13 +69,24 @@
       }
     };
 
+    Validation.prototype.isXml = function() {
+      var _ref, _ref1;
+      if (((_ref = this.req.headers) != null ? _ref['content-type'] : void 0) != null) {
+        return ((_ref1 = this.req.headers['content-type']) === 'application/xml' || _ref1 === 'text/xml') || this.req.headers['content-type'].match('\\+xml$');
+      }
+    };
+
     Validation.prototype.validateSchema = function(method) {
       var contentType, schemaValidator;
-      if ((method.body != null) && this.isJson()) {
+      if (method.body != null) {
         contentType = method.body[this.req.headers['content-type']];
         if ((contentType != null ? contentType.schema : void 0) != null) {
-          schemaValidator = new SchemaValidator();
-          return !(schemaValidator.validate(this.req.body, JSON.parse(contentType.schema))).errors.length;
+          if (this.isJson()) {
+            schemaValidator = new SchemaValidator();
+            return !(schemaValidator.validate(this.req.body, JSON.parse(contentType.schema))).errors.length;
+          } else if (this.isXml()) {
+            return xml.parseXml(this.req.body).validate(contentType.schema);
+          }
         }
       }
       return true;

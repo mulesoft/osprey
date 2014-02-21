@@ -7,6 +7,7 @@ InvalidQueryParameterError = require './errors/invalid-query-parameter-error'
 InvalidHeaderError = require './errors/invalid-header-error'
 InvalidBodyError = require './errors/invalid-body-error'
 moment = require 'moment'
+xml = require 'libxmljs'
 
 class Validation
   constructor: (@req, @uriTemplateReader, @resource, @apiPath) ->
@@ -30,18 +31,23 @@ class Validation
     @req.headers['content-type'] in ['application/x-www-form-urlencoded', 'multipart/form-data']
 
   isJson: () =>
-    # TODO: Fixme. If any content-type is defined it should be defaulted to the first content-type defined in the raml file
     if @req.headers?['content-type']?
       @req.headers['content-type'] == 'application/json' or @req.headers['content-type'].match '\\+json$'
 
+  isXml: () =>
+    if @req.headers?['content-type']?
+      @req.headers['content-type'] in ['application/xml', 'text/xml'] or @req.headers['content-type'].match '\\+xml$'
+
   validateSchema: (method) =>
-    if method.body? and @isJson()
+    if method.body?
       contentType =  method.body[@req.headers['content-type']]
 
       if contentType?.schema?
-        schemaValidator = new SchemaValidator()
-
-        return not (schemaValidator.validate @req.body, JSON.parse contentType.schema).errors.length
+        if @isJson()
+          schemaValidator = new SchemaValidator()
+          return not (schemaValidator.validate @req.body, JSON.parse contentType.schema).errors.length
+        else if @isXml()
+          return xml.parseXml(@req.body).validate(contentType.schema)
 
     true
 

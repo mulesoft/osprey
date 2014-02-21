@@ -26,6 +26,7 @@ class Osprey
     if @settings.enableConsole
       @context.use "#{@apiPath}/console", express.static(path.join(__dirname, '/assets/console'))
       @context.get @apiPath, @ramlHandler(@settings.ramlFile)
+      @context.use @apiPath, express.static(path.join(__dirname, path.dirname(@settings.ramlFile)))
       @logger.info 'Osprey::APIConsole has been initialized successfully'
 
   ramlHandler: (ramlPath) ->

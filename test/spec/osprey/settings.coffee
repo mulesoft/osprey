@@ -53,7 +53,7 @@ describe 'OSPREY - SETTINGS', =>
     osprey.registerConsole()
 
     # Assert
-    context.middlewares.should.have.lengthOf 1
+    context.middlewares.should.have.lengthOf 2
     context.getMethods.should.have.lengthOf 1
     context.getMethods[0].should.eql '/api'
     context.middlewares[0].should.eql '/api/console'
