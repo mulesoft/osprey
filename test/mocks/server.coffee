@@ -34,6 +34,8 @@ class ExpressMock
   patch: (content) =>
     @patchMethods.push content
 
+  disable: (name) ->
+
 class ResponseMock
   constructor: ->
     @response = null

@@ -10,6 +10,8 @@ class Osprey
     unless @settings?
       @settings = {}
 
+    @context.disable 'x-powered-by'
+
   register: (router, uriTemplateReader, resources) =>
     @settings.enableValidations = true unless @settings.enableValidations?
     

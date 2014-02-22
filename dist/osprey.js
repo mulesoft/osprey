@@ -30,6 +30,7 @@
       if (this.settings == null) {
         this.settings = {};
       }
+      this.context.disable('x-powered-by');
     }
 
     Osprey.prototype.register = function(router, uriTemplateReader, resources) {
