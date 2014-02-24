@@ -14,21 +14,21 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
   
       done()
 
-  # it 'Should be correctly validated if request body is ok', (done) =>
-  #   # Arrange
-  #   resource = @resources['/resources']
-  #   req = new Request 'POST', '/api/resources'
-  #   validation = new Validation req, @uriTemplateReader, resource, '/api'
+  it 'Should be correctly validated if request body is ok', (done) =>
+    # Arrange
+    resource = @resources['/resources']
+    req = new Request 'POST', '/api/resources'
+    validation = new Validation req, @uriTemplateReader, resource, '/api'
 
-  #   req.addHeader 'content-type', 'application/xml'
-  #   req.addJsonBody '<?xml version="1.0" ?><league>test</league></xml>'
+    req.addHeader 'content-type', 'application/xml'
+    req.addJsonBody '<?xml version="1.0" ?><league>test</league></xml>'
 
-  #   # Assert
-  #   ( ->
-  #     validation.validate()
-  #   ).should.not.throw();
+    # Assert
+    ( ->
+      validation.validate()
+    ).should.not.throw();
 
-  #   done()
+    done()
 
   # it 'Should throw an exception if request body is incorrect', (done) =>
   #   # Arrange
