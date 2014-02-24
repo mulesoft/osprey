@@ -100,6 +100,24 @@ api.get('/teams', function (req, res) {
 | InvalidHeaderError         | 400 | It will be thrown if a Header is invalid according to the validation rules |
 | InvalidBodyError           | 400 | It will be thrown if a body is invalid according to the validation schemas |
 
+### Validations
+
+You can enable or disable validations by using the option `enableValidations` in `osprey.create`. 
+
+##### Supported Validations
+
+* Form Parameters
+* Query Parameters
+* URI Parameters
+* Headers
+* JSON Schema
+* XML Schema
+
+###### Notes
+
+In order to support XML schema validation, you have to setup the following middleware in your application
+[express-xml-bodyparser](https://www.npmjs.org/package/express-xml-bodyparser).
+
 ### Example
 ```javascript
   var express = require('express');
