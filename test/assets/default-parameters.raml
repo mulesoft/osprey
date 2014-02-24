@@ -1,0 +1,22 @@
+#%RAML 0.8
+---
+title: default-parameters
+version: 1.0
+baseUri: http://localhost:3000/api
+/resources:
+  get:
+    headers:
+      header:
+        type: string
+        default: HEADER
+    queryParameters:
+      param:
+        type: string
+        default: QUERY PARAMETER
+  post:
+    body:
+      application/x-www-form-urlencoded:
+        formParameters:
+          param:
+            type: string
+            default: FORM PARAMETER

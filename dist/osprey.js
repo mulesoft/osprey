@@ -1,5 +1,5 @@
 (function() {
-  var Osprey, Validation, errorDefaultSettings, express, path,
+  var DefaultParameters, Osprey, Validation, errorDefaultSettings, express, path,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   express = require('express');
@@ -7,6 +7,8 @@
   path = require('path');
 
   Validation = require('./validation');
+
+  DefaultParameters = require('./default-parameters');
 
   errorDefaultSettings = require('./error-default-settings');
 
@@ -37,6 +39,7 @@
       if (this.settings.enableValidations == null) {
         this.settings.enableValidations = true;
       }
+      this.context.use(this.loadDefaultParameters(this.apiPath, uriTemplateReader, resources, this.logger));
       if (this.settings.enableValidations) {
         this.context.use(this.validations(uriTemplateReader, resources));
       }
@@ -122,6 +125,12 @@
         }
         return next();
       };
+    };
+
+    Osprey.prototype.loadDefaultParameters = function(apiPath, uriTemplateReader, resources, logger) {
+      var middleware;
+      middleware = new DefaultParameters(apiPath, uriTemplateReader, resources, logger);
+      return middleware.checkDefaults;
     };
 
     Osprey.prototype.get = function(uriTemplate, handler) {

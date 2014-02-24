@@ -1,6 +1,7 @@
 express = require 'express'
 path = require 'path'
 Validation = require './validation'
+DefaultParameters = require './default-parameters'
 errorDefaultSettings = require './error-default-settings'
 
 class Osprey
@@ -15,6 +16,8 @@ class Osprey
   register: (router, uriTemplateReader, resources) =>
     @settings.enableValidations = true unless @settings.enableValidations?
     
+    @context.use @loadDefaultParameters(@apiPath, uriTemplateReader, resources, @logger)
+
     if @settings.enableValidations
       @context.use @validations(uriTemplateReader, resources)
 
@@ -84,6 +87,10 @@ class Osprey
             validation.validate()
 
       next()
+
+  loadDefaultParameters: (apiPath, uriTemplateReader, resources, logger) ->
+    middleware = new DefaultParameters apiPath, uriTemplateReader, resources, logger
+    middleware.checkDefaults
 
   get: (uriTemplate, handler) =>
     @handlers.push { method: 'get', template: uriTemplate, handler: handler }

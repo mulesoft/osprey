@@ -1,11 +1,9 @@
 (function() {
-  var InvalidBodyError, InvalidFormParameterError, InvalidHeaderError, InvalidQueryParameterError, InvalidUriParameterError, OspreyBase, SchemaValidator, Validation, libxml, logger, moment,
+  var InvalidBodyError, InvalidFormParameterError, InvalidHeaderError, InvalidQueryParameterError, InvalidUriParameterError, SchemaValidator, Validation, libxml, logger, moment,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   SchemaValidator = require('jsonschema').Validator;
-
-  OspreyBase = require('./utils/base');
 
   logger = require('./utils/logger');
 

@@ -1,5 +1,4 @@
 SchemaValidator = require('jsonschema').Validator
-OspreyBase = require './utils/base'
 logger = require './utils/logger'
 InvalidUriParameterError = require './errors/invalid-uri-parameter-error'
 InvalidFormParameterError = require './errors/invalid-form-parameter-error'
