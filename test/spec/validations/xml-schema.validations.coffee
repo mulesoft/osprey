@@ -14,14 +14,14 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
   
       done()
 
-  it 'Should be correctly validated if request body is ok', (done) =>
+  it 'Should be correctly validated if request body is ok and content-type is application/xml', (done) =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
     validation = new Validation req, @uriTemplateReader, resource, '/api'
 
     req.addHeader 'content-type', 'application/xml'
-    req.addJsonBody '<?xml version="1.0" ?><league>test</league></xml>'
+    req.addBody '<?xml version="1.0" ?><league><name>test</name></league>'
 
     # Assert
     ( ->
@@ -30,33 +30,80 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
 
     done()
 
-  # it 'Should throw an exception if request body is incorrect', (done) =>
-  #   # Arrange
-  #   resource = @resources['/resources']
-  #   req = new Request 'POST', '/api/resources'
-  #   validation = new Validation req, @uriTemplateReader, resource, '/api'
+  it 'Should be correctly validated if request body is ok and content-type is text/xml', (done) =>
+    # Arrange
+    resource = @resources['/resources']
+    req = new Request 'POST', '/api/resources'
+    validation = new Validation req, @uriTemplateReader, resource, '/api'
 
-  #   req.addHeader 'content-type', 'application/json'
-  #   req.addJsonBody { id: 'a' }
+    req.addHeader 'content-type', 'text/xml'
+    req.addBody '<?xml version="1.0" ?><league><name>test</name></league>'
 
-  #   # Assert
-  #   ( ->
-  #     validation.validate()
-  #   ).should.throw();
+    # Assert
+    ( ->
+      validation.validate()
+    ).should.not.throw();
 
-  #   done()
+    done()
 
-  # it 'Should not validate if content-type is not application/json', (done) =>
-  #   # Arrange
-  #   resource = @resources['/resources']
-  #   req = new Request 'POST', '/api/resources'
-  #   validation = new Validation req, @uriTemplateReader, resource, '/api'
+  it 'Should be correctly validated if request body is ok and content-type is [something]+xml', (done) =>
+    # Arrange
+    resource = @resources['/resources']
+    req = new Request 'POST', '/api/resources'
+    validation = new Validation req, @uriTemplateReader, resource, '/api'
 
-  #   req.addHeader 'content-type', 'text/plain'
+    req.addHeader 'content-type', 'application/test+xml'
+    req.addBody '<?xml version="1.0" ?><league><name>test</name></league>'
 
-  #   # Assert
-  #   ( ->
-  #     validation.validate()
-  #   ).should.not.throw();
+    # Assert
+    ( ->
+      validation.validate()
+    ).should.not.throw();
 
-  #   done()
+    done()
+
+  it 'Should throw an exception if request body is incorrect', (done) =>
+    # Arrange
+    resource = @resources['/resources']
+    req = new Request 'POST', '/api/resources'
+    validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+    req.addHeader 'content-type', 'application/xml'
+    req.addBody '<?xml version="1.0" ?><league></league>'
+
+    # Assert
+    ( ->
+      validation.validate()
+    ).should.throw();
+
+    done()
+
+  it 'Should throw an exception if request body is empty', (done) =>
+    # Arrange
+    resource = @resources['/resources']
+    req = new Request 'POST', '/api/resources'
+    validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+    req.addHeader 'content-type', 'application/xml'
+
+    # Assert
+    ( ->
+      validation.validate()
+    ).should.not.throw();
+
+    done()
+
+  it 'Should not validate if content-type is not application/xml nor text/xml', (done) =>
+    # Arrange
+    resource = @resources['/resources']
+    req = new Request 'POST', '/api/resources'
+    validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+    req.addHeader 'content-type', 'text/plain'
+
+    # Assert
+    ( ->
+      validation.validate()
+    ).should.not.throw();
+
+    done()

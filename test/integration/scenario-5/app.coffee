@@ -1,9 +1,11 @@
 express = require 'express'
 path = require 'path'
 osprey = require '../../../src/lib'
+xmlparser = require 'express-xml-bodyparser'
 
 app = express()
 
+app.use xmlparser()
 app.use express.bodyParser()
 
 api = osprey.create '/api', app,

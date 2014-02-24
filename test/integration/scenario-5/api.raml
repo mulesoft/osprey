@@ -37,6 +37,18 @@ baseUri: http://localhost:8002/api
             "type": "object",
             "name": "resource"
           }
+      application/xml:
+        schema: |
+          <?xml version="1.0" encoding="ISO-8859-1" ?>
+          <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:element name="league">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:schema>
     responses:
       201:
         body:
@@ -119,6 +131,18 @@ baseUri: http://localhost:8002/api
             "type": "object",
             "name": "resource"
           }
+      application/xml:
+        schema: |
+          <?xml version="1.0" encoding="ISO-8859-1" ?>
+          <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:element name="league">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:schema>
     responses:
       201:
         headers:

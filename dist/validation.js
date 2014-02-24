@@ -1,5 +1,5 @@
 (function() {
-  var InvalidBodyError, InvalidFormParameterError, InvalidHeaderError, InvalidQueryParameterError, InvalidUriParameterError, OspreyBase, SchemaValidator, Validation, logger, moment, xml,
+  var InvalidBodyError, InvalidFormParameterError, InvalidHeaderError, InvalidQueryParameterError, InvalidUriParameterError, OspreyBase, SchemaValidator, Validation, libxml, logger, moment,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
@@ -21,7 +21,7 @@
 
   moment = require('moment');
 
-  xml = require('libxmljs');
+  libxml = require('libxmljs');
 
   Validation = (function() {
     function Validation(req, uriTemplateReader, resource, apiPath) {
@@ -77,7 +77,7 @@
     };
 
     Validation.prototype.validateSchema = function(method) {
-      var contentType, schemaValidator;
+      var contentType, schemaValidator, xml, xsd;
       if (method.body != null) {
         contentType = method.body[this.req.headers['content-type']];
         if ((contentType != null ? contentType.schema : void 0) != null) {
@@ -85,7 +85,11 @@
             schemaValidator = new SchemaValidator();
             return !(schemaValidator.validate(this.req.body, JSON.parse(contentType.schema))).errors.length;
           } else if (this.isXml()) {
-            return xml.parseXml(this.req.body).validate(contentType.schema);
+            if (this.req.rawBody != null) {
+              xml = libxml.parseXmlString(this.req.rawBody);
+              xsd = libxml.parseXmlString(contentType.schema);
+              return xml.validate(xsd);
+            }
           }
         }
       }

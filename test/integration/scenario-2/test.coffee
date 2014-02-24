@@ -112,3 +112,28 @@ describe 'SCENARIO 2 - RAML BASED MOCKS + VALIDATIONS', ->
 
           done()
         )
+
+  describe 'XML SCHEMA - VALIDATIONS', ->
+    it 'Should response 200 if the request body is valid', (done) ->
+      request(apiPath)
+        .post('/validations')
+        .type('xml')
+        .send('<?xml version="1.0" ?><league><name>test</name></league>')
+        .end((err, res) ->
+          # Assert
+          res.status.should.be.eql 200
+
+          done()
+        )
+
+    it 'Should response 400 if the request body is invalid', (done) ->
+      request(apiPath)
+        .post('/validations')
+        .set('Content-Type', 'application/xml')
+        .send('<?xml version="1.0" ?><league>test</league>')
+        .end((err, res) ->
+          # Assert
+          res.status.should.be.eql 400
+
+          done()
+        )        

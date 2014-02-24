@@ -296,6 +296,31 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
             done()
           )
 
+    describe 'XML SCHEMA - VALIDATIONS', ->
+      it 'Should response 200 if the request body is valid', (done) ->
+        request(apiPath)
+          .post('/all')
+          .type('xml')
+          .send('<?xml version="1.0" ?><league><name>test</name></league>')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 201
+
+            done()
+          )
+
+      it 'Should response 400 if the request body is invalid', (done) ->
+        request(apiPath)
+          .post('/all')
+          .set('Content-Type', 'application/xml')
+          .send('<?xml version="1.0" ?><league>test</league>')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 400
+
+            done()
+          )    
+
   describe 'MOCK RESOURCES', ->
 
     describe 'ROOT RESOURCE', ->
@@ -416,7 +441,7 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
         it 'Should return 415 if required content-type is not supported', (done) ->
           request(apiPath)
             .post('/mocks')
-            .set('Content-Type', 'application/xml')
+            .set('Content-Type', 'application/xls')
             .end((err, res) ->
               res.status.should.be.eql 415
               done()
@@ -716,3 +741,28 @@ describe 'SCENARIO 5 - OVERWRITE RESOURCES + VALIDATIONS + MOCKS', ->
 
             done()
           )
+
+    describe 'XML SCHEMA - VALIDATIONS', ->
+      it 'Should response 200 if the request body is valid', (done) ->
+        request(apiPath)
+          .post('/mocks')
+          .type('xml')
+          .send('<?xml version="1.0" ?><league><name>test</name></league>')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 201
+
+            done()
+          )
+
+      it 'Should response 400 if the request body is invalid', (done) ->
+        request(apiPath)
+          .post('/mocks')
+          .set('Content-Type', 'application/xml')
+          .send('<?xml version="1.0" ?><league>test</league>')
+          .end((err, res) ->
+            # Assert
+            res.status.should.be.eql 400
+
+            done()
+          )   

@@ -14,14 +14,30 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
   
       done()
 
-  it 'Should be correctly validated if request body is ok', (done) =>
+  it 'Should be correctly validated if request body is ok and content-type is application/json', (done) =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
     validation = new Validation req, @uriTemplateReader, resource, '/api'
 
     req.addHeader 'content-type', 'application/json'
-    req.addJsonBody { id: 'aaa' }
+    req.addBody { id: 'aaa' }
+
+    # Assert
+    ( ->
+      validation.validate()
+    ).should.not.throw();
+
+    done()
+
+  it 'Should be correctly validated if request body is ok and content-type is [something]+json', (done) =>
+    # Arrange
+    resource = @resources['/resources']
+    req = new Request 'POST', '/api/resources'
+    validation = new Validation req, @uriTemplateReader, resource, '/api'
+
+    req.addHeader 'content-type', 'application/test+json'
+    req.addBody { id: 'aaa' }
 
     # Assert
     ( ->
@@ -37,7 +53,7 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     validation = new Validation req, @uriTemplateReader, resource, '/api'
 
     req.addHeader 'content-type', 'application/json'
-    req.addJsonBody { id: 'a' }
+    req.addBody { id: 'a' }
 
     # Assert
     ( ->

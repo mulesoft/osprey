@@ -7,7 +7,7 @@ InvalidQueryParameterError = require './errors/invalid-query-parameter-error'
 InvalidHeaderError = require './errors/invalid-header-error'
 InvalidBodyError = require './errors/invalid-body-error'
 moment = require 'moment'
-xml = require 'libxmljs'
+libxml = require 'libxmljs'
 
 class Validation
   constructor: (@req, @uriTemplateReader, @resource, @apiPath) ->
@@ -47,8 +47,10 @@ class Validation
           schemaValidator = new SchemaValidator()
           return not (schemaValidator.validate @req.body, JSON.parse contentType.schema).errors.length
         else if @isXml()
-          return xml.parseXml(@req.body).validate(contentType.schema)
-
+          if @req.rawBody?
+            xml = libxml.parseXmlString @req.rawBody
+            xsd = libxml.parseXmlString contentType.schema
+            return xml.validate(xsd)
     true
 
   getMethod: () =>
