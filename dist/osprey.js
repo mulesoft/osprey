@@ -30,6 +30,7 @@
       if (this.settings == null) {
         this.settings = {};
       }
+      this.context.disable('x-powered-by');
     }
 
     Osprey.prototype.register = function(router, uriTemplateReader, resources) {
@@ -50,7 +51,7 @@
       if (this.settings.enableConsole) {
         this.context.use("" + this.apiPath + "/console", express["static"](path.join(__dirname, '/assets/console')));
         this.context.get(this.apiPath, this.ramlHandler(this.settings.ramlFile));
-        this.context.use(this.apiPath, express["static"](path.join(__dirname, path.dirname(this.settings.ramlFile))));
+        this.context.use(this.apiPath, express["static"](path.dirname(this.settings.ramlFile)));
         return this.logger.info('Osprey::APIConsole has been initialized successfully');
       }
     };
