@@ -1,15 +1,18 @@
 path = require 'path'
 
 module.exports = (grunt) ->
+  require('load-grunt-tasks') grunt
+
   grunt.initConfig(
-    pkg: grunt.file.readJSON('package.json'),
+    pkg: grunt.file.readJSON('package.json')
+
     coffee:
       compile:
-        expand: true,
-        flatten: false,
-        cwd: 'src',
+        expand: true
+        flatten: false
+        cwd: 'src'
         src: ['**/*.coffee']
-        dest: './dist',
+        dest: './dist'
         ext: '.js'
 
     coffeelint:
@@ -28,18 +31,18 @@ module.exports = (grunt) ->
     clean:
       build: ['dist']
 
-    nodemon:
-      dev:
-        options:
-          file: './src/app.coffee'
-          watchedFolders: ['src', 'test']
-          ignoredFiles: ['node_modules/**', 'src/assets/console']
-
-    concurrent:
+    express:
+      options:
+        cmd: 'coffee'
+        port: process.env.PORT || 3000
+        script: 'src/app.coffee'
       development:
-        tasks: ['nodemon', 'watch']
         options:
-          logConcurrentOutput: true
+          node_env: 'development'
+      test:
+        options:
+          node_env: 'test'
+          port: 3001
 
     copy:
       assets:
@@ -50,32 +53,12 @@ module.exports = (grunt) ->
         dest: 'dist/'
 
     watch:
-      wait:
-        files: ['src/assets/raml/**/*.*', 'src/**/*.coffee']
-        tasks: ['wait']
-      assets:
-        files: ['src/assets/raml/**/*.*']
-        tasks: ['copy:assets']
+      express:
+        files: ['src/**/*.coffee', 'src/assets/raml/**/*.*']
+        tasks: ['coffeelint', 'express:development']
         options:
-          livereload: true
+          spawn: false
           atBegin: true
-      development:
-        files: ['src/**/*.coffee']
-        tasks: ['coffee', 'coffeelint']
-        options:
-          atBegin: true
-      # test:
-      #   files: ['src/**/*.coffee', 'test/**/*.coffee']
-      #   tasks: ['mochaTest']
-      #   options:
-      #     atBegin: true
   )
 
-  require('load-grunt-tasks') grunt
-
-  grunt.registerTask 'default', ['concurrent']
-
-  grunt.registerTask 'wait', 'just taking some time', ->
-    # Workaround for syncing watch and nodemon
-    done = @async()
-    setTimeout((() -> done()), 500)
+  grunt.registerTask 'default', ['watch']
