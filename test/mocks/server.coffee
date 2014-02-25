@@ -9,6 +9,8 @@ class ExpressMock
     @deleteMethods = []
     @headMethods = []
     @patchMethods = []
+    @settings = 
+      port: 3000
     
   use: (content) =>
     @middlewares.push content

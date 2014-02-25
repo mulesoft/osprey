@@ -3,7 +3,7 @@
   <head>
     <title>api:Console</title>
 
-    <link rel="stylesheet" href="styles/app.css"/>
+    <link rel="stylesheet" href="resourcesPath/styles/app.css"/>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -11,10 +11,9 @@
     <meta name="viewport" content="width=device-width">
   </head>
   <body ng-app="ramlConsoleApp" ng-cloak id="raml-console-unembedded">
-    <raml-console src="http://localhost:3000/api/" with-root-documentation></raml-console>
+    <raml-console src="apiPath/" with-root-documentation></raml-console>
 
-    <script src="scripts/vendor.js"></script>
-
-    <script src="scripts/app.js"></script>
+    <script src="resourcesPath/scripts/vendor.js"></script>
+    <script src="resourcesPath/scripts/app.js"></script>
   </body>
 </html>

@@ -15,7 +15,7 @@ app.set 'port', process.env.PORT || 3000
 api = osprey.create '/api', app,
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   logLevel: 'debug',
-  enableMocks: true
+  enableMocks: true,
   exceptionHandler:
     InvalidUriParameterError: (err, req, res) ->
       console.log 'Overwriting default implementation'

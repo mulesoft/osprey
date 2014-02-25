@@ -1,5 +1,5 @@
 (function() {
-  var DefaultParameters, Osprey, Validation, errorDefaultSettings, express, path,
+  var DefaultParameters, Osprey, Validation, errorDefaultSettings, express, fs, path, url,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   express = require('express');
@@ -11,6 +11,10 @@
   DefaultParameters = require('./default-parameters');
 
   errorDefaultSettings = require('./error-default-settings');
+
+  fs = require('fs');
+
+  url = require('url');
 
   Osprey = (function() {
     Osprey.prototype.handlers = [];
@@ -28,6 +32,7 @@
       this.get = __bind(this.get, this);
       this.validations = __bind(this.validations, this);
       this.route = __bind(this.route, this);
+      this.registerConsole = __bind(this.registerConsole, this);
       this.register = __bind(this.register, this);
       if (this.settings == null) {
         this.settings = {};
@@ -51,12 +56,31 @@
       if (this.settings.enableConsole == null) {
         this.settings.enableConsole = true;
       }
+      if (!this.settings.consolePath) {
+        this.settings.consolePath = "/console";
+      }
       if (this.settings.enableConsole) {
-        this.context.use("" + this.apiPath + "/console", express["static"](path.join(__dirname, '/assets/console')));
+        this.settings.consolePath = this.apiPath + this.settings.consolePath;
+        this.context.get(this.settings.consolePath, this.consoleHandler(this.apiPath, this.settings.consolePath, this.context.settings.port));
+        this.context.get(url.resolve(this.settings.consolePath, 'index.html'), this.consoleHandler(this.apiPath, this.settings.consolePath, this.context.settings.port));
+        this.context.use(this.settings.consolePath, express["static"](path.join(__dirname, 'assets/console')));
         this.context.get(this.apiPath, this.ramlHandler(this.settings.ramlFile));
         this.context.use(this.apiPath, express["static"](path.dirname(this.settings.ramlFile)));
-        return this.logger.info('Osprey::APIConsole has been initialized successfully');
+        return this.logger.info("Osprey::APIConsole has been initialized successfully listening at " + this.settings.consolePath);
       }
+    };
+
+    Osprey.prototype.consoleHandler = function(apiPath, consolePath, port) {
+      return function(req, res) {
+        var filePath;
+        filePath = path.join(__dirname, '/assets/console/index.html');
+        return fs.readFile(filePath, function(err, data) {
+          data = data.toString().replace(/apiPath/gi, url.resolve("http://localhost:" + port + "/", apiPath));
+          data = data.toString().replace(/resourcesPath/gi, url.resolve("http://localhost:" + port + "/", consolePath));
+          res.set('Content-Type', 'text/html');
+          return res.send(data);
+        });
+      };
     };
 
     Osprey.prototype.ramlHandler = function(ramlPath) {

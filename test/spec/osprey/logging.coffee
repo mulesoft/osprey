@@ -30,6 +30,6 @@ describe 'OSPREY - LOGGING', =>
     logger.infoMessages[0].should.eql 'Osprey::Validations has been initialized successfully'
     logger.infoMessages[1].should.eql 'Osprey::Router has been initialized successfully'
     logger.infoMessages[2].should.eql 'Osprey::ExceptionHandler has been initialized successfully'
-    logger.infoMessages[3].should.eql 'Osprey::APIConsole has been initialized successfully'
+    logger.infoMessages[3].should.eql 'Osprey::APIConsole has been initialized successfully listening at /api/console'
 
     done()

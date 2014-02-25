@@ -3,6 +3,8 @@ path = require 'path'
 Validation = require './validation'
 DefaultParameters = require './default-parameters'
 errorDefaultSettings = require './error-default-settings'
+fs = require 'fs'
+url = require 'url'
 
 class Osprey
   handlers: []
@@ -25,14 +27,29 @@ class Osprey
 
     @context.use @exceptionHandler(@settings.exceptionHandler)
 
-  registerConsole: () ->
+  registerConsole: () =>
     @settings.enableConsole = true unless @settings.enableConsole?
+    @settings.consolePath = "/console" unless @settings.consolePath
 
     if @settings.enableConsole
-      @context.use "#{@apiPath}/console", express.static(path.join(__dirname, '/assets/console'))
+      @settings.consolePath = @apiPath + @settings.consolePath
+      @context.get @settings.consolePath, @consoleHandler(@apiPath, @settings.consolePath, @context.settings.port)
+      @context.get url.resolve(@settings.consolePath, 'index.html'), @consoleHandler(@apiPath, @settings.consolePath, @context.settings.port)
+      @context.use @settings.consolePath, express.static(path.join(__dirname, 'assets/console'))
+
       @context.get @apiPath, @ramlHandler(@settings.ramlFile)
       @context.use @apiPath, express.static(path.dirname(@settings.ramlFile))
-      @logger.info 'Osprey::APIConsole has been initialized successfully'
+      @logger.info "Osprey::APIConsole has been initialized successfully listening at #{@settings.consolePath}"
+
+  consoleHandler: (apiPath, consolePath, port) ->
+    return (req, res) ->
+      filePath = path.join __dirname, '/assets/console/index.html'
+
+      fs.readFile filePath, (err, data) ->
+        data = data.toString().replace(/apiPath/gi, url.resolve("http://localhost:#{port}/", apiPath))
+        data = data.toString().replace(/resourcesPath/gi, url.resolve("http://localhost:#{port}/", consolePath))
+        res.set 'Content-Type', 'text/html'
+        res.send data
 
   ramlHandler: (ramlPath) ->
     return (req, res) ->
