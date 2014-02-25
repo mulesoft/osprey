@@ -88,8 +88,12 @@
         return info.method === config.method;
       }) : void 0 : void 0;
       if ((resourceExists != null) && resourceExists.length > 0) {
-        this.logger.debug("Overwritten resource - " + (config.method.toUpperCase()) + " " + config.template);
-        return this.methodHandlers[config.method].resolve(config.template, config.handler);
+        if (config.handler) {
+          this.logger.debug("Overwritten resource - " + (config.method.toUpperCase()) + " " + config.template);
+          return this.methodHandlers[config.method].resolve(config.template, config.handler);
+        } else {
+          return this.logger.error("Resource to overwrite does not have handlers defined - " + (config.method.toUpperCase()) + " " + config.template);
+        }
       } else {
         return this.logger.error("Resource to overwrite does not exists - " + (config.method.toUpperCase()) + " " + config.template);
       }

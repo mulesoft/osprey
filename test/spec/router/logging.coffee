@@ -23,7 +23,7 @@ describe 'OSPREY ROUTER - LOGGING', =>
     router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, logger
 
     # Act
-    router.resolveMethod method: 'get', template: '/resource', handler: null
+    router.resolveMethod method: 'get', template: '/resource', handler: () ->
 
     # Assert
     logger.debugMessages[0].should.eql  'Overwritten resource - GET /resource'
@@ -37,7 +37,7 @@ describe 'OSPREY ROUTER - LOGGING', =>
     router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, logger
 
     # Act
-    router.resolveMethod method: 'get', template: '/no-existing', handler: null
+    router.resolveMethod method: 'get', template: '/no-existing', handler: () ->
 
     # Assert
     logger.errorMessages[0].should.eql  'Resource to overwrite does not exists - GET /no-existing'

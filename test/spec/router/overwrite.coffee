@@ -22,7 +22,7 @@ describe 'OSPREY ROUTER - OVERWRITE', =>
     router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, new Logger
 
     # Act
-    router.resolveMethod method: 'get', template: '/resource', handler: null
+    router.resolveMethod method: 'get', template: '/resource', handler: () ->
 
     # Assert
     context.getMethods[0].should.be.eql '/api/resource'
