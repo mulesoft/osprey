@@ -37,6 +37,7 @@ api = osprey.create('/api', app, {
 |:------------------|:---------------|:---------------|
 | ramlFile          | null           | Indicates where the RAML file is being stored|
 | enableConsole     | true           | Enables or disables the [API console](https://github.com/mulesoft/api-console) |
+| consolePath       | /console       | Defines the url for the API-console relative to the apiPath |
 | enableMocks       | true           | Enables or disables the mocks routes |
 | enableValidations | true           | Enables or disables the validations |
 | exceptionHandler  | {}             | Gives you the possibility to reuse exception handlers|
