@@ -64,7 +64,7 @@
         this.context.get(this.settings.consolePath, this.consoleHandler(this.apiPath, this.settings.consolePath, this.context.settings.port));
         this.context.get(url.resolve(this.settings.consolePath, 'index.html'), this.consoleHandler(this.apiPath, this.settings.consolePath, this.context.settings.port));
         this.context.use(this.settings.consolePath, express["static"](path.join(__dirname, 'assets/console')));
-        this.context.get(this.apiPath, this.ramlHandler(this.settings.ramlFile));
+        this.context.get(this.apiPath, this.ramlHandler(this.settings.ramlFile, this.apiPath, this.context.settings.port));
         this.context.use(this.apiPath, express["static"](path.dirname(this.settings.ramlFile)));
         return this.logger.info("Osprey::APIConsole has been initialized successfully listening at " + this.settings.consolePath);
       }
@@ -83,10 +83,13 @@
       };
     };
 
-    Osprey.prototype.ramlHandler = function(ramlPath) {
+    Osprey.prototype.ramlHandler = function(ramlPath, apiPath, port) {
       return function(req, res) {
         if (req.accepts('application/raml+yaml') != null) {
-          return res.sendfile(ramlPath);
+          return fs.readFile(ramlPath, function(err, data) {
+            data = data.toString().replace(/^baseUri:.*$/gmi, "baseUri: " + (url.resolve("http://localhost:" + port + "/", apiPath)));
+            return res.send(data);
+          });
         } else {
           return res.send(406);
         }
