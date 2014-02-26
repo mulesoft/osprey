@@ -2,6 +2,10 @@ module.exports = (grunt) ->
   grunt.initConfig(
     pkg: grunt.file.readJSON('package.json'),
 
+    githooks: 
+      all: 
+        'pre-commit': 'coffeelint mochaTest'
+
     bower:
       install:
         options:
@@ -109,5 +113,4 @@ module.exports = (grunt) ->
 
   #TODO: Add https://github.com/vojtajina/grunt-npm for npm publishing
   grunt.registerTask 'default', ['clean:build', 'watch:development']
-  grunt.registerTask 'integration', ['clean:build', 'watch:integration']
   grunt.registerTask 'release', ['clean', 'bower:install', 'coffeelint', 'coffee', 'mochaTest', 'copy', 'clean:bower']
