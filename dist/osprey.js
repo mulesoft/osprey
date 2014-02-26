@@ -1,16 +1,16 @@
 (function() {
-  var DefaultParameters, Osprey, Validation, errorDefaultSettings, express, fs, path, url,
+  var DefaultParameters, ErrorHandler, Osprey, Validation, express, fs, path, url,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   express = require('express');
 
   path = require('path');
 
-  Validation = require('./validation');
+  Validation = require('./middlewares/validation');
 
-  DefaultParameters = require('./default-parameters');
+  DefaultParameters = require('./middlewares/default-parameters');
 
-  errorDefaultSettings = require('./error-default-settings');
+  ErrorHandler = require('./middlewares/error-handler');
 
   fs = require('fs');
 
@@ -30,7 +30,6 @@
       this.put = __bind(this.put, this);
       this.post = __bind(this.post, this);
       this.get = __bind(this.get, this);
-      this.validations = __bind(this.validations, this);
       this.route = __bind(this.route, this);
       this.registerConsole = __bind(this.registerConsole, this);
       this.register = __bind(this.register, this);
@@ -44,12 +43,12 @@
       if (this.settings.enableValidations == null) {
         this.settings.enableValidations = true;
       }
-      this.context.use(this.loadDefaultParameters(this.apiPath, uriTemplateReader, resources, this.logger));
+      this.context.use(this.loadDefaultParameters(this.apiPath, resources, uriTemplateReader, this.logger));
       if (this.settings.enableValidations) {
-        this.context.use(this.validations(uriTemplateReader, resources));
+        this.context.use(this.validations(this.apiPath, resources, uriTemplateReader, this.logger));
       }
       this.context.use(this.route(router, this.settings.enableMocks));
-      return this.context.use(this.exceptionHandler(this.settings.exceptionHandler));
+      return this.context.use(this.exceptionHandler(this.apiPath, resources, uriTemplateReader, this.logger, this.settings.exceptionHandler));
     };
 
     Osprey.prototype.registerConsole = function() {
@@ -114,50 +113,27 @@
       };
     };
 
-    Osprey.prototype.exceptionHandler = function(settings) {
-      var key, value;
-      this.logger.info('Osprey::ExceptionHandler has been initialized successfully');
-      for (key in settings) {
-        value = settings[key];
-        errorDefaultSettings[key] = value;
-      }
-      return function(err, req, res, next) {
-        var errorHandler;
-        errorHandler = errorDefaultSettings[err.constructor.name];
-        if (errorHandler != null) {
-          return errorHandler(err, req, res, next);
-        } else {
-          return next();
-        }
-      };
-    };
-
-    Osprey.prototype.validations = function(uriTemplateReader, resources) {
-      var _this = this;
-      this.logger.info('Osprey::Validations has been initialized successfully');
-      return function(req, res, next) {
-        var regex, resource, template, uri, urlPath, validation;
-        regex = new RegExp("^\\" + _this.apiPath + "(.*)");
-        urlPath = regex.exec(req.url);
-        if (urlPath && urlPath.length > 1) {
-          uri = urlPath[1].split('?')[0];
-          template = uriTemplateReader.getTemplateFor(uri);
-          if (template != null) {
-            resource = resources[template.uriTemplate];
-            if (resource != null) {
-              validation = new Validation(req, uriTemplateReader, resource, _this.apiPath);
-              validation.validate();
-            }
-          }
-        }
-        return next();
-      };
-    };
-
-    Osprey.prototype.loadDefaultParameters = function(apiPath, uriTemplateReader, resources, logger) {
+    Osprey.prototype.exceptionHandler = function(apiPath, resources, uriTemplateReader, logger, settings) {
       var middleware;
-      middleware = new DefaultParameters(apiPath, uriTemplateReader, resources, logger);
+      middleware = new ErrorHandler(apiPath, resources, uriTemplateReader, logger, settings);
+      return middleware.exec;
+    };
+
+    Osprey.prototype.validations = function(apiPath, resources, uriTemplateReader, logger) {
+      var middleware;
+      middleware = new Validation(apiPath, resources, uriTemplateReader, logger);
+      return middleware.validate;
+    };
+
+    Osprey.prototype.loadDefaultParameters = function(apiPath, resources, uriTemplateReader, logger) {
+      var middleware;
+      middleware = new DefaultParameters(apiPath, resources, uriTemplateReader, logger);
       return middleware.checkDefaults;
+    };
+
+    Osprey.prototype.describe = function(descriptor) {
+      descriptor(this);
+      return this;
     };
 
     Osprey.prototype.get = function(uriTemplate, handler) {

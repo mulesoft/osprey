@@ -1,5 +1,5 @@
 parser = require '../../../../src/wrapper'
-Validation = require '../../../../src/validation'
+Validation = require '../../../../src/middlewares/validation'
 should = require 'should'
 Request = require('../../../mocks/server').request
 Logger = require '../../../mocks/logger'
@@ -18,13 +18,13 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date/:id']
     req = new Request 'GET', '/api/date/aa'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()  
@@ -33,13 +33,13 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date/:id']
     req = new Request 'GET', '/api/date/Sun, 06 Nov 1994 08:49:37 GMT'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()    

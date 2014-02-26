@@ -1,5 +1,6 @@
 class DefaultParameters
-  constructor: (@apiPath, @uriTemplateReader, @resources, @logger) ->
+  constructor: (@apiPath, @resources, @uriTemplateReader, @logger) ->
+    @logger.info 'Osprey::DefaultParameters has been initialized successfully'
 
   checkDefaults: (req, res, next) =>
     regex = new RegExp "^\\" + @apiPath + "(.*)"
@@ -7,7 +8,7 @@ class DefaultParameters
 
     if urlPath and urlPath.length > 1
       uri = urlPath[1].split('?')[0]
-      console.log uri
+
       template = @uriTemplateReader.getTemplateFor(uri)
       
       if template?

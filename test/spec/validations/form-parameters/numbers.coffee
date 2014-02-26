@@ -1,5 +1,5 @@
 parser = require '../../../../src/wrapper'
-Validation = require '../../../../src/validation'
+Validation = require '../../../../src/middlewares/validation'
 should = require 'should'
 Request = require('../../../mocks/server').request
 Logger = require '../../../mocks/logger'
@@ -18,14 +18,14 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'POST', '/api/number'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '10'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -34,13 +34,13 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'POST', '/api/number'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -49,14 +49,14 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'POST', '/api/number'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', 'aa'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -65,14 +65,14 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'POST', '/api/number'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '10'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -81,14 +81,14 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'POST', '/api/number'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '10'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -97,14 +97,14 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'POST', '/api/number'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '1'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -113,14 +113,14 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'POST', '/api/number'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '10'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -129,14 +129,14 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'POST', '/api/number'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '11'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()

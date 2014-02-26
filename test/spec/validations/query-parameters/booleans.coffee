@@ -1,5 +1,5 @@
 parser = require '../../../../src/wrapper'
-Validation = require '../../../../src/validation'
+Validation = require '../../../../src/middlewares/validation'
 should = require 'should'
 Request = require('../../../mocks/server').request
 Logger = require '../../../mocks/logger'
@@ -18,13 +18,13 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean?param=true'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', 'true'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -33,11 +33,11 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -46,14 +46,14 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean?param=aa'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addQueryParameter 'param', 'aa'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -62,14 +62,14 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean?param=true'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addQueryParameter 'param', 'true'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done() 

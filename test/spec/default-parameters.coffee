@@ -3,7 +3,7 @@ should = require 'should'
 Request = require('../mocks/server').request
 Logger = require '../mocks/logger'
 UriTemplateReader = require '../../src/uri-template-reader'
-DefaultParameters = require '../../src/default-parameters'
+DefaultParameters = require '../../src/middlewares/default-parameters'
 
 describe 'OSPREY DEFAULT PARAMETERS', =>
   before (done) =>
@@ -17,7 +17,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should add a query param to the request if it is not present', (done) =>
       # Arrange
       req = new Request 'GET', '/api/resources'
-      middleware = new DefaultParameters '/api', @uriTemplateReader, @resources, new Logger
+      middleware = new DefaultParameters '/api', @resources, @uriTemplateReader, new Logger
       
       # Act
       middleware.checkDefaults(req, {}, ()-> )
@@ -30,7 +30,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should use the assigned value', (done) =>
       # Arrange
       req = new Request 'GET', '/api/resources?param=CUSTOM'
-      middleware = new DefaultParameters '/api', @uriTemplateReader, @resources, new Logger
+      middleware = new DefaultParameters '/api', @resources, @uriTemplateReader, new Logger
       
       # Act
       req.addQueryParameter 'param', 'CUSTOM'
@@ -45,7 +45,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should add a form parameter to the request if it is not present', (done) =>
       # Arrange
       req = new Request 'POST', '/api/resources'
-      middleware = new DefaultParameters '/api', @uriTemplateReader, @resources, new Logger
+      middleware = new DefaultParameters '/api', @resources, @uriTemplateReader, new Logger
       
       # Act
       req.addHeader 'content-type', 'application/x-www-form-urlencoded'
@@ -59,7 +59,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should use the assigned value', (done) =>
       # Arrange
       req = new Request 'POST', '/api/resources'
-      middleware = new DefaultParameters '/api', @uriTemplateReader, @resources, new Logger
+      middleware = new DefaultParameters '/api', @resources, @uriTemplateReader, new Logger
       
       # Act
       req.addHeader 'content-type', 'application/x-www-form-urlencoded'
@@ -75,7 +75,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should add a header to the request if it is not present', (done) =>
       # Arrange
       req = new Request 'GET', '/api/resources'
-      middleware = new DefaultParameters '/api', @uriTemplateReader, @resources, new Logger
+      middleware = new DefaultParameters '/api', @resources, @uriTemplateReader, new Logger
       
       # Act
       middleware.checkDefaults(req, {}, ()-> )
@@ -88,7 +88,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
     it 'Should use the assigned value', (done) =>
       # Arrange
       req = new Request 'GET', '/api/resources'
-      middleware = new DefaultParameters '/api', @uriTemplateReader, @resources, new Logger
+      middleware = new DefaultParameters '/api', @resources, @uriTemplateReader, new Logger
       
       # Act
       req.addHeader 'header', 'CUSTOM'

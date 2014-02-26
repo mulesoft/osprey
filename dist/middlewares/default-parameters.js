@@ -3,14 +3,15 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   DefaultParameters = (function() {
-    function DefaultParameters(apiPath, uriTemplateReader, resources, logger) {
+    function DefaultParameters(apiPath, resources, uriTemplateReader, logger) {
       this.apiPath = apiPath;
-      this.uriTemplateReader = uriTemplateReader;
       this.resources = resources;
+      this.uriTemplateReader = uriTemplateReader;
       this.logger = logger;
       this.checkFormParameters = __bind(this.checkFormParameters, this);
       this.checkHeaders = __bind(this.checkHeaders, this);
       this.checkDefaults = __bind(this.checkDefaults, this);
+      this.logger.info('Osprey::DefaultParameters has been initialized successfully');
     }
 
     DefaultParameters.prototype.checkDefaults = function(req, res, next) {
@@ -19,7 +20,6 @@
       urlPath = regex.exec(req.url);
       if (urlPath && urlPath.length > 1) {
         uri = urlPath[1].split('?')[0];
-        console.log(uri);
         template = this.uriTemplateReader.getTemplateFor(uri);
         if (template != null) {
           resource = this.resources[template.uriTemplate];

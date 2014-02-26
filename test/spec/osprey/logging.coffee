@@ -26,10 +26,11 @@ describe 'OSPREY - LOGGING', =>
     osprey.registerConsole()
 
     # Assert
-    logger.infoMessages.should.have.lengthOf 4
-    logger.infoMessages[0].should.eql 'Osprey::Validations has been initialized successfully'
-    logger.infoMessages[1].should.eql 'Osprey::Router has been initialized successfully'
-    logger.infoMessages[2].should.eql 'Osprey::ExceptionHandler has been initialized successfully'
-    logger.infoMessages[3].should.eql 'Osprey::APIConsole has been initialized successfully listening at /api/console'
+    logger.infoMessages.should.have.lengthOf 5
+    logger.infoMessages[0].should.eql 'Osprey::DefaultParameters has been initialized successfully'
+    logger.infoMessages[1].should.eql 'Osprey::Validations has been initialized successfully'
+    logger.infoMessages[2].should.eql 'Osprey::Router has been initialized successfully'
+    logger.infoMessages[3].should.eql 'Osprey::ExceptionHandler has been initialized successfully'
+    logger.infoMessages[4].should.eql 'Osprey::APIConsole has been initialized successfully listening at /api/console'
 
     done()

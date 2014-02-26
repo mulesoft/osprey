@@ -1,5 +1,5 @@
 parser = require '../../../src/wrapper'
-Validation = require '../../../src/validation'
+Validation = require '../../../src/middlewares/validation'
 should = require 'should'
 Request = require('../../mocks/server').request
 Logger = require '../../mocks/logger'
@@ -18,14 +18,14 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addBody { id: 'aaa' }
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -34,14 +34,14 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/test+json'
     req.addBody { id: 'aaa' }
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -50,14 +50,14 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addBody { id: 'a' }
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -66,13 +66,13 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'text/plain'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()

@@ -1,5 +1,5 @@
 parser = require '../../../../src/wrapper'
-Validation = require '../../../../src/validation'
+Validation = require '../../../../src/middlewares/validation'
 should = require 'should'
 Request = require('../../../mocks/server').request
 Logger = require '../../../mocks/logger'
@@ -18,13 +18,13 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/111'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -33,11 +33,11 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/1'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -46,13 +46,13 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/111'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -61,11 +61,11 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/1111'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -74,11 +74,11 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/enum/:id']
     req = new Request 'GET', '/api/string/enum/AAA'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -87,11 +87,11 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/enum/:id']
     req = new Request 'GET', '/api/string/enum/1'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -100,11 +100,11 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/pattern/:id']
     req = new Request 'GET', '/api/string/pattern/a'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()    
@@ -113,11 +113,11 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/pattern/:id']
     req = new Request 'GET', '/api/string/pattern/1'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()  

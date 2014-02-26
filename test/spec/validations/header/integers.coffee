@@ -1,5 +1,5 @@
 parser = require '../../../../src/wrapper'
-Validation = require '../../../../src/validation'
+Validation = require '../../../../src/middlewares/validation'
 should = require 'should'
 Request = require('../../../mocks/server').request
 Logger = require '../../../mocks/logger'
@@ -18,13 +18,13 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'GET', '/api/integer'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'Header', '10'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -33,11 +33,11 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'GET', '/api/integer'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -46,14 +46,14 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'GET', '/api/integer'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addHeader 'Header', 'aa'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -62,14 +62,14 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'GET', '/api/integer'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addHeader 'Header', '10'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -78,14 +78,14 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'GET', '/api/integer'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addHeader 'Header', '10'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -94,13 +94,13 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'GET', '/api/integer'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'Header', '1'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()
@@ -109,14 +109,14 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'GET', '/api/integer'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addHeader 'Header', '10'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.not.throw();
 
     done()
@@ -125,13 +125,13 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'GET', '/api/integer'
-    validation = new Validation req, @uriTemplateReader, resource, '/api'
+    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'Header', '11'
 
     # Assert
     ( ->
-      validation.validate()
+      validation.validateRequest resource, req
     ).should.throw();
 
     done()

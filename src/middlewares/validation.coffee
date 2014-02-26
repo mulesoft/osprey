@@ -1,61 +1,77 @@
 SchemaValidator = require('jsonschema').Validator
-logger = require './utils/logger'
-InvalidUriParameterError = require './errors/invalid-uri-parameter-error'
-InvalidFormParameterError = require './errors/invalid-form-parameter-error'
-InvalidQueryParameterError = require './errors/invalid-query-parameter-error'
-InvalidHeaderError = require './errors/invalid-header-error'
-InvalidBodyError = require './errors/invalid-body-error'
+InvalidUriParameterError = require '../errors/invalid-uri-parameter-error'
+InvalidFormParameterError = require '../errors/invalid-form-parameter-error'
+InvalidQueryParameterError = require '../errors/invalid-query-parameter-error'
+InvalidHeaderError = require '../errors/invalid-header-error'
+InvalidBodyError = require '../errors/invalid-body-error'
 moment = require 'moment'
 libxml = require 'libxmljs'
 
 class Validation
-  constructor: (@req, @uriTemplateReader, @resource, @apiPath) ->
+  constructor: (@apiPath, @resources, @uriTemplateReader, @logger) ->
+    @logger.info 'Osprey::Validations has been initialized successfully'
 
-  validate: () =>
-    method = @getMethod()
+  validate: (req, res, next) =>
+    regex = new RegExp "^\\" + @apiPath + "(.*)"
+    urlPath = regex.exec req.url
 
-    @validateUriParams()
+    if urlPath and urlPath.length > 1
+      uri = urlPath[1].split('?')[0]
+      template = @uriTemplateReader.getTemplateFor(uri)
+
+      if template?
+        resource = @resources[template.uriTemplate]
+
+        if resource?
+          @validateRequest resource, req
+
+    next()
+
+  validateRequest: (resource, req) =>
+    method = @getMethodInfo resource, req.method.toLowerCase()
+
+    @validateUriParams resource, req
 
     if method?
-      @validateQueryParams method
+      @validateQueryParams method, req
       
-      @validateHeaders method
+      @validateHeaders method, req
+
+      @validateFormParams method, req
       
-      @validateFormParams method
-      
-      unless @validateSchema method
+      unless @validateSchema method, req
         throw new InvalidBodyError {}
 
-  isForm: () =>
-    @req.headers['content-type'] in ['application/x-www-form-urlencoded', 'multipart/form-data']
+  isForm: (req) ->
+    req.headers['content-type'] in ['application/x-www-form-urlencoded', 'multipart/form-data']
 
-  isJson: () =>
-    if @req.headers?['content-type']?
-      @req.headers['content-type'] == 'application/json' or @req.headers['content-type'].match '\\+json$'
+  isJson: (req) ->
+    if req.headers?['content-type']?
+      req.headers['content-type'] == 'application/json' or req.headers['content-type'].match '\\+json$'
 
-  isXml: () =>
-    if @req.headers?['content-type']?
-      @req.headers['content-type'] in ['application/xml', 'text/xml'] or @req.headers['content-type'].match '\\+xml$'
+  isXml: (req) ->
+    if req.headers?['content-type']?
+      req.headers['content-type'] in ['application/xml', 'text/xml'] or req.headers['content-type'].match '\\+xml$'
 
-  validateSchema: (method) =>
+  validateSchema: (method, req) =>
     if method.body?
-      contentType =  method.body[@req.headers['content-type']]
+      contentType =  method.body[req.headers['content-type']]
 
       if contentType?.schema?
-        if @isJson()
+        if @isJson req
           schemaValidator = new SchemaValidator()
-          return not (schemaValidator.validate @req.body, JSON.parse contentType.schema).errors.length
-        else if @isXml()
-          if @req.rawBody?
-            xml = libxml.parseXmlString @req.rawBody
+          return not (schemaValidator.validate req.body, JSON.parse contentType.schema).errors.length
+        else if @isXml req
+          if req.rawBody?
+            xml = libxml.parseXmlString req.rawBody
             xsd = libxml.parseXmlString contentType.schema
             return xml.validate(xsd)
     true
 
-  getMethod: () =>
-    if @resource.methods?
-      for method in @resource.methods
-        if method.method == @req.method.toLowerCase()
+  getMethodInfo: (resource, httpMethod) ->
+    if resource.methods?
+      for method in resource.methods
+        if method.method == httpMethod
           return method
 
     return null
@@ -72,47 +88,47 @@ class Validation
 
     validationInfo
 
-  validateUriParams: () =>
-    if @resource.uriParameters?
-      uri = @req.url.replace @apiPath, ''
+  validateUriParams: (resource, req) =>
+    if resource.uriParameters?
+      uri = req.url.replace @apiPath, ''
 
       reqUriParameters = @uriTemplateReader.getUriParametersFor uri
 
-      for key, ramlUriParameter of @resource.uriParameters
+      for key, ramlUriParameter of resource.uriParameters
         if not @isValid reqUriParameters[key], ramlUriParameter
-          logger.error "Invalid URI Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqUriParameters[key]}"
-          logger.data "Validation rule", ramlUriParameter
+          @logger.error "Invalid URI Parameter :#{key} - Request: #{req.url}, Parameter value: #{reqUriParameters[key]}"
+          @logger.data "Validation rule", ramlUriParameter
           throw new InvalidUriParameterError @readValidationInfo(key, reqUriParameters[key], ramlUriParameter)
 
-  validateFormParams: (method) =>
-    if @isForm()
+  validateFormParams: (method, req) =>
+    if @isForm req
       formParameters = method.body['multipart/form-data']
       formParameters = method.body['application/x-www-form-urlencoded'] unless formParameters?
       formParameters = formParameters.formParameters
 
       for key, ramlFormParameter of formParameters
-        reqFormParam = @req.body[key]
+        reqFormParam = req.body[key]
         if not @isValid reqFormParam, ramlFormParameter
-          logger.error "Invalid Form Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqFormParam}"
-          logger.data "Validation Info", ramlFormParameter
+          @logger.error "Invalid Form Parameter :#{key} - Request: #{req.url}, Parameter value: #{reqFormParam}"
+          @logger.data "Validation Info", ramlFormParameter
           throw new InvalidFormParameterError @readValidationInfo(key, reqFormParam, ramlFormParameter)
 
-  validateQueryParams: (method) =>
+  validateQueryParams: (method, req) =>
     if method.queryParameters?
       for key, ramlQueryParameter of method.queryParameters
-        reqQueryParam = @req.query[key]
+        reqQueryParam = req.query[key]
         if not @isValid reqQueryParam, ramlQueryParameter
-          logger.error "Invalid Query Parameter :#{key} - Request: #{@req.url}, Parameter value: #{reqQueryParam}"
-          logger.data "Validation Info", ramlQueryParameter
+          @logger.error "Invalid Query Parameter :#{key} - Request: #{req.url}, Parameter value: #{reqQueryParam}"
+          @logger.data "Validation Info", ramlQueryParameter
           throw new InvalidQueryParameterError @readValidationInfo(key, reqQueryParam, ramlQueryParameter)
 
-  validateHeaders: (method) =>
+  validateHeaders: (method, req) =>
     if method.headers?
       for key, ramlHeader of method.headers
-        reqHeader = @req.headers[key]
+        reqHeader = req.headers[key]
         if not @isValid reqHeader, ramlHeader
-          logger.error "Invalid Header :#{key} - Request: #{@req.url}, Header value: #{reqHeader}"
-          logger.data "Validation Info", ramlHeader
+          @logger.error "Invalid Header :#{key} - Request: #{req.url}, Header value: #{reqHeader}"
+          @logger.data "Validation Info", ramlHeader
           throw new InvalidHeaderError @readValidationInfo(key, reqHeader, ramlHeader)
 
   isValid: (reqParam, ramlParam) =>
