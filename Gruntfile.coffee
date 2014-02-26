@@ -4,6 +4,8 @@ module.exports = (grunt) ->
 
     githooks: 
       all: 
+        options:
+          startMarker: '## Running Tests'
         'pre-commit': 'coffeelint mochaTest'
 
     bower:
