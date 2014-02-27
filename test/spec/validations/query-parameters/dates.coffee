@@ -18,7 +18,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'GET', '/api/date?param=Sun, 06 Nov 1994 08:49:37 GMT'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', 'Sun, 06 Nov 1994 08:49:37 GMT'
 
@@ -33,7 +33,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'GET', '/api/date'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -46,7 +46,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'GET', '/api/date?param=aa'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addQueryParameter 'param', 'aa'
@@ -62,7 +62,7 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'GET', '/api/date?param=Sun, 06 Nov 1994 08:49:37 GMT'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addQueryParameter 'param', 'Sun, 06 Nov 1994 08:49:37 GMT'

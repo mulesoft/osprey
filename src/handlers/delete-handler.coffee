@@ -1,5 +1,4 @@
 HttpUtils = require '../utils/http-utils'
-OspreyBase = require '../utils/base'
 logger = require '../utils/logger'
 
 class MockDeleteHandler extends HttpUtils
@@ -8,7 +7,7 @@ class MockDeleteHandler extends HttpUtils
     @setDefaultHeaders res, methodInfo
     res.send @readStatusCode(methodInfo)
 
-class DeleteHandler extends OspreyBase
+class DeleteHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
 
   resolve: (uriTemplate, handler) =>

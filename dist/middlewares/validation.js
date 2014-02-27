@@ -20,8 +20,10 @@
   libxml = require('libxmljs');
 
   Validation = (function() {
-    function Validation(apiPath, resources, uriTemplateReader, logger) {
+    function Validation(apiPath, context, settings, resources, uriTemplateReader, logger) {
       this.apiPath = apiPath;
+      this.context = context;
+      this.settings = settings;
       this.resources = resources;
       this.uriTemplateReader = uriTemplateReader;
       this.logger = logger;
@@ -33,11 +35,11 @@
       this.validateUriParams = __bind(this.validateUriParams, this);
       this.validateSchema = __bind(this.validateSchema, this);
       this.validateRequest = __bind(this.validateRequest, this);
-      this.validate = __bind(this.validate, this);
+      this.exec = __bind(this.exec, this);
       this.logger.info('Osprey::Validations has been initialized successfully');
     }
 
-    Validation.prototype.validate = function(req, res, next) {
+    Validation.prototype.exec = function(req, res, next) {
       var regex, resource, template, uri, urlPath;
       regex = new RegExp("^\\" + this.apiPath + "(.*)");
       urlPath = regex.exec(req.url);

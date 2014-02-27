@@ -1,6 +1,6 @@
 Osprey = require '../../../src/osprey'
 parser = require '../../../src/wrapper'
-OspreyRouter = require '../../../src/router'
+OspreyRouter = require '../../../src/middlewares/router'
 UriTemplateReader = require '../../../src/uri-template-reader'
 should = require 'should'
 Express = require('../../mocks/server').express
@@ -13,7 +13,6 @@ describe 'OSPREY - LOGGING', =>
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
       
-      @router = new OspreyRouter '/api', new Express, @resources, @uriTemplateReader, new Logger
       done()
   
   it 'Should make a log entry informing which modules were initialized', (done) =>        
@@ -22,7 +21,7 @@ describe 'OSPREY - LOGGING', =>
     osprey = new Osprey '/api', new Express, {}, logger
 
     # Act
-    osprey.register @router, @uriTemplateReader, @resources
+    osprey.register @uriTemplateReader, @resources
     osprey.registerConsole()
 
     # Assert

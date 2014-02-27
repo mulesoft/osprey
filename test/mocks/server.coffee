@@ -9,6 +9,7 @@ class ExpressMock
     @deleteMethods = []
     @headMethods = []
     @patchMethods = []
+    @locals = {}
     @settings = 
       port: 3000
     

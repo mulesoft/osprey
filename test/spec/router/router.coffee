@@ -1,5 +1,5 @@
 parser = require '../../../src/wrapper'
-OspreyRouter = require '../../../src/router'
+OspreyRouter = require '../../../src/middlewares/router'
 UriTemplateReader = require '../../../src/uri-template-reader'
 should = require 'should'
 Express = require('../../mocks/server').express
@@ -19,7 +19,7 @@ describe 'OSPREY ROUTER', =>
   it 'Should return false if the resource was not registered on express', (done) =>        
     # Arrange
     context = new Express
-    router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
     result = router.routerExists 'GET', '/resource'
@@ -38,7 +38,7 @@ describe 'OSPREY ROUTER', =>
         regexp: /^\/resource\/?$/i
       ]
 
-    router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
     result = router.routerExists 'GET', '/resource'
@@ -57,7 +57,7 @@ describe 'OSPREY ROUTER', =>
         regexp:  /^\/resource\/(?:([^\/]+?))\/?$/i
       ]
 
-    router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
     result = router.routerExists 'GET', '/resource/1'

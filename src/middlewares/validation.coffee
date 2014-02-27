@@ -8,10 +8,10 @@ moment = require 'moment'
 libxml = require 'libxmljs'
 
 class Validation
-  constructor: (@apiPath, @resources, @uriTemplateReader, @logger) ->
+  constructor: (@apiPath, @context, @settings, @resources, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::Validations has been initialized successfully'
 
-  validate: (req, res, next) =>
+  exec: (req, res, next) =>
     regex = new RegExp "^\\" + @apiPath + "(.*)"
     urlPath = regex.exec req.url
 

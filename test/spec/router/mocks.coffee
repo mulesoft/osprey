@@ -1,5 +1,5 @@
 parser = require '../../../src/wrapper'
-OspreyRouter = require '../../../src/router'
+OspreyRouter = require '../../../src/middlewares/router'
 UriTemplateReader = require '../../../src/uri-template-reader'
 should = require 'should'
 Express = require('../../mocks/server').express
@@ -19,10 +19,9 @@ describe 'OSPREY ROUTER - MOCKS', =>
   it 'Should response 200 if the resource does not have an example', (done) =>  
     # Arrange
     context = new Express
-    logger = new Logger
     res = new Response
     req = new Request 'GET', '/api/resource'
-    router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, logger
+    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMock req, res, null, true
@@ -35,10 +34,9 @@ describe 'OSPREY ROUTER - MOCKS', =>
   it 'Should response with the example defined in the RAML file', (done) =>  
     # Arrange
     context = new Express
-    logger = new Logger
     res = new Response
     req = new Request 'GET', '/api/resource/1'
-    router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, logger
+    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMock req, res, null, true
@@ -53,11 +51,10 @@ describe 'OSPREY ROUTER - MOCKS', =>
   it 'Shoul skip not registered resources if mock routing was turned off', (done) =>  
     # Arrange
     context = new Express
-    logger = new Logger
     res = new Response
     req = new Request 'GET', '/api/resource'
     middleware = new Middleware(0)
-    router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, logger
+    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMock req, res, middleware.next, false

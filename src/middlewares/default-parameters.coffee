@@ -1,8 +1,8 @@
 class DefaultParameters
-  constructor: (@apiPath, @resources, @uriTemplateReader, @logger) ->
+  constructor: (@apiPath, @context, @settings, @resources, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::DefaultParameters has been initialized successfully'
 
-  checkDefaults: (req, res, next) =>
+  exec: (req, res, next) =>
     regex = new RegExp "^\\" + @apiPath + "(.*)"
     urlPath = regex.exec req.url
 

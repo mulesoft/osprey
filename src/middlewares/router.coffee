@@ -1,13 +1,15 @@
-GetMethod = require './handlers/get-handler'
-PostMethod = require './handlers/post-handler'
-PutMethod = require './handlers/put-handler'
-DeleteMethod = require './handlers/delete-handler'
-HeadMethod = require './handlers/head-handler'
-PatchMethod = require './handlers/patch-handler'
-OspreyBase = require './utils/base'
+GetMethod = require '../handlers/get-handler'
+PostMethod = require '../handlers/post-handler'
+PutMethod = require '../handlers/put-handler'
+DeleteMethod = require '../handlers/delete-handler'
+HeadMethod = require '../handlers/head-handler'
+PatchMethod = require '../handlers/patch-handler'
+RamlHelper = require '../utils/raml-helper'
 
-class OspreyRouter extends OspreyBase
-  constructor: (@apiPath, @context, @resources, @uriTemplateReader, @logger) ->
+class OspreyRouter extends RamlHelper
+  constructor: (@apiPath, @context, @settings, @resources, @uriTemplateReader, @logger) ->
+    @logger.info 'Osprey::Router has been initialized successfully'
+
     @mockMethodHandlers =
       get: new GetMethod.MockHandler
       post: new PostMethod.MockHandler
@@ -23,6 +25,16 @@ class OspreyRouter extends OspreyBase
       delete: new DeleteMethod.Handler @apiPath, @context, @resources
       head: new HeadMethod.Handler @apiPath, @context, @resources
       patch: new PatchMethod.Handler @apiPath, @context, @resources
+
+    if @context.locals.handlers?
+      for handler in @context.locals.handlers
+        @resolveMethod handler
+
+  exec: (req, res, next) =>
+    if req.path.indexOf(@apiPath) >= 0
+      @resolveMock req, res, next, @settings.enableMocks
+    else
+      next()
 
   resolveMock: (req, res, next, enableMocks) =>
     regex = new RegExp "^\\" + @apiPath + "(.*)"

@@ -1,5 +1,5 @@
 parser = require '../../../src/wrapper'
-OspreyRouter = require '../../../src/router'
+OspreyRouter = require '../../../src/middlewares/router'
 UriTemplateReader = require '../../../src/uri-template-reader'
 should = require 'should'
 Express = require('../../mocks/server').express
@@ -19,7 +19,7 @@ describe 'OSPREY ROUTER - OVERWRITE', =>
   it 'Should be able to overwrite a valid resource', (done) =>        
     # Arrange
     context = new Express
-    router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMethod method: 'get', template: '/resource', handler: () ->
@@ -32,7 +32,7 @@ describe 'OSPREY ROUTER - OVERWRITE', =>
   it 'Should not be able to overwrite a resource which does not exists in the RAML file', (done) =>        
     # Arrange
     context = new Express
-    router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMethod method: 'get', template: '/no-existing', handler: null
@@ -45,7 +45,7 @@ describe 'OSPREY ROUTER - OVERWRITE', =>
   it 'Should not fail if a resource does not have method defined', (done) =>        
     # Arrange
     context = new Express
-    router = new OspreyRouter '/api', context, @resources, @uriTemplateReader, new Logger
+    router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
     router.resolveMethod method: 'get', template: '/resource2', handler: null

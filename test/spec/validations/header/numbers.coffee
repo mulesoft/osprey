@@ -18,7 +18,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'GET', '/api/number'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'Header', '10'
 
@@ -33,7 +33,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'GET', '/api/number'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -46,7 +46,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'GET', '/api/number'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addHeader 'Header', 'aa'
@@ -62,7 +62,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'GET', '/api/number'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addHeader 'Header', '10'
@@ -78,7 +78,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'GET', '/api/number'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addHeader 'Header', '10'
@@ -94,7 +94,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'GET', '/api/number'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'Header', '1'
 
@@ -109,7 +109,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'GET', '/api/number'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addHeader 'Header', '10'
@@ -125,7 +125,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - NUMBER', =>
     # Arrange
     resource = @resources['/number']
     req = new Request 'GET', '/api/number'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'Header', '11'
 

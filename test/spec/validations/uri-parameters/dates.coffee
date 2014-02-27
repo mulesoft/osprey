@@ -18,7 +18,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date/:id']
     req = new Request 'GET', '/api/date/aa'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
@@ -33,7 +33,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date/:id']
     req = new Request 'GET', '/api/date/Sun, 06 Nov 1994 08:49:37 GMT'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 

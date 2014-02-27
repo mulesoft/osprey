@@ -1,10 +1,10 @@
 errorDefaultSettings = require '../error-default-settings'
 
 class ErrorHandler
-  constructor: (@apiPath, @resources, @uriTemplateReader, @logger, settings) ->
+  constructor: (@apiPath, @context, @settings, @resources, @uriTemplateReader, @logger) ->
     @logger.info 'Osprey::ExceptionHandler has been initialized successfully'
 
-    for key,value of settings
+    for key,value of settings.exceptionHandler
       errorDefaultSettings[key] = value
 
   exec: (err, req, res, next) ->

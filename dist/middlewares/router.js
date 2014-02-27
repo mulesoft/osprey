@@ -1,35 +1,39 @@
 (function() {
-  var DeleteMethod, GetMethod, HeadMethod, OspreyBase, OspreyRouter, PatchMethod, PostMethod, PutMethod,
+  var DeleteMethod, GetMethod, HeadMethod, OspreyRouter, PatchMethod, PostMethod, PutMethod, RamlHelper,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  GetMethod = require('./handlers/get-handler');
+  GetMethod = require('../handlers/get-handler');
 
-  PostMethod = require('./handlers/post-handler');
+  PostMethod = require('../handlers/post-handler');
 
-  PutMethod = require('./handlers/put-handler');
+  PutMethod = require('../handlers/put-handler');
 
-  DeleteMethod = require('./handlers/delete-handler');
+  DeleteMethod = require('../handlers/delete-handler');
 
-  HeadMethod = require('./handlers/head-handler');
+  HeadMethod = require('../handlers/head-handler');
 
-  PatchMethod = require('./handlers/patch-handler');
+  PatchMethod = require('../handlers/patch-handler');
 
-  OspreyBase = require('./utils/base');
+  RamlHelper = require('../utils/raml-helper');
 
   OspreyRouter = (function(_super) {
     __extends(OspreyRouter, _super);
 
-    function OspreyRouter(apiPath, context, resources, uriTemplateReader, logger) {
+    function OspreyRouter(apiPath, context, settings, resources, uriTemplateReader, logger) {
+      var handler, _i, _len, _ref;
       this.apiPath = apiPath;
       this.context = context;
+      this.settings = settings;
       this.resources = resources;
       this.uriTemplateReader = uriTemplateReader;
       this.logger = logger;
       this.resolveMethod = __bind(this.resolveMethod, this);
       this.routerExists = __bind(this.routerExists, this);
       this.resolveMock = __bind(this.resolveMock, this);
+      this.exec = __bind(this.exec, this);
+      this.logger.info('Osprey::Router has been initialized successfully');
       this.mockMethodHandlers = {
         get: new GetMethod.MockHandler,
         post: new PostMethod.MockHandler,
@@ -46,7 +50,22 @@
         head: new HeadMethod.Handler(this.apiPath, this.context, this.resources),
         patch: new PatchMethod.Handler(this.apiPath, this.context, this.resources)
       };
+      if (this.context.locals.handlers != null) {
+        _ref = this.context.locals.handlers;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          handler = _ref[_i];
+          this.resolveMethod(handler);
+        }
+      }
     }
+
+    OspreyRouter.prototype.exec = function(req, res, next) {
+      if (req.path.indexOf(this.apiPath) >= 0) {
+        return this.resolveMock(req, res, next, this.settings.enableMocks);
+      } else {
+        return next();
+      }
+    };
 
     OspreyRouter.prototype.resolveMock = function(req, res, next, enableMocks) {
       var method, methodInfo, regex, reqUrl, template, uri, urlPath;
@@ -101,7 +120,7 @@
 
     return OspreyRouter;
 
-  })(OspreyBase);
+  })(RamlHelper);
 
   module.exports = OspreyRouter;
 

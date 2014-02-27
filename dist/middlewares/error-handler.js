@@ -4,15 +4,18 @@
   errorDefaultSettings = require('../error-default-settings');
 
   ErrorHandler = (function() {
-    function ErrorHandler(apiPath, resources, uriTemplateReader, logger, settings) {
-      var key, value;
+    function ErrorHandler(apiPath, context, settings, resources, uriTemplateReader, logger) {
+      var key, value, _ref;
       this.apiPath = apiPath;
+      this.context = context;
+      this.settings = settings;
       this.resources = resources;
       this.uriTemplateReader = uriTemplateReader;
       this.logger = logger;
       this.logger.info('Osprey::ExceptionHandler has been initialized successfully');
-      for (key in settings) {
-        value = settings[key];
+      _ref = settings.exceptionHandler;
+      for (key in _ref) {
+        value = _ref[key];
         errorDefaultSettings[key] = value;
       }
     }

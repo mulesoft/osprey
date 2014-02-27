@@ -1,5 +1,5 @@
 (function() {
-  var Osprey, OspreyRouter, UriTemplateReader, logger, parser;
+  var Osprey, UriTemplateReader, logger, parser;
 
   UriTemplateReader = require('./uri-template-reader');
 
@@ -9,8 +9,6 @@
 
   UriTemplateReader = require('./uri-template-reader');
 
-  OspreyRouter = require('./router');
-
   logger = require('./utils/logger');
 
   exports.create = function(apiPath, context, settings) {
@@ -19,12 +17,10 @@
     logger.setLevel(settings.logLevel);
     osprey.registerConsole();
     parser.loadRaml(settings.ramlFile, logger, function(wrapper) {
-      var resources, router, templates, uriTemplateReader;
+      var resources, uriTemplateReader;
       resources = wrapper.getResources();
-      templates = wrapper.getUriTemplates();
-      uriTemplateReader = new UriTemplateReader(templates);
-      router = new OspreyRouter(apiPath, context, resources, uriTemplateReader, logger);
-      return osprey.register(router, uriTemplateReader, resources);
+      uriTemplateReader = new UriTemplateReader(wrapper.getUriTemplates());
+      return osprey.register(uriTemplateReader, resources);
     });
     return osprey;
   };

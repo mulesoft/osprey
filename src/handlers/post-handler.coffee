@@ -1,5 +1,4 @@
 HttpUtils = require '../utils/http-utils'
-OspreyBase = require '../utils/base'
 logger = require '../utils/logger'
 
 class MockPostHandler extends HttpUtils
@@ -9,7 +8,7 @@ class MockPostHandler extends HttpUtils
     @negotiateContentType req, res, methodInfo
     @negotiateAcceptType req, res, methodInfo
 
-class PostHandler extends OspreyBase
+class PostHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
 
   resolve: (uriTemplate, handler) =>

@@ -18,7 +18,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addHeader 'Header', 'aa'
@@ -34,7 +34,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean/'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addHeader 'Header', 'true'
@@ -50,7 +50,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'Header', 'true'
 
@@ -65,7 +65,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - BOOLEAN', =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->

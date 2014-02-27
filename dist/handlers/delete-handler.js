@@ -1,12 +1,10 @@
 (function() {
-  var DeleteHandler, HttpUtils, MockDeleteHandler, OspreyBase, logger, _ref,
+  var DeleteHandler, HttpUtils, MockDeleteHandler, logger, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   HttpUtils = require('../utils/http-utils');
-
-  OspreyBase = require('../utils/base');
 
   logger = require('../utils/logger');
 
@@ -48,7 +46,7 @@
 
     return DeleteHandler;
 
-  })(OspreyBase);
+  })(HttpUtils);
 
   exports.MockHandler = MockDeleteHandler;
 

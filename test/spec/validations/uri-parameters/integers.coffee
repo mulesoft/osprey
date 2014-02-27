@@ -18,7 +18,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer/:id']
     req = new Request 'GET', '/api/integer/aa'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
@@ -33,7 +33,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer/:id']
     req = new Request 'GET', '/api/integer/10'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
@@ -48,7 +48,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer/:id']
     req = new Request 'GET', '/api/integer/10'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
@@ -63,7 +63,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer/:id']
     req = new Request 'GET', '/api/integer/1'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -76,7 +76,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer/:id']
     req = new Request 'GET', '/api/integer/10'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
 
@@ -91,7 +91,7 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - INTEGER', =>
     # Arrange
     resource = @resources['/integer/:id']
     req = new Request 'GET', '/api/integer/11'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->

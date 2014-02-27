@@ -18,7 +18,7 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addBody { id: 'aaa' }
@@ -34,7 +34,7 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/test+json'
     req.addBody { id: 'aaa' }
@@ -50,7 +50,7 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addBody { id: 'a' }
@@ -66,7 +66,7 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'text/plain'
 

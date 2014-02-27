@@ -1,6 +1,6 @@
 HttpUtils = require '../utils/http-utils'
 
-class OspreyBase extends HttpUtils
+class RamlHelper
   methodLookup: (resources, httpMethod, uri) ->
     if resources[uri]?.methods?
       methodInfo = resources[uri].methods.filter (method) ->
@@ -21,4 +21,4 @@ class OspreyBase extends HttpUtils
 
     Number statusCode
 
-module.exports = OspreyBase
+module.exports = RamlHelper

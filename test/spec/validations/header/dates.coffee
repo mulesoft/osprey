@@ -18,7 +18,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'GET', '/api/date'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'Header', 'Sun, 06 Nov 1994 08:49:37 GMT'
 
@@ -33,7 +33,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'GET', '/api/date'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     # Assert
     ( ->
@@ -46,7 +46,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'GET', '/api/date'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'Header', ''
 
@@ -61,7 +61,7 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - DATE', =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'GET', '/api/date'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
     req.addHeader 'Header', 'Sun, 06 Nov 1994 08:49:37 GMT'

@@ -1,6 +1,6 @@
 Osprey = require '../../../src/osprey'
 parser = require '../../../src/wrapper'
-OspreyRouter = require '../../../src/router'
+OspreyRouter = require '../../../src/middlewares/router'
 UriTemplateReader = require '../../../src/uri-template-reader'
 should = require 'should'
 Express = require('../../mocks/server').express
@@ -13,7 +13,6 @@ describe 'OSPREY - OVERWRITE', =>
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
       
-      @router = new OspreyRouter '/api', new Express, @resources, @uriTemplateReader, new Logger
       done()
  
   it 'Should be able to overwrite an existing resource - GET', (done) =>        
@@ -25,10 +24,9 @@ describe 'OSPREY - OVERWRITE', =>
 
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
-      router = new OspreyRouter '/api', context, wrapper.getResources(), uriTemplateReader, new Logger
-
+      
       # Act
-      osprey.route router, false
+      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
       
       # Assert
       context.getMethods.should.have.lengthOf 1
@@ -45,10 +43,9 @@ describe 'OSPREY - OVERWRITE', =>
 
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
-      router = new OspreyRouter '/api', context, wrapper.getResources(), uriTemplateReader, new Logger
 
       # Act
-      osprey.route router, false
+      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
       
       # Assert
       context.postMethods.should.have.lengthOf 1
@@ -65,10 +62,9 @@ describe 'OSPREY - OVERWRITE', =>
 
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
-      router = new OspreyRouter '/api', context, wrapper.getResources(), uriTemplateReader, new Logger
-
+      
       # Act
-      osprey.route router, false
+      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
       
       # Assert
       context.putMethods.should.have.lengthOf 1
@@ -85,10 +81,9 @@ describe 'OSPREY - OVERWRITE', =>
 
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
-      router = new OspreyRouter '/api', context, wrapper.getResources(), uriTemplateReader, new Logger
 
       # Act
-      osprey.route router, false
+      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
       
       # Assert
       context.deleteMethods.should.have.lengthOf 1
@@ -105,10 +100,9 @@ describe 'OSPREY - OVERWRITE', =>
 
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
-      router = new OspreyRouter '/api', context, wrapper.getResources(), uriTemplateReader, new Logger
 
       # Act
-      osprey.route router, false
+      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
       
       # Assert
       context.headMethods.should.have.lengthOf 1
@@ -125,10 +119,9 @@ describe 'OSPREY - OVERWRITE', =>
 
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
-      router = new OspreyRouter '/api', context, wrapper.getResources(), uriTemplateReader, new Logger
 
       # Act
-      osprey.route router, false
+      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
       
       # Assert
       context.patchMethods.should.have.lengthOf 1

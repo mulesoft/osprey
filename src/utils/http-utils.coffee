@@ -1,7 +1,8 @@
 InvalidAcceptTypeError = require '../errors/invalid-accept-type-error'
 InvalidContentTypeError = require '../errors/invalid-content-type-error'
+RamlHelper = require '../utils/raml-helper'
 
-class HttpUtils
+class HttpUtils extends RamlHelper
   readStatusCode: (methodInfo) ->
     statusCode = 200
 

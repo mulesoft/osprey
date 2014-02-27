@@ -18,7 +18,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'POST', '/api/string'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', 'aaa'
@@ -34,7 +34,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'POST', '/api/string'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
 
@@ -49,7 +49,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'POST', '/api/string'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '111'
@@ -65,7 +65,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'POST', '/api/string'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '1'
@@ -81,7 +81,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'POST', '/api/string'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '111'
@@ -97,7 +97,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'POST', '/api/string'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '1111'
@@ -113,7 +113,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/enum']
     req = new Request 'POST', '/api/string/enum'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', 'AAA'
@@ -129,7 +129,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/enum']
     req = new Request 'POST', '/api/string/enum'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '1'
@@ -145,7 +145,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/pattern']
     req = new Request 'POST', '/api/string/pattern'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', 'a'
@@ -161,7 +161,7 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - STRING', =>
     # Arrange
     resource = @resources['/string/pattern']
     req = new Request 'POST', '/api/string/pattern'
-    validation = new Validation '/api', @resources, @uriTemplateReader, new Logger
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/x-www-form-urlencoded'
     req.addBodyParameter 'param', '1'

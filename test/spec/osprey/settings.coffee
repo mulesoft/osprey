@@ -1,6 +1,6 @@
 Osprey = require '../../../src/osprey'
 parser = require '../../../src/wrapper'
-OspreyRouter = require '../../../src/router'
+OspreyRouter = require '../../../src/middlewares/router'
 UriTemplateReader = require '../../../src/uri-template-reader'
 should = require 'should'
 Express = require('../../mocks/server').express
@@ -13,7 +13,6 @@ describe 'OSPREY - SETTINGS', =>
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
       
-      @router = new OspreyRouter '/api', new Express, @resources, @uriTemplateReader, new Logger
       done()
    
   it 'Should register by default validations, routing and exception handling', (done) =>        
@@ -22,7 +21,7 @@ describe 'OSPREY - SETTINGS', =>
     osprey = new Osprey '/api', context, {}, new Logger
 
     # Act
-    osprey.register @router, @uriTemplateReader, @resources
+    osprey.register @uriTemplateReader, @resources
 
     # Assert
     context.middlewares.should.have.lengthOf 4
@@ -37,7 +36,7 @@ describe 'OSPREY - SETTINGS', =>
     }, new Logger
 
     # Act
-    osprey.register @router, @uriTemplateReader, @resources
+    osprey.register @uriTemplateReader, @resources
 
     # Assert
     context.middlewares.should.have.lengthOf 3
@@ -66,7 +65,7 @@ describe 'OSPREY - SETTINGS', =>
     osprey = new Osprey '/api', context, null, new Logger
 
     # Act
-    osprey.register @router, @uriTemplateReader, @resources
+    osprey.register @uriTemplateReader, @resources
 
     # Assert
     context.middlewares.should.have.lengthOf 4
@@ -79,7 +78,7 @@ describe 'OSPREY - SETTINGS', =>
     osprey = new Osprey '/api', context, undefined, new Logger
 
     # Act
-    osprey.register @router, @uriTemplateReader, @resources
+    osprey.register @uriTemplateReader, @resources
 
     # Assert
     context.middlewares.should.have.lengthOf 4
