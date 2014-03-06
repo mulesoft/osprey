@@ -50,8 +50,8 @@
         head: new HeadMethod.Handler(this.apiPath, this.context, this.resources),
         patch: new PatchMethod.Handler(this.apiPath, this.context, this.resources)
       };
-      if (this.context.locals.handlers != null) {
-        _ref = this.context.locals.handlers;
+      if (this.settings.handlers != null) {
+        _ref = this.settings.handlers;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           handler = _ref[_i];
           this.resolveMethod(handler);

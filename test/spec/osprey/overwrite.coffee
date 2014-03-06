@@ -26,7 +26,7 @@ describe 'OSPREY - OVERWRITE', =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
       
       # Act
-      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
+      osprey.register uriTemplateReader, wrapper.getResources()
       
       # Assert
       context.getMethods.should.have.lengthOf 1
@@ -45,7 +45,7 @@ describe 'OSPREY - OVERWRITE', =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
-      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
+      osprey.register uriTemplateReader, wrapper.getResources()
       
       # Assert
       context.postMethods.should.have.lengthOf 1
@@ -64,7 +64,7 @@ describe 'OSPREY - OVERWRITE', =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
       
       # Act
-      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
+      osprey.register uriTemplateReader, wrapper.getResources()
       
       # Assert
       context.putMethods.should.have.lengthOf 1
@@ -83,7 +83,7 @@ describe 'OSPREY - OVERWRITE', =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
-      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
+      osprey.register uriTemplateReader, wrapper.getResources()
       
       # Assert
       context.deleteMethods.should.have.lengthOf 1
@@ -102,7 +102,7 @@ describe 'OSPREY - OVERWRITE', =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
-      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
+      osprey.register uriTemplateReader, wrapper.getResources()
       
       # Assert
       context.headMethods.should.have.lengthOf 1
@@ -121,7 +121,7 @@ describe 'OSPREY - OVERWRITE', =>
       uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
       # Act
-      router = new OspreyRouter '/api', context, {}, wrapper.getResources(), uriTemplateReader, new Logger
+      osprey.register uriTemplateReader, wrapper.getResources()
       
       # Assert
       context.patchMethods.should.have.lengthOf 1

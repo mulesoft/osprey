@@ -43,7 +43,8 @@
     "winston": "~0.7.2",
     "colors": "~0.6.2",
     "moment": "~2.5.1",
-    "libxmljs": "~0.8.1"
+    "libxmljs": "~0.8.1",
+    "lodash": "~2.4.1"
   },
   "files": [
     "dist"

@@ -26,8 +26,8 @@ class OspreyRouter extends RamlHelper
       head: new HeadMethod.Handler @apiPath, @context, @resources
       patch: new PatchMethod.Handler @apiPath, @context, @resources
 
-    if @context.locals.handlers?
-      for handler in @context.locals.handlers
+    if @settings.handlers?
+      for handler in @settings.handlers
         @resolveMethod handler
 
   exec: (req, res, next) =>

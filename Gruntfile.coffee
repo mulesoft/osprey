@@ -26,6 +26,8 @@ module.exports = (grunt) ->
       options:
         max_line_length:
           level: 'ignore'
+        indentation:
+          level: 'ignore'
 
     mochaTest:
       spec:

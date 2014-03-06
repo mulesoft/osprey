@@ -1,7 +1,6 @@
 (function() {
-  var InvalidBodyError, InvalidFormParameterError, InvalidHeaderError, InvalidQueryParameterError, InvalidUriParameterError, SchemaValidator, Validation, libxml, moment,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+  var InvalidBodyError, InvalidFormParameterError, InvalidHeaderError, InvalidQueryParameterError, InvalidUriParameterError, SchemaValidator, Validation, Validators, libxml,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   SchemaValidator = require('jsonschema').Validator;
 
@@ -15,9 +14,9 @@
 
   InvalidBodyError = require('../errors/invalid-body-error');
 
-  moment = require('moment');
-
   libxml = require('libxmljs');
+
+  Validators = require('./validators');
 
   Validation = (function() {
     function Validation(apiPath, context, settings, resources, uriTemplateReader, logger) {
@@ -58,7 +57,7 @@
 
     Validation.prototype.validateRequest = function(resource, req) {
       var method;
-      method = this.getMethodInfo(resource, req.method.toLowerCase());
+      method = this.methodInfoFor(resource, req.method.toLowerCase());
       this.validateUriParams(resource, req);
       if (method != null) {
         this.validateQueryParams(method, req);
@@ -109,7 +108,7 @@
       return true;
     };
 
-    Validation.prototype.getMethodInfo = function(resource, httpMethod) {
+    Validation.prototype.methodInfoFor = function(resource, httpMethod) {
       var method, _i, _len, _ref;
       if (resource.methods != null) {
         _ref = resource.methods;
@@ -230,77 +229,40 @@
     };
 
     Validation.prototype.validateType = function(reqParam, ramlParam) {
-      if ('string' === ramlParam.type) {
-        return this.validateString(reqParam, ramlParam);
-      } else if ('number' === ramlParam.type) {
-        return this.validateNumber(reqParam, ramlParam);
-      } else if ('integer' === ramlParam.type) {
-        return this.validateInt(reqParam, ramlParam);
-      } else if ('boolean' === ramlParam.type) {
-        return this.validateBoolean(reqParam);
-      } else if ('date' === ramlParam.type) {
-        return this.validateDate(reqParam);
-      } else {
-        return true;
+      switch (ramlParam.type) {
+        case 'string':
+          return this.validateString(reqParam, ramlParam);
+        case 'number':
+          return this.validateNumber(reqParam, ramlParam);
+        case 'integer':
+          return this.validateInt(reqParam, ramlParam);
+        case 'boolean':
+          return this.validateBoolean(reqParam, ramlParam);
+        case 'date':
+          return this.validateDate(reqParam, ramlParam);
+        default:
+          return true;
       }
     };
 
     Validation.prototype.validateString = function(reqParam, ramlParam) {
-      var matcher;
-      if (ramlParam.pattern != null) {
-        matcher = new RegExp(ramlParam.pattern, 'ig');
-        if (!matcher.test(reqParam)) {
-          return false;
-        }
-      }
-      if ((ramlParam.minLength != null) && reqParam.length < ramlParam.minLength) {
-        return false;
-      }
-      if ((ramlParam.maxLength != null) && reqParam.length > ramlParam.maxLength) {
-        return false;
-      }
-      if ((ramlParam["enum"] != null) && !(__indexOf.call(ramlParam["enum"], reqParam) >= 0)) {
-        return false;
-      }
-      return true;
+      return Validators.StringValidator.validate(reqParam, ramlParam);
     };
 
     Validation.prototype.validateNumber = function(reqParam, ramlParam) {
-      var number;
-      number = parseFloat(reqParam);
-      if (isNaN(number)) {
-        return false;
-      }
-      if ((ramlParam.minimum != null) && number < ramlParam.minimum) {
-        return false;
-      }
-      if ((ramlParam.maximum != null) && number > ramlParam.maximum) {
-        return false;
-      }
-      return true;
+      return Validators.NumberValidator.validate(reqParam, ramlParam);
     };
 
     Validation.prototype.validateInt = function(reqParam, ramlParam) {
-      var number;
-      number = parseInt(reqParam);
-      if (isNaN(number)) {
-        return false;
-      }
-      if ((ramlParam.minimum != null) && number < ramlParam.minimum) {
-        return false;
-      }
-      if ((ramlParam.maximum != null) && number > ramlParam.maximum) {
-        return false;
-      }
-      return true;
+      return Validators.IntegerValidator.validate(reqParam, ramlParam);
     };
 
-    Validation.prototype.validateBoolean = function(reqParam) {
-      return "true" === reqParam || "false" === reqParam;
+    Validation.prototype.validateBoolean = function(reqParam, ramlParam) {
+      return Validators.BooleanValidator.validate(reqParam, ramlParam);
     };
 
-    Validation.prototype.validateDate = function(reqParam) {
-      return moment(reqParam).isValid();
+    Validation.prototype.validateDate = function(reqParam, ramlParam) {
+      return Validators.DateValidator.validate(reqParam, ramlParam);
     };
 
     return Validation;

@@ -18,21 +18,20 @@ api = osprey.create '/api', app,
   enableMocks: true,
   exceptionHandler:
     InvalidUriParameterError: (err, req, res) ->
-      console.log 'Overwriting default implementation'
       res.send 400
     CustomError: (err, req, res) ->
       console.log 'Custom Error'
       res.send 400
 
 # Example:
-api.get '/teams/:teamId', (req, res) ->
-  res.send({ name: 'test' })
+# api.get '/teams/:teamId', (req, res) ->
+#   res.send({ name: 'test' })
 
-api.get '/teams', (req, res) ->
-  throw new CustomError 'some exception'
+# api.get '/teams', (req, res) ->
+#   throw new CustomError 'some exception'
 
-api.get '/teamss', (req, res) ->
-  res.send 200
+# api.get '/teamss', (req, res) ->
+#   res.send 200
 
 unless module.parent
   port = app.get('port')

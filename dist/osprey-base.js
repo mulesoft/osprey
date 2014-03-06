@@ -17,7 +17,7 @@
       if (this.settings == null) {
         this.settings = {};
       }
-      this.context.locals.handlers = [];
+      this.settings.handlers = [];
       this.context.disable('x-powered-by');
       this.checkSettings(this.settings);
     }
@@ -46,7 +46,7 @@
     };
 
     OspreyBase.prototype.get = function(uriTemplate, handler) {
-      return this.context.locals.handlers.push({
+      return this.settings.handlers.push({
         method: 'get',
         template: uriTemplate,
         handler: handler
@@ -54,7 +54,7 @@
     };
 
     OspreyBase.prototype.post = function(uriTemplate, handler) {
-      return this.context.locals.handlers.push({
+      return this.settings.handlers.push({
         method: 'post',
         template: uriTemplate,
         handler: handler
@@ -62,7 +62,7 @@
     };
 
     OspreyBase.prototype.put = function(uriTemplate, handler) {
-      return this.context.locals.handlers.push({
+      return this.settings.handlers.push({
         method: 'put',
         template: uriTemplate,
         handler: handler
@@ -70,7 +70,7 @@
     };
 
     OspreyBase.prototype["delete"] = function(uriTemplate, handler) {
-      return this.context.locals.handlers.push({
+      return this.settings.handlers.push({
         method: 'delete',
         template: uriTemplate,
         handler: handler
@@ -78,7 +78,7 @@
     };
 
     OspreyBase.prototype.head = function(uriTemplate, handler) {
-      return this.context.locals.handlers.push({
+      return this.settings.handlers.push({
         method: 'head',
         template: uriTemplate,
         handler: handler
@@ -86,7 +86,7 @@
     };
 
     OspreyBase.prototype.patch = function(uriTemplate, handler) {
-      return this.context.locals.handlers.push({
+      return this.settings.handlers.push({
         method: 'patch',
         template: uriTemplate,
         handler: handler

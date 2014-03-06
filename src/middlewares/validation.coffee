@@ -4,8 +4,8 @@ InvalidFormParameterError = require '../errors/invalid-form-parameter-error'
 InvalidQueryParameterError = require '../errors/invalid-query-parameter-error'
 InvalidHeaderError = require '../errors/invalid-header-error'
 InvalidBodyError = require '../errors/invalid-body-error'
-moment = require 'moment'
 libxml = require 'libxmljs'
+Validators = require './validators'
 
 class Validation
   constructor: (@apiPath, @context, @settings, @resources, @uriTemplateReader, @logger) ->
@@ -28,7 +28,7 @@ class Validation
     next()
 
   validateRequest: (resource, req) =>
-    method = @getMethodInfo resource, req.method.toLowerCase()
+    method = @methodInfoFor resource, req.method.toLowerCase()
 
     @validateUriParams resource, req
 
@@ -68,7 +68,7 @@ class Validation
             return xml.validate(xsd)
     true
 
-  getMethodInfo: (resource, httpMethod) ->
+  methodInfoFor: (resource, httpMethod) ->
     if resource.methods?
       for method in resource.methods
         if method.method == httpMethod
@@ -138,58 +138,27 @@ class Validation
     not ramlParam.required or reqParam?
 
   validateType: (reqParam, ramlParam) =>
-    if 'string' == ramlParam.type
-      @validateString reqParam, ramlParam
-    else if 'number' == ramlParam.type
-      @validateNumber reqParam, ramlParam
-    else if 'integer' == ramlParam.type
-      @validateInt reqParam, ramlParam
-    else if 'boolean' == ramlParam.type
-      @validateBoolean reqParam
-    else if 'date' == ramlParam.type
-      @validateDate reqParam
-    else
-      true
+    switch ramlParam.type
+      when 'string' then @validateString reqParam, ramlParam
+      when 'number' then @validateNumber reqParam, ramlParam
+      when 'integer' then @validateInt reqParam, ramlParam
+      when 'boolean' then @validateBoolean reqParam, ramlParam
+      when 'date' then @validateDate reqParam, ramlParam
+      else true
 
   validateString: (reqParam, ramlParam) ->
-    if ramlParam.pattern?
-      matcher = new RegExp ramlParam.pattern, 'ig'
-      unless matcher.test(reqParam)
-        return false
-    if ramlParam.minLength? and reqParam.length < ramlParam.minLength
-      return false
-    if ramlParam.maxLength? and reqParam.length > ramlParam.maxLength
-      return false
-    if ramlParam.enum? and not (reqParam in ramlParam.enum)
-      return false
-    true
+    Validators.StringValidator.validate reqParam, ramlParam
 
   validateNumber: (reqParam, ramlParam) ->
-    number = parseFloat reqParam
-
-    return false if isNaN(number)
-
-    if ramlParam.minimum? and number < ramlParam.minimum
-      return false
-    if ramlParam.maximum? and number > ramlParam.maximum
-      return false
-    true
+    Validators.NumberValidator.validate reqParam, ramlParam
 
   validateInt: (reqParam, ramlParam) ->
-    number = parseInt reqParam
+    Validators.IntegerValidator.validate reqParam, ramlParam
 
-    return false if isNaN(number)
+  validateBoolean: (reqParam, ramlParam) ->
+    Validators.BooleanValidator.validate reqParam, ramlParam
 
-    if ramlParam.minimum? and number < ramlParam.minimum
-      return false
-    if ramlParam.maximum? and number > ramlParam.maximum
-      return false
-    true
-
-  validateBoolean: (reqParam) ->
-    "true" == reqParam or "false" == reqParam
-
-  validateDate: (reqParam) ->
-    moment(reqParam).isValid()
+  validateDate: (reqParam, ramlParam) ->
+    Validators.DateValidator.validate reqParam, ramlParam
 
 module.exports = Validation
