@@ -6,7 +6,8 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "3.4.4"
+    "express": "3.4.4",
+    "osprey": "git+ssh://git@github.com:mulesoft/osprey.git"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
