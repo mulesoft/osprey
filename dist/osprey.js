@@ -45,12 +45,13 @@
     };
 
     Osprey.prototype.registerConsole = function() {
-      var host;
+      var host, port;
       if (this.settings.enableConsole) {
-        host = "http://localhost:" + this.context.settings.port + "/";
+        port = this.context.settings.port || 3000;
+        host = "http://localhost:" + port + "/";
         this.settings.consolePath = this.apiPath + this.settings.consolePath;
         this.context.get(this.settings.consolePath, this.consoleHandler(this.apiPath, this.settings.consolePath, host));
-        this.context.get(url.resolve(this.settings.consolePath, 'index.html'), this.consoleHandler(this.apiPath, this.settings.consolePath, this.context.settings.port));
+        this.context.get(url.resolve(this.settings.consolePath, 'index.html'), this.consoleHandler(this.apiPath, this.settings.consolePath, port));
         this.context.use(this.settings.consolePath, express["static"](path.join(__dirname, 'assets/console')));
         this.context.get(this.apiPath, this.ramlHandler(this.apiPath, this.settings.ramlFile, host));
         this.context.use(this.apiPath, express["static"](path.dirname(this.settings.ramlFile)));

@@ -24,11 +24,12 @@ class Osprey extends OspreyBase
 
   registerConsole: () =>
     if @settings.enableConsole
-      host = "http://localhost:#{@context.settings.port}/"
+      port = @context.settings.port || 3000
+      host = "http://localhost:#{port}/"
       @settings.consolePath = @apiPath + @settings.consolePath
 
       @context.get @settings.consolePath, @consoleHandler(@apiPath, @settings.consolePath, host)
-      @context.get url.resolve(@settings.consolePath, 'index.html'), @consoleHandler(@apiPath, @settings.consolePath, @context.settings.port)
+      @context.get url.resolve(@settings.consolePath, 'index.html'), @consoleHandler(@apiPath, @settings.consolePath, port)
       @context.use @settings.consolePath, express.static(path.join(__dirname, 'assets/console'))
 
       @context.get @apiPath, @ramlHandler(@apiPath, @settings.ramlFile, host)
