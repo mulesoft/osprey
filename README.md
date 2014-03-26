@@ -45,6 +45,15 @@ Note: You can ignore warnings appearing during osprey installation. Most of thes
 #### Option B
 You can check the [example](https://github.com/mulesoft/osprey/tree/master/examples) included on Osprey to see a fully functional application, and try to create one from the scratch.
 
+#### Run your Osprey application
+From your terminal run:
+`grunt` (recommended: It will set up the proper listeners so changes in the code are automatically refreshed in runtime).
+
+**OR** you can always run: `node src/app.js` 
+
+##### Accessing the API Console
+Open a browser and navigate to http://localhost:3000/api/console/ to display the API Console.
+
 ### Key concepts
 No matter which option you go through, it's imporant for you to recognize the following sections in your code.
 
