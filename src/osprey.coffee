@@ -53,6 +53,7 @@ class Osprey extends OspreyBase
       if req.accepts('application/raml+yaml')?
         fs.readFile ramlPath, (err, data) ->
           data = data.toString().replace(/^baseUri:.*$/gmi, "baseUri: #{apiPath}")
+          res.set 'Content-Type', 'application/raml+yaml'
           res.send data
       else
         res.send 406

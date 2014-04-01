@@ -77,6 +77,7 @@
         if (req.accepts('application/raml+yaml') != null) {
           return fs.readFile(ramlPath, function(err, data) {
             data = data.toString().replace(/^baseUri:.*$/gmi, "baseUri: " + apiPath);
+            res.set('Content-Type', 'application/raml+yaml');
             return res.send(data);
           });
         } else {
