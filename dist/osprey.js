@@ -50,8 +50,8 @@
         port = this.context.settings.port || 3000;
         host = "http://localhost:" + port + "/";
         this.settings.consolePath = this.apiPath + this.settings.consolePath;
-        this.context.get(this.settings.consolePath, this.consoleHandler(this.apiPath, this.settings.consolePath, host));
-        this.context.get(url.resolve(this.settings.consolePath, 'index.html'), this.consoleHandler(this.apiPath, this.settings.consolePath, port));
+        this.context.get(this.settings.consolePath, this.consoleHandler(this.apiPath, this.settings.consolePath));
+        this.context.get(url.resolve(this.settings.consolePath + '/', 'index.html'), this.consoleHandler(this.apiPath, this.settings.consolePath));
         this.context.use(this.settings.consolePath, express["static"](path.join(__dirname, 'assets/console')));
         this.context.get(this.apiPath, this.ramlHandler(this.apiPath, this.settings.ramlFile, host));
         this.context.use(this.apiPath, express["static"](path.dirname(this.settings.ramlFile)));
@@ -59,13 +59,13 @@
       }
     };
 
-    Osprey.prototype.consoleHandler = function(apiPath, consolePath, host) {
+    Osprey.prototype.consoleHandler = function(apiPath, consolePath) {
       return function(req, res) {
         var filePath;
         filePath = path.join(__dirname, '/assets/console/index.html');
         return fs.readFile(filePath, function(err, data) {
-          data = data.toString().replace(/apiPath/gi, url.resolve(host, apiPath));
-          data = data.toString().replace(/resourcesPath/gi, url.resolve(host, consolePath));
+          data = data.toString().replace(/apiPath/gi, apiPath);
+          data = data.toString().replace(/resourcesPath/gi, consolePath);
           res.set('Content-Type', 'text/html');
           return res.send(data);
         });
@@ -76,7 +76,7 @@
       return function(req, res) {
         if (req.accepts('application/raml+yaml') != null) {
           return fs.readFile(ramlPath, function(err, data) {
-            data = data.toString().replace(/^baseUri:.*$/gmi, "baseUri: " + (url.resolve(host, apiPath)));
+            data = data.toString().replace(/^baseUri:.*$/gmi, "baseUri: " + apiPath);
             return res.send(data);
           });
         } else {
