@@ -1,0 +1,46 @@
+#%RAML 0.8
+---
+title: scenario-3
+version: 1.0
+baseUri: http://localhost:8002/api
+/overwrite:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+  post:
+    body:
+      application/json:
+    responses:
+      201:
+        body:
+          application/json:
+  head:
+    responses:
+      204:
+  /{id}:
+    get: 
+      responses:
+        200:
+          body:
+            application/json:
+    put:
+      body:
+        application/json:
+      responses:
+        204:
+    patch:
+      body:
+        application/json:
+      responses:
+        204:
+    delete:
+      responses:
+        204:
+/not-overwritten:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
