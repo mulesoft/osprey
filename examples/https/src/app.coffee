@@ -24,8 +24,10 @@ api = osprey.create '/api', app,
   logLevel: 'debug'
 
 api.describe (api) ->
+
   api.get '/teams/:teamId', (req, res) ->
     res.send({ name: 'test' })
-
-httpsServer = https.createServer credentials, app
-httpsServer.listen 3000
+    
+.then (app) ->
+  httpsServer = https.createServer credentials, app
+  httpsServer.listen 3000

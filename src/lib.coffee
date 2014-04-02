@@ -4,7 +4,7 @@ Osprey = require './osprey'
 UriTemplateReader = require './uri-template-reader'
 logger = require './utils/logger'
 
-exports.create = (apiPath, context, settings, errorCallback) ->
+exports.create = (apiPath, context, settings) ->
   osprey = new Osprey apiPath, context, settings, logger
 
   logger.setLevel settings.logLevel
@@ -16,8 +16,5 @@ exports.create = (apiPath, context, settings, errorCallback) ->
     uriTemplateReader = new UriTemplateReader wrapper.getUriTemplates()
 
     osprey.load null, uriTemplateReader, resources
-  , (error) ->
-    if errorCallback? and typeof errorCallback == 'function'
-      errorCallback error, osprey, context
 
   osprey

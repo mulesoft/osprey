@@ -1,5 +1,5 @@
 (function() {
-  var DefaultParameters, ErrorHandler, Osprey, OspreyBase, OspreyRouter, Validation, express, fs, path, url, _ref,
+  var DefaultParameters, ErrorHandler, Osprey, OspreyBase, OspreyRouter, Promise, Validation, express, fs, path, url, _ref,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -21,6 +21,8 @@
   fs = require('fs');
 
   url = require('url');
+
+  Promise = require('bluebird');
 
   Osprey = (function(_super) {
     __extends(Osprey, _super);
@@ -94,7 +96,7 @@
 
     Osprey.prototype.describe = function(descriptor) {
       this.apiDescriptor = descriptor;
-      return this;
+      return Promise.resolve(this.context);
     };
 
     return Osprey;

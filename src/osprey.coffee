@@ -7,6 +7,7 @@ OspreyRouter = require './middlewares/router'
 OspreyBase = require './osprey-base'
 fs = require 'fs'
 url = require 'url'
+Promise = require 'bluebird'
 
 class Osprey extends OspreyBase
   register: (uriTemplateReader, resources) =>
@@ -59,11 +60,11 @@ class Osprey extends OspreyBase
     unless err?
       if @apiDescriptor? and typeof @apiDescriptor == 'function'
         @apiDescriptor this, @context
-
+        
       @register(uriTemplateReader, resources)
 
   describe: (descriptor) ->
     @apiDescriptor = descriptor
-    this
+    Promise.resolve @context
 
 module.exports = Osprey
