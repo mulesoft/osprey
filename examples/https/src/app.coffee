@@ -7,7 +7,8 @@ path = require 'path'
 
 app = express()
 
-app.use express.bodyParser()
+app.use express.json()
+app.use express.urlencoded()
 app.use express.logger('dev')
 
 privateKey  = fs.readFileSync path.join(__dirname, '/assets/ssl/server.key'), 'utf8'
@@ -21,8 +22,9 @@ api = osprey.create '/api', app,
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   logLevel: 'debug'
 
-api.get '/teams/:teamId', (req, res) ->
-  res.send({ name: 'test' })
+api.describe (api) ->
+  api.get '/teams/:teamId', (req, res) ->
+    res.send({ name: 'test' })
 
 httpsServer = https.createServer credentials, app
 httpsServer.listen 3000

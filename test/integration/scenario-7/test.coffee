@@ -5,7 +5,7 @@ app = require './app'
 app.listen 8006
 apiPath = 'http://localhost:8006/api'
 
-describe 'SCENARIO 7 - OVERWRITING RESOURCES ONCE RAML IS LOADED', ->
+describe 'SCENARIO 7 - OVERWRITING RESOURCES USING DESCRIBE', ->
   describe 'OVERWRITE A ROOT RESOURCE', ->
     describe 'GET /overwrite', ->
       it 'Should response with the overwrite handler', (done) ->

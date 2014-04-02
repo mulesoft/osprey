@@ -11,7 +11,7 @@
 
   logger = require('./utils/logger');
 
-  exports.create = function(apiPath, context, settings, callback) {
+  exports.create = function(apiPath, context, settings, errorCallback) {
     var osprey;
     osprey = new Osprey(apiPath, context, settings, logger);
     logger.setLevel(settings.logLevel);
@@ -20,13 +20,10 @@
       var resources, uriTemplateReader;
       resources = wrapper.getResources();
       uriTemplateReader = new UriTemplateReader(wrapper.getUriTemplates());
-      if ((callback != null) && typeof callback === 'function') {
-        callback({}, osprey, context);
-      }
-      return osprey.register(uriTemplateReader, resources);
+      return osprey.load(null, uriTemplateReader, resources);
     }, function(error) {
-      if ((callback != null) && typeof callback === 'function') {
-        return callback(error, osprey, context);
+      if ((errorCallback != null) && typeof errorCallback === 'function') {
+        return errorCallback(error, osprey, context);
       }
     });
     return osprey;

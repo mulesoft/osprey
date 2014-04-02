@@ -4,7 +4,8 @@ osprey = require '../../../src/lib'
 
 app = express()
 
-app.use express.bodyParser()
+app.use express.json()
+app.use express.urlencoded()
 
 api = osprey.create '/api', app,
   ramlFile: path.join(__dirname, 'api.raml')

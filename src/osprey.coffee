@@ -58,8 +58,15 @@ class Osprey extends OspreyBase
       else
         res.send 406
 
+  load: (err, uriTemplateReader, resources) ->
+    unless err?
+      if @apiDescriptor? and typeof @apiDescriptor == 'function'
+        @apiDescriptor this, @context
+
+      @register(uriTemplateReader, resources)
+
   describe: (descriptor) ->
-    descriptor(this)
+    @apiDescriptor = descriptor
     this
 
 module.exports = Osprey

@@ -86,8 +86,17 @@
       };
     };
 
+    Osprey.prototype.load = function(err, uriTemplateReader, resources) {
+      if (err == null) {
+        if ((this.apiDescriptor != null) && typeof this.apiDescriptor === 'function') {
+          this.apiDescriptor(this, this.context);
+        }
+        return this.register(uriTemplateReader, resources);
+      }
+    };
+
     Osprey.prototype.describe = function(descriptor) {
-      descriptor(this);
+      this.apiDescriptor = descriptor;
       return this;
     };
 

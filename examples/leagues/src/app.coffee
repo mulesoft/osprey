@@ -5,9 +5,8 @@ CustomError = require './exceptions/custom-error'
 
 app = module.exports = express()
 
-app.use express.bodyParser()
-app.use express.methodOverride()
-app.use express.compress()
+app.use express.json()
+app.use express.urlencoded()
 app.use express.logger('dev')
 
 app.set 'port', process.env.PORT || 3000
@@ -23,15 +22,15 @@ api = osprey.create '/api', app,
       console.log 'Custom Error'
       res.send 400
 
-# Example:
-# api.get '/teams/:teamId', (req, res) ->
-#   res.send({ name: 'test' })
+api.describe (api) ->
+  api.get '/teams/:teamId', (req, res) ->
+    res.send({ name: 'test' })
 
-# api.get '/teams', (req, res) ->
-#   throw new CustomError 'some exception'
+  api.get '/teams', (req, res) ->
+    throw new CustomError 'some exception'
 
-# api.get '/teamss', (req, res) ->
-#   res.send 200
+  api.get '/teamss', (req, res) ->
+    res.send 200
 
 unless module.parent
   port = app.get('port')
