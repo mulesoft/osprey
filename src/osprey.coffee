@@ -24,16 +24,13 @@ class Osprey extends OspreyBase
 
   registerConsole: () =>
     if @settings.enableConsole
-      port = @context.settings.port || 3000
-      host = "http://localhost:#{port}/"
-
       @settings.consolePath = @apiPath + @settings.consolePath
 
       @context.get @settings.consolePath, @consoleHandler(@apiPath, @settings.consolePath)
       @context.get url.resolve(@settings.consolePath + '/', 'index.html'), @consoleHandler(@apiPath, @settings.consolePath)
       @context.use @settings.consolePath, express.static(path.join(__dirname, 'assets/console'))
 
-      @context.get @apiPath, @ramlHandler(@apiPath, @settings.ramlFile, host)
+      @context.get @apiPath, @ramlHandler(@apiPath, @settings.ramlFile)
       @context.use @apiPath, express.static(path.dirname(@settings.ramlFile))
 
       @logger.info "Osprey::APIConsole has been initialized successfully listening at #{@settings.consolePath}"
@@ -48,7 +45,7 @@ class Osprey extends OspreyBase
         res.set 'Content-Type', 'text/html'
         res.send data
 
-  ramlHandler: (apiPath, ramlPath, host) ->
+  ramlHandler: (apiPath, ramlPath) ->
     (req, res) ->
       if req.accepts('application/raml+yaml')?
         fs.readFile ramlPath, (err, data) ->
