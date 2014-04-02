@@ -11,6 +11,7 @@ app.use express.json()
 app.use express.urlencoded()
 app.use express.logger('dev')
 
+# WARNING: You have to create your own certificates
 privateKey  = fs.readFileSync path.join(__dirname, '/assets/ssl/server.key'), 'utf8'
 certificate = fs.readFileSync path.join(__dirname, '/assets/ssl/server.crt'), 'utf8'
 credentials =
