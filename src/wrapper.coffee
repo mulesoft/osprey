@@ -1,5 +1,4 @@
 ramlParser = require 'raml-parser'
-async = require 'async'
 
 class ParserWrapper
   constructor: (data)->
@@ -83,12 +82,4 @@ ramlLoader = (filePath, logger, onSuccess, onError) ->
       onError(error)
   )
 
-exports.loadRaml = async.memoize ramlLoader
-
-exports.load = (useCache) ->
-  useCache = true unless useCache?
-
-  if useCache
-    async.memoize ramlLoader
-  else
-    ramlLoader
+exports.loadRaml = ramlLoader

@@ -4,7 +4,7 @@ Logger = require '../mocks/logger'
 
 describe 'WRAPPER', ->
   before (done) ->
-    parser.loadRaml './test/assets/well-formed.raml', (wrapper) =>
+    parser.loadRaml './test/assets/well-formed.raml', new Logger, (wrapper) =>
       @parsedRaml = wrapper
       done()
 
@@ -64,30 +64,3 @@ describe 'WRAPPER', ->
     protocols.should.include 'HTTP'
 
     done()
- 
-  it 'Should make a log entry informing that the RAML file was successfully loaded', (done) =>        
-    # Arrange
-    logger = new Logger
-
-    # Act
-    parser.load(useCache = false) './test/assets/well-formed.raml', logger, (wrapper) ->
-      # Assert
-      logger.infoMessages.should.have.lengthOf 1
-      logger.infoMessages[0].should.eql 'RAML successfully loaded'
-
-      done()
-
-  it 'Should make a log entry informing that the RAML file has an error', (done) =>        
-    # Arrange
-    logger = new Logger
-
-    # Act
-    parser.load(useCache = false) './test/assets/not-well-formed.raml', logger, null, (error) ->
-      # Assert
-      logger.errorMessages.should.have.lengthOf 1
-      logger.errorMessages[0].should.contain 'Error when parsing RAML'
-      logger.errorMessages[0].should.contain 'Message:'
-      logger.errorMessages[0].should.contain 'Column:'
-      logger.errorMessages[0].should.contain 'Line:'
-
-      done()

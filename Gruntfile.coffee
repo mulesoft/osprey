@@ -2,8 +2,8 @@ module.exports = (grunt) ->
   grunt.initConfig(
     pkg: grunt.file.readJSON('package.json'),
 
-    githooks: 
-      all: 
+    githooks:
+      all:
         'pre-commit': 'coffeelint mochaTest'
 
     bower:

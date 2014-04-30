@@ -1,9 +1,7 @@
 (function() {
-  var ParserWrapper, async, clone, ramlLoader, ramlParser;
+  var ParserWrapper, clone, ramlLoader, ramlParser;
 
   ramlParser = require('raml-parser');
-
-  async = require('async');
 
   ParserWrapper = (function() {
     function ParserWrapper(data) {
@@ -130,17 +128,6 @@
     });
   };
 
-  exports.loadRaml = async.memoize(ramlLoader);
-
-  exports.load = function(useCache) {
-    if (useCache == null) {
-      useCache = true;
-    }
-    if (useCache) {
-      return async.memoize(ramlLoader);
-    } else {
-      return ramlLoader;
-    }
-  };
+  exports.loadRaml = ramlLoader;
 
 }).call(this);

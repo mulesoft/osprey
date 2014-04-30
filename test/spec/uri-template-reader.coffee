@@ -1,10 +1,11 @@
 parser = require '../../src/wrapper'
 UriTemplateReader = require '../../src/uri-template-reader'
 should = require 'should'
+Logger = require '../mocks/logger'
 
 describe 'URI TEMPLATE READER', ->
   before (done) ->
-    parser.loadRaml './test/assets/well-formed.raml', (wrapper) =>
+    parser.loadRaml './test/assets/well-formed.raml', new Logger, (wrapper) =>
       @uriTemplates = wrapper.getUriTemplates()
       done()
 
