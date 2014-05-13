@@ -48,7 +48,22 @@ Note: You can ignore warnings appearing during osprey installation. Most of thes
 
 1. Scaffold an aplication by using the [Osprey-CLI](https://github.com/mulesoft/osprey-cli).
 2. Check the resulting directories structure.
-3. If you are working with an empty RAML file, you need to start writing it.
+```
+ [output folder]
+    |--Gruntfile.js
+    |--package.json
+    |--src
+    |  |--app.js
+    |  |--assets
+    |   |--raml
+    |     |--api.raml
+    |-test  
+```
+  - Get familiar with the basic structure
+  - Notice the `[output folder]/src/assets/raml` folder. If you specified an existing RAML file, or folder containing RAML definitions, those will be copied here.
+  If not, you will find an empty RAML file named `api.raml`
+  - Also notice `[output folder]/src/app.js`. This is the main application file. Here you will start registering your resources and coding your logic (or routing to it).
+3. If you are working with an empty RAML file, you need to start writing it. The RAML file describes your API and is used by osprey to fit the resources registered on `app.js`.
 4. Find /[output_folder]/src/app.js to start registering resources ([check this under "Key Concept"](https://github.com/mulesoft/osprey/edit/master/README.md#resources-registration) section on this same document).
 
 #### Option B
@@ -67,7 +82,7 @@ Open a browser and navigate to http://localhost:3000/api/console/ to display the
 No matter which option you go through, it's imporant for you to recognize the following sections in your code.
 
 #### Osprey Initialization
-You can intialize Osprey as follow:
+You can initialize Osprey as follow:
 ```javascript
 
 api = osprey.create('/api', app, {
