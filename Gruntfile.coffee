@@ -65,8 +65,8 @@ module.exports = (grunt) ->
           {
             expand: true,
             flatten: true,
-            src: 'bower_components/api-console/dist/font/*.*',
-            dest: 'dist/assets/console/font/'
+            src: 'bower_components/api-console/dist/fonts/*.*',
+            dest: 'dist/assets/console/fonts/'
           },
           {
             expand: true,
