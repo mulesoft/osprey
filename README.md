@@ -1,33 +1,34 @@
 Osprey
 ======
 
-The [RAML](raml.org) based [Node JS](http://nodejs.org/) framework for building robust and self-documented APIs, quick and painlessly.
+Osprey is a JavaScript framework, based on [Node](http://nodejs.org/) and [Express](http://expressjs.com/), for rapidly building applications that expose APIs described via [RAML](raml.org), the RESTful API Modeling Language. Along with its [companion CLI project](https://github.com/mulesoft/osprey-cli), Osprey takes an API-first approach: the RAML API defines the contract between the application and its consumers, which Osprey helps enforce and implement, together with its CLI.
 
 ### Important
-**Osprey current release is still a work in progress. Osprey development team and other teams from MuleSoft have been working on Osprey based
-implementations, and even though it has been a great experience and it has been properly enhanced, it doesn't meet our criteria for a first stable version yet. **
+The current release of Osprey is very much a work in progress. As it is in active use within a number of rapid development projects, it too is evolving with the needs those projects uncover. While it is proving extremely beneficial, because it's still evolving rapidly we don't yet feel it meets our criteria for a first fully stable release.
 
-**We encourage you to use it and contribute raising issues, providing feedback or pushing your own code.**
+**We encourage you to use it and participate by raising issues, providing feedback or contributing your own code (see below)**
 
-#### Not supported features (yet)
-Please, check the issues for [Osprey 1.0 Milestone](https://github.com/mulesoft/osprey/issues?milestone=1&state=open) to be up-to-date with the future features to be implemented.
+### Coming Soon
+Please check the  [Osprey 1.0 Milestone](https://github.com/mulesoft/osprey/issues?milestone=1&state=open) issues list to stay up-to-date with the immediate roadmap.
 
 ### Fundamentals
-Take advantage of the power of REST and its out of the box features, such as:
+Major features include:
 - Automatic Validations:
- - Form, uri and query parameters.
- - Headers.
- - JSON and XML Schemas.
-- Default Parameters.
-- Exception Handling support.
-- Auto-generated mocks for your APIs (or APIs your team will be interacting with) by just defining sample responses in the RAML file.
-- [API Console](https://github.com/mulesoft/api-console): Auto-generated documentation displayed on an interactive web application, allowing the developer to run the actual logic behind the APIs.
+  - Form, URI, and query parameters
+  - Headers
+  - JSON and XML schemas
+- Default parameters
+- Exception handling
+- Auto-generated mocks for the APIs your application exposes, as long as you define sample responses in the RAML file.
+- [API Console](https://github.com/mulesoft/api-console): Auto-generated documentation displayed on an interactive web application, allowing the developer to easily invoke the APIs.
 
 ### Related projects
-Check [Osprey-CLI](https://github.com/mulesoft/osprey-cli). The scaffolding tool to generate Osprey-based applications with just a command.
+Check out [Osprey-CLI](https://github.com/mulesoft/osprey-cli), the scaffolding tool that generates Osprey-based applications from a RAML spec with just a single command.
 
 ### Contributing
-If you are interesting in contributing by submitting your code to this project, please read the [Contributors Agreement](https://api-notebook.anypoint.mulesoft.com/notebooks#bc1cf75a0284268407e4)
+If you are interesting in contributing some code to this project, thanks! Please submit a [Contributors Agreement](https://api-notebook.anypoint.mulesoft.com/notebooks#bc1cf75a0284268407e4) acknowledging that you are transferring ownership.
+
+To discuss this project, please use its github issues or the [RAML forum](http://forums.raml.org/).
 
 ### Prerequisites
 
@@ -46,7 +47,7 @@ Note: You can ignore warnings appearing during osprey installation. Most of thes
 
 #### Option A (Recommended)
 
-1. Scaffold an aplication by using the [Osprey-CLI](https://github.com/mulesoft/osprey-cli).
+1. Scaffold a new application by using the [Osprey-CLI](https://github.com/mulesoft/osprey-cli). You'll define an `[output folder]` there.
 2. Check the resulting directories structure.
 ```
  [output folder]
@@ -63,11 +64,11 @@ Note: You can ignore warnings appearing during osprey installation. Most of thes
   - Notice the `[output folder]/src/assets/raml` folder. If you specified an existing RAML file, or folder containing RAML definitions, those will be copied here.
   If not, you will find an empty RAML file named `api.raml`
   - Also notice `[output folder]/src/app.js`. This is the main application file. Here you will start registering your resources and coding your logic (or routing to it).
-3. If you are working with an empty RAML file, you need to start writing it. The RAML file describes your API and is used by osprey to fit the resources registered on `app.js`.
-4. Find /[output_folder]/src/app.js to start registering resources ([check this under "Key Concept"](https://github.com/mulesoft/osprey/edit/master/README.md#resources-registration) section on this same document).
+3. If you are working with an empty RAML file, you need to start capturing your API spec in it. The RAML file describes your API and is used by Osprey to match with resources registered on `app.js`, validate, etc.
+4. Edit /[output_folder]/src/app.js to start registering resources ([check this out under the "Key Concepts"](https://github.com/mulesoft/osprey/edit/master/README.md#resources-registration) section in this readme).
 
 #### Option B
-You can check the [example](https://github.com/mulesoft/osprey/tree/master/examples) included on Osprey to see a fully functional application, and try to create one from the scratch.
+You can check the [example](https://github.com/mulesoft/osprey/tree/master/examples) included with Osprey to see a fully functional application, and then create one by following the same patterns.
 
 #### Run your Osprey application
 From your terminal run:
@@ -78,11 +79,10 @@ From your terminal run:
 ##### Accessing the API Console
 Open a browser and navigate to http://localhost:3000/api/console/ to display the API Console.
 
-### Key concepts
-No matter which option you go through, it's imporant for you to recognize the following sections in your code.
+### Key Concepts
+Note that you first need to create an Express app before initializing Osprey. This is taken care of automatically by Osprey CLI, or you can just refer to the examples.
 
 #### Osprey Initialization
-You can initialize Osprey as follow:
 ```javascript
 
 api = osprey.create('/api', app, {
@@ -93,11 +93,11 @@ api = osprey.create('/api', app, {
   logLevel: 'debug'
 });
 ```
-#####Options
+##### Options
 * `/api` represents the basePath of the API
-* `app` represents the reference of an express App
+* `app` represents a reference to an express App
 
-#####Parameters
+##### Parameters
 | Name         | Default Value  | Description  |
 |:------------------|:---------------|:---------------|
 | ramlFile          | null           | Indicates where the RAML file is being stored|
@@ -109,17 +109,18 @@ api = osprey.create('/api', app, {
 | logLevel          | off            | Sets the logging level. ['off', 'info', 'debug'] |
 
 #### Resources registration
-Register a resource is as easy as follow:
+Each resource in the API must be registered as follows:
 ```javascript
 api.get('/teams/:teamId', function(req, res) {
   //// Your business logic here!
+  //// E.g.:
   res.send({ name: 'test' })
 });
 ```
 
 `osprey.get` is always relative to the basePath defined in `osprey.create`.
 
-#####Other supported methods
+##### Other supported methods
 
 * api.get
 * api.post
@@ -130,10 +131,9 @@ api.get('/teams/:teamId', function(req, res) {
 
 #### Exception Handling
 
-Osprey gives you the posibility of handling exceptions in a very reusable way.
+Osprey allows handling exceptions in a very reusable way.
 
-First you have to setup the exceptionHandler module.
-
+First you have to setup the exceptionHandler module:
 ```javascript
 api = osprey.create('/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
