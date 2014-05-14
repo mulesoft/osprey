@@ -190,14 +190,12 @@ In order to support XML schema validation, you have to setup the following middl
 
 ```javascript
   var express = require('express');
-  var path = require('path');
-  var osprey = require('osprey');
+  var path    = require('path');
+  var osprey  = require('osprey');
+  var app     = module.exports = express()
 
-  var app = module.exports = express()
-
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.compress());
+  app.use(express.json());
+  app.use(express.urlencoded());
   app.use(express.logger('dev'));
 
   app.set('port', process.env.PORT || 3000));

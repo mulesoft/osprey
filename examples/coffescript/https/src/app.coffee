@@ -4,12 +4,12 @@ osprey = require 'osprey'
 https = require 'https'
 fs = require 'fs'
 path = require 'path'
-
-app = express()
+app = module.exports = express()
 
 app.use express.json()
 app.use express.urlencoded()
 app.use express.logger('dev')
+app.set 'port', process.env.PORT || 3000
 
 # WARNING: You have to create your own certificates
 privateKey  = fs.readFileSync path.join(__dirname, '/assets/ssl/server.key'), 'utf8'
@@ -24,10 +24,10 @@ api = osprey.create '/api', app,
   logLevel: 'debug'
 
 api.describe (api) ->
-
   api.get '/teams/:teamId', (req, res) ->
     res.send({ name: 'test' })
-    
 .then (app) ->
-  httpsServer = https.createServer credentials, app
-  httpsServer.listen 3000
+  unless module.parent
+    httpsServer = https.createServer credentials, app
+    httpsServer.listen port
+    console.log "listening on port #{port}"
