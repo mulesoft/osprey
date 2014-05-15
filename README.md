@@ -65,7 +65,7 @@ Note: You can ignore warnings appearing during osprey installation. Most of thes
   If not, you will find an empty RAML file named `api.raml`
   - Also notice `[output folder]/src/app.js`. This is the main application file. Here you will start registering your resources and coding your logic (or routing to it).
 3. If you are working with an empty RAML file, you need to start capturing your API spec in it. The RAML file describes your API and is used by Osprey to match with resources registered on `app.js`, validate, etc.
-4. Edit /[output_folder]/src/app.js to start registering resources ([check this out under the "Key Concepts"](https://github.com/mulesoft/osprey/edit/master/README.md#resources-registration) section in this readme).
+4. Edit `/[output_folder]/src/app.js` to start registering resources ([check this out under the "Key Concepts"](https://github.com/mulesoft/osprey/edit/master/README.md#resources-registration) section in this readme).
 
 #### Option B
 You can check the [example](https://github.com/mulesoft/osprey/tree/master/examples) included with Osprey to see a fully functional application, and then create one by following the same patterns.
@@ -87,26 +87,22 @@ Note that you first need to create an Express app before initializing Osprey. Th
 
 api = osprey.create('/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
-  enableConsole: true,
-  enableMocks: true,
-  enableValidations: true,
   logLevel: 'debug'
 });
 ```
-##### Options
-* `/api` represents the basePath of the API
-* `app` represents a reference to an express App
-
-##### Parameters
-| Name         | Default Value  | Description  |
+##### Arguments
+* `/api` is the basePath where you'd like to host the API
+* `app` is your Express App
+* the third argument is an options object:
+| Option name       | Default Value  | Description  |
 |:------------------|:---------------|:---------------|
-| ramlFile          | null           | Indicates where the RAML file is being stored|
-| enableConsole     | true           | Enables or disables the [API console](https://github.com/mulesoft/api-console) |
-| consolePath       | /console       | Defines the url for the API-console relative to the apiPath |
-| enableMocks       | true           | Enables or disables the mocks routes |
-| enableValidations | true           | Enables or disables the validations |
-| exceptionHandler  | {}             | Gives you the possibility to reuse exception handlers|
-| logLevel          | off            | Sets the logging level. ['off', 'info', 'debug'] |
+| ramlFile          | null           | Where the RAML file is being stored|
+| enableConsole     | true           | Enables the embedded [API console](https://github.com/mulesoft/api-console) |
+| consolePath       | /console       | Defines the url for the API console relative to the apiPath |
+| enableMocks       | true           | Enables the mocking capability |
+| enableValidations | true           | Enables validation |
+| exceptionHandler  | {}             | Registers exception handlers |
+| logLevel          | off            | Sets the logging level: one of ['off', 'info', 'debug'] |
 
 #### Resources registration
 Each resource in the API must be registered as follows:
@@ -118,7 +114,7 @@ api.get('/teams/:teamId', function(req, res) {
 });
 ```
 
-`osprey.get` is always relative to the basePath defined in `osprey.create`.
+The path indicated by the first argument to `api.get`, `api.post`, etc. is always relative to the `basePath` defined in `api.create`.
 
 ##### Other supported methods
 
@@ -138,11 +134,11 @@ First you have to setup the exceptionHandler module:
 api = osprey.create('/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
     exceptionHandler: {
-    InvalidUriParameterError: function(err, req, res) {
+    InvalidUriParameterError: function (err, req, res) {
       // Overwriting the default implementation
       res.send (400);
     },
-    CustomError: function(err, req, res) {
+    CustomError: function (err, req, res) {
       //// Do something here!
       res.send (400);
     }
@@ -157,16 +153,17 @@ api.get('/teams', function (req, res) {
   throw new CustomError 'some exception'
 });
 ```
+
 ##### Default Errors
 | Name                       | HTTP Status| Description  |
 |:---------------------------|:----|:---------------|
-| InvalidAcceptTypeError     | 406 | It will be thrown when the Accept type is not supported by the API |
-| InvalidContentTypeError    | 415 | It will be thrown when the Content type is not supported by the API |
-| InvalidUriParameterError   | 400 | It will be thrown if a URI parameter is invalid according to the validation rules |
-| InvalidFormParameterError  | 400 | It will be thrown if a Form parameter is invalid according to the validation rules |
-| InvalidQueryParameterError | 400 | It will be thrown if a Query parameter is invalid according to the validation rules |
-| InvalidHeaderError         | 400 | It will be thrown if a Header is invalid according to the validation rules |
-| InvalidBodyError           | 400 | It will be thrown if a body is invalid according to the validation schemas |
+| InvalidAcceptTypeError     | 406 | When the type in the Accept header is not supported by the API |
+| InvalidContentTypeError    | 415 | When the type in the Content-Type header is not supported by the API |
+| InvalidUriParameterError   | 400 | When a URI parameter is invalid according to the validation rules |
+| InvalidFormParameterError  | 400 | When a form parameter is invalid according to the validation rules |
+| InvalidQueryParameterError | 400 | When a query parameter is invalid according to the validation rules |
+| InvalidHeaderError         | 400 | When a request header is invalid according to the validation rules |
+| InvalidBodyError           | 400 | When a request body is invalid according to the validation schemas |
 
 #### Validations
 
@@ -174,9 +171,9 @@ You can enable or disable validations by using the option `enableValidations` in
 
 ##### Supported Validations
 
-* Form Parameters
-* Query Parameters
-* URI Parameters
+* URI parameters
+* Query parameters
+* Form parameters
 * Headers
 * JSON Schema
 * XML Schema
@@ -197,13 +194,11 @@ In order to support XML schema validation, you need to setup [express-xml-bodypa
 
 #### Example
 
-
-
 ```javascript
-  var express = require('express');
-  var path    = require('path');
-  var osprey  = require('osprey');
-  var app     = module.exports = express()
+  var express   = require('express');
+  var path      = require('path');
+  var osprey    = require('osprey');
+  var app       = module.exports = express()
   var xmlparser = require('express-xml-bodyparser'); // Only if XML Schema validations are needed
 
   app.use(express.json());
