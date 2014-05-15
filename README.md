@@ -137,13 +137,15 @@ First you have to setup the exceptionHandler module:
 ```javascript
 api = osprey.create('/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
-  exceptionHandler: {
-    InvalidUriParameterError: (err, req, res) ->
+    exceptionHandler: {
+    InvalidUriParameterError: function(err, req, res) {
       // Overwriting the default implementation
-      res.send 400
-    CustomError: (err, req, res) ->
+      res.send (400);
+    },
+    CustomError: function(err, req, res) {
       //// Do something here!
-      res.send 400
+      res.send (400);
+    }
   }
 });
 ```
@@ -181,8 +183,17 @@ You can enable or disable validations by using the option `enableValidations` in
 
 ###### Notes
 
-In order to support XML schema validation, you have to setup the following middleware in your application
-[express-xml-bodyparser](https://www.npmjs.org/package/express-xml-bodyparser).
+In order to support XML schema validation, you need to setup [express-xml-bodyparser](https://www.npmjs.org/package/express-xml-bodyparser) middleware in your application:
+1. Add the dependency into the `package.json`:
+```
+"dependencies": {
+    ...,
+    "express-xml-bodyparser": "0.0.4"
+  },
+```
+
+2. Import the module: `var xmlparser = require('express-xml-bodyparser');`
+3. Indicate you application will be using it: `app.use(xmlparser()); `
 
 #### Example
 
@@ -193,10 +204,12 @@ In order to support XML schema validation, you have to setup the following middl
   var path    = require('path');
   var osprey  = require('osprey');
   var app     = module.exports = express()
+  var xmlparser = require('express-xml-bodyparser'); // Only if XML Schema validations are needed
 
   app.use(express.json());
   app.use(express.urlencoded());
   app.use(express.logger('dev'));
+  app.use(xmlparser()); // Only if XML Schema validations are needed
 
   app.set('port', process.env.PORT || 3000));
 
