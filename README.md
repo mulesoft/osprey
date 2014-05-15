@@ -96,7 +96,7 @@ api = osprey.create('/api', app, {
 
 | Option name       | Default Value  | Description  |
 |:------------------|:---------------|:---------------|
-| ramlFile          | path.join(__dirname, '/assets/raml/api.raml') | Where the RAML file is being stored |
+| ramlFile          | '/src/assets/raml/api.raml' | Where the RAML file is being stored |
 | enableConsole     | true           | Enables the embedded [API console](https://github.com/mulesoft/api-console) |
 | consolePath       | /console       | Defines the url for the API console relative to the apiPath |
 | enableMocks       | true           | Enables the mocking capability |
