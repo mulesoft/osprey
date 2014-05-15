@@ -60,7 +60,7 @@ class Osprey extends OspreyBase
     unless err?
       if @apiDescriptor? and typeof @apiDescriptor == 'function'
         @apiDescriptor this, @context
-        
+
       @register(uriTemplateReader, resources)
 
   describe: (descriptor) ->

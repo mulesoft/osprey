@@ -6,7 +6,7 @@ class OspreyBase
     @settings.handlers = []
     @context.disable 'x-powered-by'
     @checkSettings @settings
-  
+
   checkSettings: (settings) ->
     @settings.enableValidations = true unless @settings.enableValidations?
     @settings.enableConsole = true unless @settings.enableConsole?
@@ -16,7 +16,7 @@ class OspreyBase
     for middleware in middlewares
       temp = new middleware apiPath, context, settings, resources, uriTemplateReader, logger
       @context.use temp.exec
-      
+
   get: (uriTemplate, handler) =>
     @settings.handlers.push { method: 'get', template: uriTemplate, handler: handler }
 
