@@ -108,9 +108,9 @@ api = osprey.create('/api', app, {
 Each resource in the API must be registered as follows:
 ```javascript
 api.get('/teams/:teamId', function(req, res) {
-  //// Your business logic here!
-  //// E.g.:
-  res.send({ name: 'test' })
+  // Your business logic here!
+  // E.g.:
+  res.send({ name: 'test' });
 });
 ```
 
@@ -133,12 +133,12 @@ First you have to setup the exceptionHandler module:
 ```javascript
 api = osprey.create('/api', app, {
   exceptionHandler: {
-  InvalidUriParameterError: function (err, req, res) {
+    InvalidUriParameterError: function (err, req, res) {
       // Overwriting the default implementation
       res.send (400);
     },
     CustomError: function (err, req, res) {
-      //// Do something here!
+      // Do something here!
       res.send (400);
     }
   }
@@ -149,7 +149,7 @@ If a resource throws an error of type CustomError, the exception handler module 
 
 ```javascript
 api.get('/teams', function (req, res) {
-  throw new CustomError 'some exception'
+  throw new CustomError('some exception');
 });
 ```
 
@@ -210,7 +210,7 @@ In order to support XML schema validation, you need to setup [express-xml-bodypa
   var api = osprey.create('/api', app);
 
   api.get('/resource', function(req, res) {
-    //// Your business logic here!
+    // Your business logic here!
   });
 
   if (!module.parent) {
