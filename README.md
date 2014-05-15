@@ -86,17 +86,17 @@ Note that you first need to create an Express app before initializing Osprey. Th
 ```javascript
 
 api = osprey.create('/api', app, {
-  ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   logLevel: 'debug'
 });
 ```
 ##### Arguments
 * `/api` is the basePath where you'd like to host the API
 * `app` is your Express App
-* the third argument is an options object:
+* the third argument is an optional settings object:
+
 | Option name       | Default Value  | Description  |
 |:------------------|:---------------|:---------------|
-| ramlFile          | null           | Where the RAML file is being stored|
+| ramlFile          | path.join(__dirname, '/assets/raml/api.raml') | Where the RAML file is being stored |
 | enableConsole     | true           | Enables the embedded [API console](https://github.com/mulesoft/api-console) |
 | consolePath       | /console       | Defines the url for the API console relative to the apiPath |
 | enableMocks       | true           | Enables the mocking capability |
@@ -132,9 +132,8 @@ Osprey allows handling exceptions in a very reusable way.
 First you have to setup the exceptionHandler module:
 ```javascript
 api = osprey.create('/api', app, {
-  ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
-    exceptionHandler: {
-    InvalidUriParameterError: function (err, req, res) {
+  exceptionHandler: {
+  InvalidUriParameterError: function (err, req, res) {
       // Overwriting the default implementation
       res.send (400);
     },
@@ -208,9 +207,7 @@ In order to support XML schema validation, you need to setup [express-xml-bodypa
 
   app.set('port', process.env.PORT || 3000));
 
-  var api = osprey.create('/api', app, {
-    ramlFile: path.join(__dirname, '/assets/raml/api.raml')
-  });
+  var api = osprey.create('/api', app);
 
   api.get('/resource', function(req, res) {
     //// Your business logic here!
