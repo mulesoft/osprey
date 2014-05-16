@@ -39,9 +39,7 @@ To start using Osprey you'll need the following:
 
 ### Getting started
 
-`npm install git+https://github.com/mulesoft/osprey.git`
-
-Optionally, you can use [Bower](http://bower.io/) - `bower install git@github.com:mulesoft/osprey.git`
+`npm install osprey`
 
 Note: You can ignore warnings appearing during osprey installation. Most of these are thrown by libraries being used. You can always review the warnings in case the installation is not successful.
 
