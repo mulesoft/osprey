@@ -1,7 +1,7 @@
 {
   "name": "osprey",
   "description": "Osprey a RAML binding for Node Js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "MuleSoft, Inc.",
   "repository": {
     "type": "git",
@@ -10,6 +10,14 @@
   "bugs": {
     "url": "https://github.com/mulesoft/osprey/issues"
   },
+  "keywords": [
+    "osprey",
+    "raml",
+    "mulesoft",
+    "express",
+    "rest",
+    "api"
+  ],
   "licenses": [
     {
       "type": "Apache 2.0",
