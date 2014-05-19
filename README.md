@@ -1,6 +1,8 @@
 Osprey
 ======
 
+[![Dependency Status](https://david-dm.org/mulesoft/osprey.png)](https://david-dm.org/mulesoft/osprey)
+
 Osprey is a JavaScript framework, based on [Node](http://nodejs.org/) and [Express](http://expressjs.com/), for rapidly building applications that expose APIs described via [RAML](http://raml.org), the RESTful API Modeling Language. Along with its [companion CLI project](https://github.com/mulesoft/osprey-cli), Osprey takes an API-first approach: the RAML API defines the contract between the applicatiorn and its consumers, which Osprey helps enforce and implement, together with its CLI.
 
 ### Important
@@ -56,7 +58,7 @@ Note: You can ignore warnings appearing during osprey installation. Most of thes
     |  |--assets
     |   |--raml
     |     |--api.raml
-    |-test  
+    |-test
 ```
   - Get familiar with the basic structure
   - Notice the `[output folder]/src/assets/raml` folder. If you specified an existing RAML file, or folder containing RAML definitions, those will be copied here.

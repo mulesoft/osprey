@@ -1,5 +1,5 @@
 (function() {
-  var GetHandler, HttpUtils, MockGetHandler, logger, _ref,
+  var GetHandler, HttpUtils, MockGetHandler, logger,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -12,8 +12,7 @@
     __extends(MockGetHandler, _super);
 
     function MockGetHandler() {
-      _ref = MockGetHandler.__super__.constructor.apply(this, arguments);
-      return _ref;
+      return MockGetHandler.__super__.constructor.apply(this, arguments);
     }
 
     MockGetHandler.prototype.resolve = function(req, res, methodInfo) {
@@ -37,14 +36,15 @@
     }
 
     GetHandler.prototype.resolve = function(uriTemplate, handler) {
-      var template,
-        _this = this;
+      var template;
       template = "" + this.apiPath + uriTemplate;
-      return this.context.get(template, function(req, res) {
-        var methodInfo;
-        methodInfo = _this.methodLookup(_this.resources, 'get', uriTemplate);
-        return _this.negotiateAcceptType(req, res, methodInfo, handler);
-      });
+      return this.context.get(template, (function(_this) {
+        return function(req, res) {
+          var methodInfo;
+          methodInfo = _this.methodLookup(_this.resources, 'get', uriTemplate);
+          return _this.negotiateAcceptType(req, res, methodInfo, handler);
+        };
+      })(this));
     };
 
     return GetHandler;
