@@ -1,6 +1,7 @@
 Osprey
 ======
 
+[![NPM version](https://badge.fury.io/js/osprey.svg)](http://badge.fury.io/js/osprey)
 [![Build Status](https://travis-ci.org/mulesoft/osprey.png)](https://travis-ci.org/mulesoft/osprey)
 [![Dependency Status](https://david-dm.org/mulesoft/osprey.png)](https://david-dm.org/mulesoft/osprey)
 
