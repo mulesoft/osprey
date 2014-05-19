@@ -1,5 +1,5 @@
 (function() {
-  var DeleteHandler, HttpUtils, MockDeleteHandler, logger, _ref,
+  var DeleteHandler, HttpUtils, MockDeleteHandler, logger,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -12,8 +12,7 @@
     __extends(MockDeleteHandler, _super);
 
     function MockDeleteHandler() {
-      _ref = MockDeleteHandler.__super__.constructor.apply(this, arguments);
-      return _ref;
+      return MockDeleteHandler.__super__.constructor.apply(this, arguments);
     }
 
     MockDeleteHandler.prototype.resolve = function(req, res, methodInfo) {

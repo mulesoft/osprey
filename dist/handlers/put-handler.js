@@ -1,5 +1,5 @@
 (function() {
-  var HttpUtils, MockPutHandler, PutHandler, logger, _ref,
+  var HttpUtils, MockPutHandler, PutHandler, logger,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -12,8 +12,7 @@
     __extends(MockPutHandler, _super);
 
     function MockPutHandler() {
-      _ref = MockPutHandler.__super__.constructor.apply(this, arguments);
-      return _ref;
+      return MockPutHandler.__super__.constructor.apply(this, arguments);
     }
 
     MockPutHandler.prototype.resolve = function(req, res, methodInfo) {
@@ -38,15 +37,16 @@
     }
 
     PutHandler.prototype.resolve = function(uriTemplate, handler) {
-      var template,
-        _this = this;
+      var template;
       template = "" + this.apiPath + uriTemplate;
-      return this.context.put(template, function(req, res) {
-        var methodInfo;
-        methodInfo = _this.methodLookup(_this.resources, 'put', uriTemplate);
-        _this.negotiateContentType(req, res, methodInfo);
-        return _this.negotiateAcceptType(req, res, methodInfo, handler);
-      });
+      return this.context.put(template, (function(_this) {
+        return function(req, res) {
+          var methodInfo;
+          methodInfo = _this.methodLookup(_this.resources, 'put', uriTemplate);
+          _this.negotiateContentType(req, res, methodInfo);
+          return _this.negotiateAcceptType(req, res, methodInfo, handler);
+        };
+      })(this));
     };
 
     return PutHandler;
