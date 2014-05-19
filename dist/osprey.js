@@ -1,5 +1,5 @@
 (function() {
-  var DefaultParameters, ErrorHandler, Osprey, OspreyBase, OspreyRouter, Promise, Validation, express, fs, path, url, _ref,
+  var DefaultParameters, ErrorHandler, Osprey, OspreyBase, OspreyRouter, Promise, Validation, express, fs, path, url,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -30,8 +30,7 @@
     function Osprey() {
       this.registerConsole = __bind(this.registerConsole, this);
       this.register = __bind(this.register, this);
-      _ref = Osprey.__super__.constructor.apply(this, arguments);
-      return _ref;
+      return Osprey.__super__.constructor.apply(this, arguments);
     }
 
     Osprey.prototype.register = function(uriTemplateReader, resources) {
