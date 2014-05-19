@@ -1,6 +1,7 @@
 Osprey
 ======
 
+[![Build Status](https://travis-ci.org/mulesoft/osprey.png)](https://travis-ci.org/mulesoft/osprey)
 [![Dependency Status](https://david-dm.org/mulesoft/osprey.png)](https://david-dm.org/mulesoft/osprey)
 
 Osprey is a JavaScript framework, based on [Node](http://nodejs.org/) and [Express](http://expressjs.com/), for rapidly building applications that expose APIs described via [RAML](http://raml.org), the RESTful API Modeling Language. Along with its [companion CLI project](https://github.com/mulesoft/osprey-cli), Osprey takes an API-first approach: the RAML API defines the contract between the applicatiorn and its consumers, which Osprey helps enforce and implement, together with its CLI.
