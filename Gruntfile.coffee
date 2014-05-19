@@ -113,6 +113,6 @@ module.exports = (grunt) ->
 
   require('load-grunt-tasks') grunt
 
-  #TODO: Add https://github.com/vojtajina/grunt-npm for npm publishing
   grunt.registerTask 'default', ['clean:build', 'watch:development']
   grunt.registerTask 'release', ['clean', 'bower:install', 'coffeelint', 'coffee', 'mochaTest', 'copy', 'clean:bower']
+  grunt.registerTask 'test', ['mochaTest']
