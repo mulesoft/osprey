@@ -25,6 +25,8 @@
       errorHandler = errorDefaultSettings[err.constructor.name];
       if (errorHandler != null) {
         return errorHandler(err, req, res, next);
+      } else if (err) {
+        throw err;
       } else {
         return next();
       }

@@ -12,6 +12,8 @@ class ErrorHandler
 
     if errorHandler?
       errorHandler err, req, res, next
+    else if err
+      throw err
     else
       next()
 
