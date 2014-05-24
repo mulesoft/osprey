@@ -22,7 +22,7 @@ baseUri: http://localhost:3000/api
       headers:
         Header:
           type: string
-          pattern: '[a-z]'    
+          pattern: '[a-z]'
 /integer:
   get:
     headers:
@@ -30,6 +30,7 @@ baseUri: http://localhost:3000/api
         type: integer
         minimum: 10
         maximum: 10
+        required: true
 /number:
   get:
     headers:
@@ -37,6 +38,7 @@ baseUri: http://localhost:3000/api
         type: number
         minimum: 10
         maximum: 10
+        required: true
 /boolean:
   get:
     headers:

@@ -9,14 +9,13 @@ Middleware = require('../../mocks/server').middleware
 Logger = require '../../mocks/logger'
 
 describe 'OSPREY ROUTER - CONTENT NEGOTIATION', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-      done()
 
-  it 'Should response with the correct mime type if the accept type is supported', (done) =>  
+  it 'Should response with the correct mime type if the accept type is supported', () =>
     # Arrange
     context = new Express
     res = new Response
@@ -30,9 +29,7 @@ describe 'OSPREY ROUTER - CONTENT NEGOTIATION', =>
     res.key.should.be.eql 'Content-Type'
     res.value.should.be.eql 'application/xml'
 
-    done() 
-
-  it 'Should response with the first defined mime type if the accept type is */*', (done) =>  
+  it 'Should response with the first defined mime type if the accept type is */*', () =>
     # Arrange
     context = new Express
     res = new Response
@@ -46,9 +43,7 @@ describe 'OSPREY ROUTER - CONTENT NEGOTIATION', =>
     res.key.should.be.eql 'Content-Type'
     res.value.should.be.eql 'application/json'
 
-    done() 
-
-  it 'Should throw an exception if the accept type is not supported', (done) =>  
+  it 'Should throw an exception if the accept type is not supported', () =>
     # Arrange
     context = new Express
     res = new Response
@@ -58,11 +53,9 @@ describe 'OSPREY ROUTER - CONTENT NEGOTIATION', =>
     # Assert
     ( ->
       router.resolveMock req, res, null, true
-    ).should.throw();
+    ).should.throw()
 
-    done() 
-
-  it 'Should response 200 if the content type is supported', (done) =>  
+  it 'Should response 200 if the content type is supported', () =>
     # Arrange
     context = new Express
     res = new Response
@@ -75,9 +68,7 @@ describe 'OSPREY ROUTER - CONTENT NEGOTIATION', =>
     # Assert
     res.status.should.be.eql 200
 
-    done() 
-
-  it 'Should throw an exception if the content type is not supported', (done) =>  
+  it 'Should throw an exception if the content type is not supported', () =>
     # Arrange
     context = new Express
     res = new Response
@@ -87,6 +78,4 @@ describe 'OSPREY ROUTER - CONTENT NEGOTIATION', =>
     # Assert
     ( ->
       router.resolveMock req, res, null, true
-    ).should.throw();
-
-    done() 
+    ).should.throw()

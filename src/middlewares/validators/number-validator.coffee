@@ -2,9 +2,9 @@ class NumberValidator
   validate: (value, rules) ->
     return true unless rules.type == 'number'
 
-    number = parseFloat value
+    number = Number value
 
-    return false if isNaN(number)
+    return false unless isFinite(number)
 
     if rules.minimum? and number < rules.minimum
       return false

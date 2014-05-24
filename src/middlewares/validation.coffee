@@ -34,11 +34,11 @@ class Validation
 
     if method?
       @validateQueryParams method, req
-      
+
       @validateHeaders method, req
 
       @validateFormParams method, req
-      
+
       unless @validateSchema method, req
         throw new InvalidBodyError {}
 
@@ -132,12 +132,9 @@ class Validation
           throw new InvalidHeaderError @readValidationInfo(key, reqHeader, ramlHeader)
 
   isValid: (reqParam, ramlParam) =>
-    (@validateRequired reqParam, ramlParam) and (@validateType reqParam, ramlParam)
+    # If the parameter is empty, validate based on if the param was required.
+    return not ramlParam.required unless reqParam?
 
-  validateRequired: (reqParam, ramlParam) ->
-    not ramlParam.required or reqParam?
-
-  validateType: (reqParam, ramlParam) =>
     switch ramlParam.type
       when 'string' then @validateString reqParam, ramlParam
       when 'number' then @validateNumber reqParam, ramlParam

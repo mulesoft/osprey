@@ -6,15 +6,13 @@ Logger = require '../../../mocks/logger'
 UriTemplateReader = require '../../../../src/uri-template-reader'
 
 describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - DATE', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/validations.uri-parameters.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-  
-      done()
 
-  it 'Should throw an exception if the value type is incorrect', (done) =>
+  it 'Should throw an exception if the value type is incorrect', () =>
     # Arrange
     resource = @resources['/date/:id']
     req = new Request 'GET', '/api/date/aa'
@@ -25,11 +23,9 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - DATE', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()  
-
-  it 'Should be correctly validated if the type is valid', (done) =>
+  it 'Should be correctly validated if the type is valid', () =>
     # Arrange
     resource = @resources['/date/:id']
     req = new Request 'GET', '/api/date/Sun, 06 Nov 1994 08:49:37 GMT'
@@ -40,6 +36,4 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - DATE', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
-
-    done()    
+    ).should.not.throw()

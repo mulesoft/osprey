@@ -9,14 +9,13 @@ Middleware = require('../../mocks/server').middleware
 Logger = require '../../mocks/logger'
 
 describe 'OSPREY ROUTER - LOGGING', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-      done()
 
-  it 'Should make a log entry informing which resource was overwritten', (done) =>  
+  it 'Should make a log entry informing which resource was overwritten', () =>
     # Arrange
     context = new Express
     logger = new Logger
@@ -28,9 +27,7 @@ describe 'OSPREY ROUTER - LOGGING', =>
     # Assert
     logger.debugMessages[0].should.eql  'Overwritten resource - GET /resource'
 
-    done()
-
-  it 'Should make a log entry informing that a resource cannot be overwrite because it does not exists', (done) =>  
+  it 'Should make a log entry informing that a resource cannot be overwrite because it does not exists', () =>
     # Arrange
     context = new Express
     logger = new Logger
@@ -41,5 +38,3 @@ describe 'OSPREY ROUTER - LOGGING', =>
 
     # Assert
     logger.errorMessages[0].should.eql  'Resource to overwrite does not exists - GET /no-existing'
-
-    done()

@@ -3,12 +3,11 @@ should = require 'should'
 Logger = require '../mocks/logger'
 
 describe 'WRAPPER', ->
-  before (done) ->
+  before () ->
     parser.loadRaml './test/assets/well-formed.raml', new Logger, (wrapper) =>
       @parsedRaml = wrapper
-      done()
 
-  it 'Should contain at least base properties: title,version,baseUri', (done)->
+  it 'Should contain at least base properties: title,version,baseUri', ()->
     # Act
     raml = @parsedRaml.getRaml()
 
@@ -17,9 +16,7 @@ describe 'WRAPPER', ->
     raml.should.have.property 'version', '1.0'
     raml.should.have.property 'baseUri', 'http://localhost:3000/api'
 
-    done()
-
-  it 'Should read resources as a map', (done) ->
+  it 'Should read resources as a map', () ->
     # Act
     resources = @parsedRaml.getResources()
 
@@ -27,9 +24,7 @@ describe 'WRAPPER', ->
     resources.should.be.an.instanceOf Object
     resources.should.have.properties '/resource'
 
-    done()
-
-  it 'Should read resources as a list', (done) ->
+  it 'Should read resources as a list', () ->
     # Act
     resources = @parsedRaml.getResourcesList()
 
@@ -38,9 +33,7 @@ describe 'WRAPPER', ->
     resources[0].should.have.property 'uri', '/resource/:resourceId'
     resources[1].should.have.property 'uri', '/resource'
 
-    done()
-
-  it 'Should have the correct structure of Oauth', (done)->
+  it 'Should have the correct structure of Oauth', () ->
     # Act
     schemes = @parsedRaml.getSecuritySchemes()
 
@@ -52,9 +45,7 @@ describe 'WRAPPER', ->
     schemes[0]["oauth_2_0"].settings.authorizationGrants.should.include "code"
     schemes[0]["oauth_2_0"].settings.authorizationGrants.should.include "token"
 
-    done()
-
-  it 'Should return an array with HTTP, HTTPS protocols', (done)->
+  it 'Should return an array with HTTP, HTTPS protocols', () ->
     # Act
     protocols = @parsedRaml.getProtocols()
 
@@ -62,5 +53,3 @@ describe 'WRAPPER', ->
     protocols.should.have.length 2
     protocols.should.include 'HTTPS'
     protocols.should.include 'HTTP'
-
-    done()

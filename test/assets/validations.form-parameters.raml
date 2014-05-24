@@ -28,7 +28,7 @@ baseUri: http://localhost:3000/api
           formParameters:
             param:
               type: string
-              pattern: '[a-z]'    
+              pattern: '[a-z]'
 /integer:
   post:
     body:
@@ -38,6 +38,7 @@ baseUri: http://localhost:3000/api
             type: integer
             minimum: 10
             maximum: 10
+            required: true
 /number:
   post:
     body:
@@ -47,6 +48,7 @@ baseUri: http://localhost:3000/api
             type: number
             minimum: 10
             maximum: 10
+            required: true
 /boolean:
   post:
     body:

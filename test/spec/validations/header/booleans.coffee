@@ -6,15 +6,13 @@ Logger = require '../../../mocks/logger'
 UriTemplateReader = require '../../../../src/uri-template-reader'
 
 describe 'OSPREY VALIDATIONS - HEADER - TYPE - BOOLEAN', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/validations.header.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-  
-      done()
 
-  it 'Should throw an exception if the value type is incorrect', (done) =>
+  it 'Should throw an exception if the value type is incorrect', () =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean'
@@ -26,11 +24,9 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - BOOLEAN', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should be correctly validated if the type is valid', (done) =>
+  it 'Should be correctly validated if the type is valid', () =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean/'
@@ -42,11 +38,9 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - BOOLEAN', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()          
-
-  it 'Should be correctly validated if the parameter is present', (done) =>
+  it 'Should be correctly validated if the parameter is present', () =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean'
@@ -57,11 +51,9 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - BOOLEAN', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if the parameter is not present', (done) =>
+  it 'Should throw an exception if the parameter is not present', () =>
     # Arrange
     resource = @resources['/boolean']
     req = new Request 'GET', '/api/boolean'
@@ -70,6 +62,4 @@ describe 'OSPREY VALIDATIONS - HEADER - TYPE - BOOLEAN', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
-
-    done()  
+    ).should.throw()

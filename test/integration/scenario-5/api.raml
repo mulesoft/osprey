@@ -62,7 +62,7 @@ baseUri: http://localhost:8002/api
         type: number
         minimum: 10
         maximum: 10
-    get: 
+    get:
       responses:
         200:
           body:
@@ -72,6 +72,7 @@ baseUri: http://localhost:8002/api
         header:
           type: string
           enum: [a, b]
+          required: true
       body:
         application/json:
       responses:
@@ -160,6 +161,7 @@ baseUri: http://localhost:8002/api
       header:
         type: string
         enum: [a, b]
+        required: true
     body:
       application/json:
     responses:
@@ -191,7 +193,7 @@ baseUri: http://localhost:8002/api
         type: number
         minimum: 10
         maximum: 10
-    get: 
+    get:
       responses:
         200:
           headers:

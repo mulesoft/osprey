@@ -9,14 +9,13 @@ Middleware = require('../../mocks/server').middleware
 Logger = require '../../mocks/logger'
 
 describe 'OSPREY ROUTER', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-      done()
 
-  it 'Should return false if the resource was not registered on express', (done) =>        
+  it 'Should return false if the resource was not registered on express', () =>
     # Arrange
     context = new Express
     router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
@@ -27,13 +26,11 @@ describe 'OSPREY ROUTER', =>
     # Assert
     result.should.be.eql false
 
-    done()
-
-  it 'Should return true if the resource already exists in express', (done) =>        
+  it 'Should return true if the resource already exists in express', () =>
     # Arrange
     context = new Express
 
-    context.routes = 
+    context.routes =
       GET: [
         regexp: /^\/resource\/?$/i
       ]
@@ -46,13 +43,11 @@ describe 'OSPREY ROUTER', =>
     # Assert
     result.should.be.eql true
 
-    done()
-
-  it 'Should be able to resolve a resource with uri parameters', (done) =>        
+  it 'Should be able to resolve a resource with uri parameters', () =>
     # Arrange
     context = new Express
 
-    context.routes = 
+    context.routes =
       GET: [
         regexp:  /^\/resource\/(?:([^\/]+?))\/?$/i
       ]
@@ -64,6 +59,4 @@ describe 'OSPREY ROUTER', =>
 
     # Assert
     result.should.be.eql true
-
-    done()
 

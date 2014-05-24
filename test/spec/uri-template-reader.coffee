@@ -4,12 +4,11 @@ should = require 'should'
 Logger = require '../mocks/logger'
 
 describe 'URI TEMPLATE READER', ->
-  before (done) ->
+  before () ->
     parser.loadRaml './test/assets/well-formed.raml', new Logger, (wrapper) =>
       @uriTemplates = wrapper.getUriTemplates()
-      done()
 
-  it 'Should correctly generate uri matchers', (done) ->
+  it 'Should correctly generate uri matchers', () ->
     # Arrange
     uriTemplateReader = new UriTemplateReader @uriTemplates
 
@@ -20,23 +19,19 @@ describe 'URI TEMPLATE READER', ->
     result.should.not.eql null
     result.should.have.lengthOf 3
 
-    done()
-
-  it 'Should correctly read an uri template', (done) ->
+  it 'Should correctly read an uri template', () ->
     # Arrange
     uriTemplateReader = new UriTemplateReader @uriTemplates
 
     # Act
     result = uriTemplateReader.getTemplateFor '/resource/1'
-    
+
     # Assert
     result.should.not.eql null
     result.should.have.property 'uriTemplate', '/resource/:resourceId'
     result.should.have.property 'regexp'
 
-    done()
-
-  it 'Should read a null value if uri template does not exists', (done) ->
+  it 'Should read a null value if uri template does not exists', () ->
     # Arrange
     uriTemplateReader = new UriTemplateReader @uriTemplates
 
@@ -46,9 +41,7 @@ describe 'URI TEMPLATE READER', ->
     # Assert
     should(result).eql null
 
-    done()
-
-  it 'Should read a null value if uri template is empty', (done) ->
+  it 'Should read a null value if uri template is empty', () ->
     # Arrange
     uriTemplateReader = new UriTemplateReader @uriTemplates
 
@@ -58,9 +51,7 @@ describe 'URI TEMPLATE READER', ->
     # Assert
     should(result).eql null
 
-    done()
-
-  it 'Should correctly read uri parameters for a given uri', (done) ->
+  it 'Should correctly read uri parameters for a given uri', () ->
     # Arrange
     uriTemplateReader = new UriTemplateReader @uriTemplates
 
@@ -71,9 +62,7 @@ describe 'URI TEMPLATE READER', ->
     result.should.not.eql null
     result.should.have.property 'resourceId', '1'
 
-    done()
-
-  it 'Should read a null value if uri does not have parameters', (done) ->
+  it 'Should read a null value if uri does not have parameters', () ->
     # Arrange
     uriTemplateReader = new UriTemplateReader @uriTemplates
 
@@ -83,9 +72,7 @@ describe 'URI TEMPLATE READER', ->
     # Assert
     should(result).eql null
 
-    done()
-
-  it 'Should read a null value if uri does not exists', (done) ->
+  it 'Should read a null value if uri does not exists', () ->
     # Arrange
     uriTemplateReader = new UriTemplateReader @uriTemplates
 
@@ -95,9 +82,7 @@ describe 'URI TEMPLATE READER', ->
     # Assert
     should(result).eql null
 
-    done()
-
-  it 'Should read a null value if uri is empty', (done) ->
+  it 'Should read a null value if uri is empty', () ->
     # Arrange
     uriTemplateReader = new UriTemplateReader @uriTemplates
 
@@ -106,5 +91,3 @@ describe 'URI TEMPLATE READER', ->
 
     # Assert
     should(result).eql null
-
-    done()
