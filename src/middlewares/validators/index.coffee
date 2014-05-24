@@ -1,6 +1,5 @@
 fs = require 'fs'
 path = require 'path'
-lodash  = require 'lodash'
 validators = {}
 
 fs.readdirSync(__dirname).filter (file) ->
