@@ -1,7 +1,14 @@
 ramlParser = require 'raml-parser'
 
+extend = (dest, sources...) ->
+  for source in sources
+    for key, value of source
+      dest[key] = value
+
+  dest
+
 class ParserWrapper
-  constructor: (data)->
+  constructor: (data) ->
     @raml = data
     @resources = {}
     @_generateResources()
@@ -12,14 +19,14 @@ class ParserWrapper
   getUriTemplates: ->
     templates = []
 
-    for key,resource of @resources
+    for key, resource of @resources
       templates.push { uriTemplate: key }
 
     templates
 
   getResourcesList: ->
     resourceList = []
-    for key,resource of @resources
+    for key, resource of @resources
       resourceCopy = clone resource
       resourceCopy.uri = key
       resourceList.push resourceCopy
@@ -36,14 +43,20 @@ class ParserWrapper
 
   _generateResources: ->
     if @raml.resources?
-      @_processResource x, @resources for x in @raml.resources
+      for resource in @raml.resources
+        @_processResource resource, @resources
 
   _processResource: (resource, resourceMap, uri) ->
     if not uri?
       uri = resource.relativeUri
 
     if resource.resources?
-      this._processResource x, resourceMap, uri + x.relativeUri for x in resource.resources
+      for child in resource.resources
+        # Update the child uri parameters by extending the parents.
+        child.uriParameters = extend({}, resource.uriParameters, child.uriParameters)
+
+        # Recursively process resource objects.
+        this._processResource child, resourceMap, uri + child.relativeUri
 
     uriKey = uri.replace /{(.*?)}/g,":$1"
     resourceMap[uriKey] = clone resource
