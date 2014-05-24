@@ -13,13 +13,13 @@ api = osprey.create '/api', app,
   ramlFile: path.join(__dirname, 'api.raml')
   enableMocks: false
   enableValidations: true
-  enableConsole: false
+  enableConsole: true
   logLevel: 'off'
 
 api.get '/overwrite-validations', (req, res) ->
   res.send([{
     id: 1
-    description: 'GET' 
+    description: 'GET'
   }])
 
 api.post '/overwrite-validations', (req, res) ->

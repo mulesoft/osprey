@@ -12,10 +12,10 @@ describe 'OSPREY - LOGGING', =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-      
+
       done()
-  
-  it 'Should make a log entry informing which modules were initialized', (done) =>        
+
+  it 'Should make a log entry informing which modules were initialized', (done) =>
     # Arrange
     logger = new Logger
     osprey = new Osprey '/api', new Express, {}, logger

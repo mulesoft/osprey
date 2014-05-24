@@ -20,12 +20,12 @@
     }
     osprey = new Osprey(apiPath, context, settings, logger);
     logger.setLevel(settings.logLevel);
-    osprey.registerConsole();
     parser.loadRaml(settings.ramlFile, logger, function(wrapper) {
       var resources, uriTemplateReader;
       resources = wrapper.getResources();
       uriTemplateReader = new UriTemplateReader(wrapper.getUriTemplates());
-      return osprey.load(null, uriTemplateReader, resources);
+      osprey.load(null, uriTemplateReader, resources);
+      return osprey.registerConsole();
     });
     return osprey;
   };

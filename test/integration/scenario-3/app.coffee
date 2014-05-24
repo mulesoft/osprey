@@ -17,7 +17,7 @@ api = osprey.create '/api', app,
 api.get '/overwrite', (req, res) ->
   res.send([{
     id: 1
-    description: 'GET' 
+    description: 'GET'
   }])
 
 api.post '/overwrite', (req, res) ->
