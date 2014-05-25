@@ -49,11 +49,7 @@ class Osprey extends OspreyBase
   ramlHandler: (apiPath, ramlPath) ->
     (req, res) ->
       if req.accepts('application/raml+yaml')?
-        urlPart = path.join req.headers.host, apiPath
-        baseUri = "http://#{urlPart}"
-
-        if req.secure
-          baseUri = "https://#{urlPart}"
+        baseUri = "http#{if req.secure then 's' else ''}://#{req.headers.host}#{req.originalUrl}"
 
         fs.readFile ramlPath, (err, data) ->
           data = data.toString().replace(/^baseUri:.*$/gmi, "baseUri: #{baseUri}")

@@ -1,7 +1,21 @@
 (function() {
-  var ParserWrapper, clone, ramlLoader, ramlParser;
+  var ParserWrapper, clone, extend, ramlLoader, ramlParser,
+    __slice = [].slice;
 
   ramlParser = require('raml-parser');
+
+  extend = function() {
+    var dest, key, source, sources, value, _i, _len;
+    dest = arguments[0], sources = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+    for (_i = 0, _len = sources.length; _i < _len; _i++) {
+      source = sources[_i];
+      for (key in source) {
+        value = source[key];
+        dest[key] = value;
+      }
+    }
+    return dest;
+  };
 
   ParserWrapper = (function() {
     function ParserWrapper(data) {
@@ -53,28 +67,29 @@
     };
 
     ParserWrapper.prototype._generateResources = function() {
-      var x, _i, _len, _ref, _results;
+      var resource, _i, _len, _ref, _results;
       if (this.raml.resources != null) {
         _ref = this.raml.resources;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          x = _ref[_i];
-          _results.push(this._processResource(x, this.resources));
+          resource = _ref[_i];
+          _results.push(this._processResource(resource, this.resources));
         }
         return _results;
       }
     };
 
     ParserWrapper.prototype._processResource = function(resource, resourceMap, uri) {
-      var uriKey, x, _i, _len, _ref, _ref1;
+      var child, uriKey, _i, _len, _ref, _ref1;
       if (uri == null) {
         uri = resource.relativeUri;
       }
       if (resource.resources != null) {
         _ref = resource.resources;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          x = _ref[_i];
-          this._processResource(x, resourceMap, uri + x.relativeUri);
+          child = _ref[_i];
+          child.uriParameters = extend({}, resource.uriParameters, child.uriParameters);
+          this._processResource(child, resourceMap, uri + child.relativeUri);
         }
       }
       uriKey = uri.replace(/{(.*?)}/g, ":$1");
