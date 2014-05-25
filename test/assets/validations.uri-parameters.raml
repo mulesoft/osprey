@@ -22,7 +22,7 @@ baseUri: http://localhost:3000/api
       uriParameters:
         id:
           type: string
-          pattern: '[a-z]'    
+          pattern: '[a-z]'
 /integer:
   /{id}:
     uriParameters:
@@ -47,3 +47,16 @@ baseUri: http://localhost:3000/api
     uriParameters:
       id:
         type: date
+/nested:
+  /{first}:
+    uriParameters:
+      first:
+        type: string
+        minLength: 5
+        maxLength: 10
+    /{second}:
+      uriParameters:
+        second:
+          type: number
+          minimum: 10
+          maximum: 20
