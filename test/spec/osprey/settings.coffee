@@ -7,15 +7,13 @@ Express = require('../../mocks/server').express
 Logger = require '../../mocks/logger'
 
 describe 'OSPREY - SETTINGS', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-      
-      done()
-   
-  it 'Should register by default validations, routing and exception handling', (done) =>        
+
+  it 'Should register by default validations, routing and exception handling', () =>
     # Arrange
     context = new Express
     osprey = new Osprey '/api', context, {}, new Logger
@@ -26,9 +24,7 @@ describe 'OSPREY - SETTINGS', =>
     # Assert
     context.middlewares.should.have.lengthOf 4
 
-    done()
-
-  it 'Should possible to disable validations', (done) =>        
+  it 'Should possible to disable validations', () =>
     # Arrange
     context = new Express
     osprey = new Osprey '/api', context, {
@@ -41,9 +37,7 @@ describe 'OSPREY - SETTINGS', =>
     # Assert
     context.middlewares.should.have.lengthOf 3
 
-    done()
-
-  it 'Should enable the api console by default', (done) =>        
+  it 'Should enable the api console by default', () =>
     # Arrange
     context = new Express
     osprey = new Osprey '/api', context, null, new Logger
@@ -57,9 +51,7 @@ describe 'OSPREY - SETTINGS', =>
     context.getMethods[0].should.eql '/api/console'
     context.middlewares[0].should.eql '/api/console'
 
-    done()
-
-  it 'Should use default settings if settings are null', (done) =>        
+  it 'Should use default settings if settings are null', () =>
     # Arrange
     context = new Express
     osprey = new Osprey '/api', context, null, new Logger
@@ -70,9 +62,7 @@ describe 'OSPREY - SETTINGS', =>
     # Assert
     context.middlewares.should.have.lengthOf 4
 
-    done()
-
-  it 'Should use default settings if settings are undefined', (done) =>        
+  it 'Should use default settings if settings are undefined', () =>
     # Arrange
     context = new Express
     osprey = new Osprey '/api', context, undefined, new Logger
@@ -82,5 +72,3 @@ describe 'OSPREY - SETTINGS', =>
 
     # Assert
     context.middlewares.should.have.lengthOf 4
-
-    done()

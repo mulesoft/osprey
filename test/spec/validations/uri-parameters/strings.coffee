@@ -6,15 +6,13 @@ Logger = require '../../../mocks/logger'
 UriTemplateReader = require '../../../../src/uri-template-reader'
 
 describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/validations.uri-parameters.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-  
-      done()
- 
-  it 'Should be correctly validated if min-length is valid', (done) =>
+
+  it 'Should be correctly validated if min-length is valid', () =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/111'
@@ -25,11 +23,9 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if min-length is not valid', (done) =>
+  it 'Should throw an exception if min-length is not valid', () =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/1'
@@ -38,11 +34,9 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should be correctly validated if max-length is valid ', (done) =>
+  it 'Should be correctly validated if max-length is valid ', () =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/111'
@@ -53,11 +47,9 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if max-length is not valid', (done) =>
+  it 'Should throw an exception if max-length is not valid', () =>
     # Arrange
     resource = @resources['/string/:id']
     req = new Request 'GET', '/api/string/1111'
@@ -66,11 +58,9 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should be correctly validated if the parameter value is present in the enum', (done) =>
+  it 'Should be correctly validated if the parameter value is present in the enum', () =>
     # Arrange
     resource = @resources['/string/enum/:id']
     req = new Request 'GET', '/api/string/enum/AAA'
@@ -79,11 +69,9 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if the parameter value is not present in the enum', (done) =>
+  it 'Should throw an exception if the parameter value is not present in the enum', () =>
     # Arrange
     resource = @resources['/string/enum/:id']
     req = new Request 'GET', '/api/string/enum/1'
@@ -92,11 +80,9 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should be correctly validated if pattern is matched by the parameter value', (done) =>
+  it 'Should be correctly validated if pattern is matched by the parameter value', () =>
     # Arrange
     resource = @resources['/string/pattern/:id']
     req = new Request 'GET', '/api/string/pattern/a'
@@ -105,11 +91,9 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()    
-
-  it 'Should throw an exception if pattern is not matched by the parameter value', (done) =>
+  it 'Should throw an exception if pattern is not matched by the parameter value', () =>
     # Arrange
     resource = @resources['/string/pattern/:id']
     req = new Request 'GET', '/api/string/pattern/1'
@@ -118,7 +102,5 @@ describe 'OSPREY VALIDATIONS - URI PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
-
-    done()  
+    ).should.throw()
 

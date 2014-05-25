@@ -6,15 +6,13 @@ Logger = require '../../../mocks/logger'
 UriTemplateReader = require '../../../../src/uri-template-reader'
 
 describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/validations.form-parameters.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-  
-      done()
 
-  it 'Should be correctly validated if the parameter is present', (done) =>
+  it 'Should be correctly validated if the parameter is present', () =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
@@ -26,11 +24,9 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if the parameter is not present', (done) =>
+  it 'Should throw an exception if the parameter is not present', () =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
@@ -41,11 +37,9 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should throw an exception if the value type is incorrect', (done) =>
+  it 'Should throw an exception if the value type is incorrect', () =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
@@ -57,11 +51,9 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should be correctly validated if the type is valid', (done) =>
+  it 'Should be correctly validated if the type is valid', () =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
@@ -73,11 +65,9 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should be correctly validated if minimum is valid', (done) =>
+  it 'Should be correctly validated if minimum is valid', () =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
@@ -89,11 +79,9 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if minimum is not valid', (done) =>
+  it 'Should throw an exception if minimum is not valid', () =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
@@ -105,11 +93,9 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should be correctly validated if maximum is valid', (done) =>
+  it 'Should be correctly validated if maximum is valid', () =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
@@ -121,11 +107,9 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if maximum is not valid', (done) =>
+  it 'Should throw an exception if maximum is not valid', () =>
     # Arrange
     resource = @resources['/integer']
     req = new Request 'POST', '/api/integer'
@@ -137,6 +121,4 @@ describe 'OSPREY VALIDATIONS - FORM PARAMETER - TYPE - INTEGER', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
-
-    done()
+    ).should.throw()

@@ -9,14 +9,13 @@ Middleware = require('../../mocks/server').middleware
 Logger = require '../../mocks/logger'
 
 describe 'OSPREY ROUTER - MOCKS', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/well-formed.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-      done()
 
-  it 'Should response 200 if the resource does not have an example', (done) =>  
+  it 'Should response 200 if the resource does not have an example', () =>
     # Arrange
     context = new Express
     res = new Response
@@ -29,9 +28,7 @@ describe 'OSPREY ROUTER - MOCKS', =>
     # Assert
     res.status.should.be.eql 200
 
-    done() 
-
-  it 'Should response with the example defined in the RAML file', (done) =>  
+  it 'Should response with the example defined in the RAML file', () =>
     # Arrange
     context = new Express
     res = new Response
@@ -46,9 +43,7 @@ describe 'OSPREY ROUTER - MOCKS', =>
     res.key.should.be.eql 'Content-Type'
     res.value.should.be.eql 'application/json'
 
-    done() 
-
-  it 'Shoul skip not registered resources if mock routing was turned off', (done) =>  
+  it 'Shoul skip not registered resources if mock routing was turned off', () =>
     # Arrange
     context = new Express
     res = new Response
@@ -61,5 +56,3 @@ describe 'OSPREY ROUTER - MOCKS', =>
 
     # Assert
     middleware.nextCounter.should.be.eql 1
-
-    done() 

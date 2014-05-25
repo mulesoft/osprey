@@ -22,7 +22,12 @@ baseUri: http://localhost:3000/api
       queryParameters:
         param:
           type: string
-          pattern: '[a-z]'    
+          pattern: '[a-z]'
+  /empty:
+    get:
+      queryParameters:
+        param:
+          type: string
 /integer:
   get:
     queryParameters:
@@ -30,13 +35,21 @@ baseUri: http://localhost:3000/api
         type: integer
         minimum: 10
         maximum: 10
+        required: true
 /number:
   get:
     queryParameters:
       param:
         type: number
         minimum: 10
-        maximum: 10
+        maximum: 11
+        required: true
+  /empty:
+    get:
+      queryParameters:
+        param:
+          type: number
+          required: true
 /boolean:
   get:
     queryParameters:

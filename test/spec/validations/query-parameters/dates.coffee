@@ -6,18 +6,16 @@ Logger = require '../../../mocks/logger'
 UriTemplateReader = require '../../../../src/uri-template-reader'
 
 describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - DATE', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/validations.query-parameters.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-  
-      done()
 
-  it 'Should be correctly validated if the parameter is present', (done) =>
+  it 'Should be correctly validated if the parameter is present', () =>
     # Arrange
     resource = @resources['/date']
-    req = new Request 'GET', '/api/date?param=Sun, 06 Nov 1994 08:49:37 GMT'
+    req = new Request 'GET', '/api/date'
     validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', 'Sun, 06 Nov 1994 08:49:37 GMT'
@@ -25,11 +23,9 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - DATE', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if the parameter is not present', (done) =>
+  it 'Should throw an exception if the parameter is not present', () =>
     # Arrange
     resource = @resources['/date']
     req = new Request 'GET', '/api/date'
@@ -38,14 +34,25 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - DATE', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should throw an exception if the value type is incorrect', (done) =>
+  it 'Should throw an exception if the parameter is empty', () =>
     # Arrange
     resource = @resources['/date']
-    req = new Request 'GET', '/api/date?param=aa'
+    req = new Request 'GET', '/api/date'
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+
+    req.addQueryParameter 'param', ''
+
+    # Assert
+    ( ->
+      validation.validateRequest resource, req
+    ).should.throw()
+
+  it 'Should throw an exception if the value type is incorrect', () =>
+    # Arrange
+    resource = @resources['/date']
+    req = new Request 'GET', '/api/date'
     validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addHeader 'content-type', 'application/json'
@@ -54,22 +61,4 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - DATE', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
-
-    done()  
-
-  it 'Should be correctly validated if the type is valid', (done) =>
-    # Arrange
-    resource = @resources['/date']
-    req = new Request 'GET', '/api/date?param=Sun, 06 Nov 1994 08:49:37 GMT'
-    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
-
-    req.addHeader 'content-type', 'application/json'
-    req.addQueryParameter 'param', 'Sun, 06 Nov 1994 08:49:37 GMT'
-
-    # Assert
-    ( ->
-      validation.validateRequest resource, req
-    ).should.not.throw();
-
-    done()       
+    ).should.throw()

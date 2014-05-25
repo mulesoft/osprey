@@ -6,15 +6,13 @@ Logger = require '../../mocks/logger'
 UriTemplateReader = require '../../../src/uri-template-reader'
 
 describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/validations.json-schema.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-  
-      done()
 
-  it 'Should be correctly validated if request body is ok and content-type is application/json', (done) =>
+  it 'Should be correctly validated if request body is ok and content-type is application/json', () =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
@@ -26,11 +24,9 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should be correctly validated if request body is ok and content-type is [something]+json', (done) =>
+  it 'Should be correctly validated if request body is ok and content-type is [something]+json', () =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
@@ -42,11 +38,23 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
+  it 'Should be correctly validated if request body is empty and content-type is [something]+json', () =>
+    # Arrange
+    resource = @resources['/resources']
+    req = new Request 'POST', '/api/resources'
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
-  it 'Should throw an exception if request body is incorrect', (done) =>
+    req.addHeader 'content-type', 'application/test+json'
+    req.addBody {}
+
+    # Assert
+    ( ->
+      validation.validateRequest resource, req
+    ).should.not.throw()
+
+  it 'Should throw an exception if request body is incorrect', () =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
@@ -58,11 +66,9 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should not validate if content-type is not application/json', (done) =>
+  it 'Should not validate if content-type is not application/json', () =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
@@ -73,6 +79,4 @@ describe 'OSPREY VALIDATIONS - JSON SCHEMA', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
-
-    done()
+    ).should.not.throw()

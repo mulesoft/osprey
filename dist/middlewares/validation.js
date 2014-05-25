@@ -26,7 +26,6 @@
       this.resources = resources;
       this.uriTemplateReader = uriTemplateReader;
       this.logger = logger;
-      this.validateType = __bind(this.validateType, this);
       this.isValid = __bind(this.isValid, this);
       this.validateHeaders = __bind(this.validateHeaders, this);
       this.validateQueryParams = __bind(this.validateQueryParams, this);
@@ -221,14 +220,9 @@
     };
 
     Validation.prototype.isValid = function(reqParam, ramlParam) {
-      return (this.validateRequired(reqParam, ramlParam)) && (this.validateType(reqParam, ramlParam));
-    };
-
-    Validation.prototype.validateRequired = function(reqParam, ramlParam) {
-      return !ramlParam.required || (reqParam != null);
-    };
-
-    Validation.prototype.validateType = function(reqParam, ramlParam) {
+      if (reqParam == null) {
+        return !ramlParam.required;
+      }
       switch (ramlParam.type) {
         case 'string':
           return this.validateString(reqParam, ramlParam);

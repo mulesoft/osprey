@@ -6,18 +6,16 @@ Logger = require '../../../mocks/logger'
 UriTemplateReader = require '../../../../src/uri-template-reader'
 
 describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/validations.query-parameters.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-  
-      done()
 
-  it 'Should be correctly validated if the parameter is present', (done) =>
+  it 'Should be correctly validated if the parameter is present', () =>
     # Arrange
     resource = @resources['/string']
-    req = new Request 'GET', '/api/string?param=a'
+    req = new Request 'GET', '/api/string'
     validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', 'aaa'
@@ -25,11 +23,9 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if the parameter is not present', (done) =>
+  it 'Should throw an exception if the parameter is not present', () =>
     # Arrange
     resource = @resources['/string']
     req = new Request 'GET', '/api/string'
@@ -38,30 +34,25 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should be correctly validated if min-length is valid', (done) =>
+  it 'Should be correctly validated if min-length is valid', () =>
     # Arrange
     resource = @resources['/string']
-    req = new Request 'GET', '/api/string?param=111'
+    req = new Request 'GET', '/api/string'
     validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
-    req.addHeader 'content-type', 'application/json'
     req.addQueryParameter 'param', '111'
 
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if min-length is not valid', (done) =>
+  it 'Should throw an exception if min-length is not valid', () =>
     # Arrange
     resource = @resources['/string']
-    req = new Request 'GET', '/api/string?param=1'
+    req = new Request 'GET', '/api/string'
     validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', '1'
@@ -69,30 +60,25 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should be correctly validated if max-length is valid', (done) =>
+  it 'Should be correctly validated if max-length is valid', () =>
     # Arrange
     resource = @resources['/string']
-    req = new Request 'GET', '/api/string?param=111'
+    req = new Request 'GET', '/api/string'
     validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
-    req.addHeader 'content-type', 'application/json'
     req.addQueryParameter 'param', '111'
 
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if max-length is not valid', (done) =>
+  it 'Should throw an exception if max-length is not valid', () =>
     # Arrange
     resource = @resources['/string']
-    req = new Request 'GET', '/api/string?param=1111'
+    req = new Request 'GET', '/api/string'
     validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', '1111'
@@ -100,14 +86,12 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should be correctly validated if the parameter value is present in the enum ', (done) =>
+  it 'Should be correctly validated if the parameter value is present in the enum', () =>
     # Arrange
     resource = @resources['/string/enum']
-    req = new Request 'integer', '/api/string/enum?param=AAA'
+    req = new Request 'integer', '/api/string/enum'
     validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', 'AAA'
@@ -115,14 +99,12 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if the parameter value is not present in the enum', (done) =>
+  it 'Should throw an exception if the parameter value is not present in the enum', () =>
     # Arrange
     resource = @resources['/string/enum']
-    req = new Request 'GET', '/api/string/enum?param=1'
+    req = new Request 'GET', '/api/string/enum'
     validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', '1'
@@ -130,14 +112,23 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
+  it 'Should be correctly validated if the parameter value is not present', () =>
+    # Arrange
+    resource = @resources['/string/enum']
+    req = new Request 'integer', '/api/string/enum'
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
-  it 'Should be correctly validated if pattern is matched by the parameter value', (done) =>
+    # Assert
+    ( ->
+      validation.validateRequest resource, req
+    ).should.not.throw()
+
+  it 'Should be correctly validated if pattern is matched by the parameter value', () =>
     # Arrange
     resource = @resources['/string/pattern']
-    req = new Request 'GET', '/api/string/pattern?param=a'
+    req = new Request 'GET', '/api/string/pattern'
     validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', 'a'
@@ -145,14 +136,12 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()    
-
-  it 'Should throw an exception if pattern is not matched by the parameter value', (done) =>
+  it 'Should throw an exception if pattern is not matched by the parameter value', () =>
     # Arrange
     resource = @resources['/string/pattern']
-    req = new Request 'GET', '/api/string/pattern?param=1'
+    req = new Request 'GET', '/api/string/pattern'
     validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
     req.addQueryParameter 'param', '1'
@@ -160,6 +149,28 @@ describe 'OSPREY VALIDATIONS - QUERY PARAMETER - TYPE - STRING', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()     
+  it 'Should be correctly validated if the parameter value is not present', () =>
+    # Arrange
+    resource = @resources['/string/pattern']
+    req = new Request 'integer', '/api/string/pattern'
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+
+    # Assert
+    ( ->
+      validation.validateRequest resource, req
+    ).should.not.throw()
+
+  it 'Should be correctly validated if the parameter value is empty', () =>
+    # Arrange
+    resource = @resources['/string/empty']
+    req = new Request 'GET', '/api/string/empty'
+    validation = new Validation '/api', {}, {}, @resources, @uriTemplateReader, new Logger
+
+    req.addQueryParameter 'param', ''
+
+    # Assert
+    ( ->
+      validation.validateRequest resource, req
+    ).should.not.throw()

@@ -9,8 +9,8 @@
       if (rules.type !== 'number') {
         return true;
       }
-      number = parseFloat(value);
-      if (isNaN(number)) {
+      number = Number(value);
+      if (!isFinite(number)) {
         return false;
       }
       if ((rules.minimum != null) && number < rules.minimum) {

@@ -6,15 +6,13 @@ Logger = require '../../mocks/logger'
 UriTemplateReader = require '../../../src/uri-template-reader'
 
 describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
-  before (done) =>
+  before () =>
     parser.loadRaml "./test/assets/validations.xml-schema.raml", new Logger, (wrapper) =>
       @resources = wrapper.getResources()
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
-  
-      done()
 
-  it 'Should be correctly validated if request body is ok and content-type is application/xml', (done) =>
+  it 'Should be correctly validated if request body is ok and content-type is application/xml', () =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
@@ -26,11 +24,9 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should be correctly validated if request body is ok and content-type is text/xml', (done) =>
+  it 'Should be correctly validated if request body is ok and content-type is text/xml', () =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
@@ -42,11 +38,9 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should be correctly validated if request body is ok and content-type is [something]+xml', (done) =>
+  it 'Should be correctly validated if request body is ok and content-type is [something]+xml', () =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
@@ -58,11 +52,9 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should throw an exception if request body is incorrect', (done) =>
+  it 'Should throw an exception if request body is incorrect', () =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
@@ -74,11 +66,9 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.throw();
+    ).should.throw()
 
-    done()
-
-  it 'Should throw an exception if request body is empty', (done) =>
+  it 'Should throw an exception if request body is empty', () =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
@@ -89,11 +79,9 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
+    ).should.not.throw()
 
-    done()
-
-  it 'Should not validate if content-type is not application/xml nor text/xml', (done) =>
+  it 'Should not validate if content-type is not application/xml nor text/xml', () =>
     # Arrange
     resource = @resources['/resources']
     req = new Request 'POST', '/api/resources'
@@ -104,6 +92,4 @@ describe 'OSPREY VALIDATIONS - XML SCHEMA', =>
     # Assert
     ( ->
       validation.validateRequest resource, req
-    ).should.not.throw();
-
-    done()
+    ).should.not.throw()
