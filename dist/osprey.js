@@ -72,9 +72,11 @@
 
     Osprey.prototype.ramlHandler = function(apiPath, ramlPath) {
       return function(req, res) {
+        var baseUri;
         if (req.accepts('application/raml+yaml') != null) {
+          baseUri = "http" + (req.secure ? 's' : '') + "://" + req.headers.host + (req.originalUrl || req.url);
           return fs.readFile(ramlPath, function(err, data) {
-            data = data.toString().replace(/^baseUri:.*$/gmi, "baseUri: " + apiPath);
+            data = data.toString().replace(/^baseUri:.*$/gmi, "baseUri: " + baseUri);
             res.set('Content-Type', 'application/raml+yaml');
             return res.send(data);
           });

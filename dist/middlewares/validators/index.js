@@ -1,11 +1,9 @@
 (function() {
-  var fs, lodash, path, validators;
+  var fs, path, validators;
 
   fs = require('fs');
 
   path = require('path');
-
-  lodash = require('lodash');
 
   validators = {};
 
