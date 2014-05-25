@@ -74,7 +74,7 @@
       return function(req, res) {
         var baseUri;
         if (req.accepts('application/raml+yaml') != null) {
-          baseUri = "http" + (req.secure ? 's' : '') + "://" + req.headers.host + (req.originalUrl || req.url);
+          baseUri = "http" + (req.secure ? 's' : '') + "://" + req.headers.host + req.originalUrl;
           return fs.readFile(ramlPath, function(err, data) {
             data = data.toString().replace(/^baseUri:.*$/gmi, "baseUri: " + baseUri);
             res.set('Content-Type', 'application/raml+yaml');
