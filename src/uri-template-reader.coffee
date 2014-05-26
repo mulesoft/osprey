@@ -17,6 +17,7 @@ class UriTemplateReader
     if template? and template.length then template[0] else null
 
   getUriParametersFor: (uri) ->
+    uri = uri.replace(/\?.*$/,'')
     template = @getTemplateFor uri
     return null unless template?
     matches = uri.match template.regexp
