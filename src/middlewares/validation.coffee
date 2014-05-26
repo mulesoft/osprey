@@ -46,16 +46,16 @@ class Validation
     req.headers['content-type'] in ['application/x-www-form-urlencoded', 'multipart/form-data']
 
   isJson: (req) ->
-    if req.headers?['content-type']?
-      req.headers['content-type'] == 'application/json' or req.headers['content-type'].match '\\+json$'
+    req?.headers?['content-type']?.split(/;/)?[0]?.match(/^application\/([\w!#\$%&\*`\-\.\^~]*\+)?json$/i)
 
   isXml: (req) ->
     if req.headers?['content-type']?
-      req.headers['content-type'] in ['application/xml', 'text/xml'] or req.headers['content-type'].match '\\+xml$'
+      contentType = req?.headers['content-type']?.split(/;/)?[0]
+      contentType in ['application/xml', 'text/xml'] or contentType.match '\\+xml$'
 
   validateSchema: (method, req) =>
     if method.body?
-      contentType =  method.body[req.headers['content-type']]
+      contentType = method.body[req?.headers?['content-type']?.split(/;/)?[0]];
 
       if contentType?.schema?
         if @isJson req
