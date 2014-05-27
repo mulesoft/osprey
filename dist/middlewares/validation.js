@@ -74,23 +74,22 @@
     };
 
     Validation.prototype.isJson = function(req) {
-      var _ref;
-      if (((_ref = req.headers) != null ? _ref['content-type'] : void 0) != null) {
-        return req.headers['content-type'] === 'application/json' || req.headers['content-type'].match('\\+json$');
-      }
+      var _ref, _ref1, _ref2, _ref3;
+      return req != null ? (_ref = req.headers) != null ? (_ref1 = _ref['content-type']) != null ? (_ref2 = _ref1.split(/;/)) != null ? (_ref3 = _ref2[0]) != null ? _ref3.match(/^application\/([\w!#\$%&\*`\-\.\^~]*\+)?json$/i) : void 0 : void 0 : void 0 : void 0 : void 0;
     };
 
     Validation.prototype.isXml = function(req) {
-      var _ref, _ref1;
+      var contentType, _ref, _ref1, _ref2;
       if (((_ref = req.headers) != null ? _ref['content-type'] : void 0) != null) {
-        return ((_ref1 = req.headers['content-type']) === 'application/xml' || _ref1 === 'text/xml') || req.headers['content-type'].match('\\+xml$');
+        contentType = req != null ? (_ref1 = req.headers['content-type']) != null ? (_ref2 = _ref1.split(/;/)) != null ? _ref2[0] : void 0 : void 0 : void 0;
+        return (contentType === 'application/xml' || contentType === 'text/xml') || contentType.match('\\+xml$');
       }
     };
 
     Validation.prototype.validateSchema = function(method, req) {
-      var contentType, schemaValidator, xml, xsd;
+      var contentType, schemaValidator, xml, xsd, _ref, _ref1, _ref2;
       if (method.body != null) {
-        contentType = method.body[req.headers['content-type']];
+        contentType = method.body[req != null ? (_ref = req.headers) != null ? (_ref1 = _ref['content-type']) != null ? (_ref2 = _ref1.split(/;/)) != null ? _ref2[0] : void 0 : void 0 : void 0 : void 0];
         if ((contentType != null ? contentType.schema : void 0) != null) {
           if (this.isJson(req)) {
             schemaValidator = new SchemaValidator();

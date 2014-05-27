@@ -38,6 +38,7 @@
 
     UriTemplateReader.prototype.getUriParametersFor = function(uri) {
       var i, keys, matches, template, uriParameters, _i, _ref;
+      uri = uri.replace(/\?.*$/, '');
       template = this.getTemplateFor(uri);
       if (template == null) {
         return null;

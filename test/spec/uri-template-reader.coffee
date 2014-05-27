@@ -62,6 +62,17 @@ describe 'URI TEMPLATE READER', ->
     result.should.not.eql null
     result.should.have.property 'resourceId', '1'
 
+  it 'Should correctly read uri parameters for a given uri if it has query parameters', () ->
+    # Arrange
+    uriTemplateReader = new UriTemplateReader @uriTemplates
+
+    # Act
+    result = uriTemplateReader.getUriParametersFor '/resource/1?someParam=somevalue'
+
+    # Assert
+    result.should.not.eql null
+    result.should.have.property 'resourceId', '1'
+
   it 'Should read a null value if uri does not have parameters', () ->
     # Arrange
     uriTemplateReader = new UriTemplateReader @uriTemplates
