@@ -31,28 +31,20 @@ class OspreyRouter extends RamlHelper
         @resolveMethod handler
 
   exec: (req, res, next) =>
-    if req.path.indexOf(@apiPath) >= 0
-      @resolveMock req, res, next, @settings.enableMocks
-    else
-      next()
+    @resolveMock req, res, next, @settings.enableMocks
 
   resolveMock: (req, res, next, enableMocks) =>
-    regex = new RegExp "^\\" + @apiPath + "(.*)"
-    urlPath = regex.exec req.url
+    uri = req.url.split('?')[0]
+    template = @uriTemplateReader.getTemplateFor uri
+    method = req.method.toLowerCase()
+    enableMocks = true unless enableMocks?
 
-    if urlPath and urlPath.length > 1
-      uri = urlPath[1].split('?')[0]
-      reqUrl = req.url.split('?')[0]
-      template = @uriTemplateReader.getTemplateFor uri
-      method = req.method.toLowerCase()
-      enableMocks = true unless enableMocks?
+    if template? and not @routerExists method, uri
+      methodInfo = @methodLookup @resources, method, template.uriTemplate
 
-      if template? and not @routerExists method, reqUrl
-        methodInfo = @methodLookup @resources, method, template.uriTemplate
-
-        if methodInfo? and enableMocks
-          @mockMethodHandlers[method].resolve req, res, methodInfo
-          return
+      if methodInfo? and enableMocks
+        @mockMethodHandlers[method].resolve req, res, methodInfo
+        return
 
     next()
 

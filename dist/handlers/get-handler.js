@@ -36,9 +36,7 @@
     }
 
     GetHandler.prototype.resolve = function(uriTemplate, handler) {
-      var template;
-      template = "" + this.apiPath + uriTemplate;
-      return this.context.get(template, (function(_this) {
+      return this.context.get(uriTemplate, (function(_this) {
         return function(req, res) {
           var methodInfo;
           methodInfo = _this.methodLookup(_this.resources, 'get', uriTemplate);

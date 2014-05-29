@@ -20,7 +20,7 @@ api.get '/default-parameters', (req, res) ->
     param: req.query.param
 
 api.post '/default-parameters', (req, res) ->
-  res.send 
+  res.send
     param: req.body.param
 
 module.exports = app

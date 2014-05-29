@@ -12,18 +12,14 @@ class Validation
     @logger.info 'Osprey::Validations has been initialized successfully'
 
   exec: (req, res, next) =>
-    regex = new RegExp "^\\" + @apiPath + "(.*)"
-    urlPath = regex.exec req.url
+    uri = req.url.split('?')[0]
+    template = @uriTemplateReader.getTemplateFor(uri)
 
-    if urlPath and urlPath.length > 1
-      uri = urlPath[1].split('?')[0]
-      template = @uriTemplateReader.getTemplateFor(uri)
+    if template?
+      resource = @resources[template.uriTemplate]
 
-      if template?
-        resource = @resources[template.uriTemplate]
-
-        if resource?
-          @validateRequest resource, req
+      if resource?
+        @validateRequest resource, req
 
     next()
 
@@ -55,7 +51,7 @@ class Validation
 
   validateSchema: (method, req) =>
     if method.body?
-      contentType = method.body[req?.headers?['content-type']?.split(/;/)?[0]];
+      contentType = method.body[req?.headers?['content-type']?.split(/;/)?[0]]
 
       if contentType?.schema?
         if @isJson req

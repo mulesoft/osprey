@@ -38,17 +38,13 @@
     }
 
     Validation.prototype.exec = function(req, res, next) {
-      var regex, resource, template, uri, urlPath;
-      regex = new RegExp("^\\" + this.apiPath + "(.*)");
-      urlPath = regex.exec(req.url);
-      if (urlPath && urlPath.length > 1) {
-        uri = urlPath[1].split('?')[0];
-        template = this.uriTemplateReader.getTemplateFor(uri);
-        if (template != null) {
-          resource = this.resources[template.uriTemplate];
-          if (resource != null) {
-            this.validateRequest(resource, req);
-          }
+      var resource, template, uri;
+      uri = req.url.split('?')[0];
+      template = this.uriTemplateReader.getTemplateFor(uri);
+      if (template != null) {
+        resource = this.resources[template.uriTemplate];
+        if (resource != null) {
+          this.validateRequest(resource, req);
         }
       }
       return next();

@@ -12,9 +12,7 @@ class PostHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
 
   resolve: (uriTemplate, handler) =>
-    template = "#{@apiPath}#{uriTemplate}"
-
-    @context.post template, (req, res) =>
+    @context.post uriTemplate, (req, res) =>
       methodInfo = @methodLookup @resources, 'post', uriTemplate
       @negotiateContentType req, res, methodInfo
       @negotiateAcceptType req, res, methodInfo, handler

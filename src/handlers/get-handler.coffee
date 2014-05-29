@@ -11,9 +11,7 @@ class GetHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
 
   resolve: (uriTemplate, handler) =>
-    template = "#{@apiPath}#{uriTemplate}"
-
-    @context.get template, (req, res) =>
+    @context.get uriTemplate, (req, res) =>
       methodInfo = @methodLookup @resources, 'get', uriTemplate
       @negotiateAcceptType req, res, methodInfo, handler
 

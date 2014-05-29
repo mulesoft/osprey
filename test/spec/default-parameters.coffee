@@ -15,7 +15,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
   describe 'QUERY PARAMETERS', =>
     it 'Should add a query param to the request if it is not present', () =>
       # Arrange
-      req = new Request 'GET', '/api/resources'
+      req = new Request 'GET', '/resources'
       middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
       # Act
@@ -26,7 +26,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
 
     it 'Should use the assigned value', () =>
       # Arrange
-      req = new Request 'GET', '/api/resources?param=CUSTOM'
+      req = new Request 'GET', '/resources?param=CUSTOM'
       middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
       # Act
@@ -39,7 +39,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
   describe 'FORM PARAMETERS', =>
     it 'Should add a form parameter to the request if it is not present', () =>
       # Arrange
-      req = new Request 'POST', '/api/resources'
+      req = new Request 'POST', '/resources'
       middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
       # Act
@@ -51,7 +51,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
 
     it 'Should use the assigned value', () =>
       # Arrange
-      req = new Request 'POST', '/api/resources'
+      req = new Request 'POST', '/resources'
       middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
       # Act
@@ -65,7 +65,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
   describe 'HEADERS', =>
     it 'Should add a header to the request if it is not present', () =>
       # Arrange
-      req = new Request 'GET', '/api/resources'
+      req = new Request 'GET', '/resources'
       middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
       # Act
@@ -76,7 +76,7 @@ describe 'OSPREY DEFAULT PARAMETERS', =>
 
     it 'Should use the assigned value', () =>
       # Arrange
-      req = new Request 'GET', '/api/resources'
+      req = new Request 'GET', '/resources'
       middleware = new DefaultParameters '/api', {}, {}, @resources, @uriTemplateReader, new Logger
 
       # Act

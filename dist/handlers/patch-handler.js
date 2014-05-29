@@ -37,9 +37,7 @@
     }
 
     PatchHandler.prototype.resolve = function(uriTemplate, handler) {
-      var template;
-      template = "" + this.apiPath + uriTemplate;
-      return this.context.patch(template, (function(_this) {
+      return this.context.patch(uriTemplate, (function(_this) {
         return function(req, res) {
           var methodInfo;
           methodInfo = _this.methodLookup(_this.resources, 'patch', uriTemplate);

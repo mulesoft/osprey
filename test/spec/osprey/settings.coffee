@@ -48,8 +48,8 @@ describe 'OSPREY - SETTINGS', =>
     # Assert
     context.middlewares.should.have.lengthOf 2
     context.getMethods.should.have.lengthOf 3
-    context.getMethods[0].should.eql '/api/console'
-    context.middlewares[0].should.eql '/api/console'
+    context.getMethods[0].should.eql '/console'
+    context.middlewares[0].should.eql '/console'
 
   it 'Should use default settings if settings are null', () =>
     # Arrange

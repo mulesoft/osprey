@@ -47,13 +47,12 @@
 
     Osprey.prototype.registerConsole = function() {
       if (this.settings.enableConsole) {
-        this.settings.consolePath = this.apiPath + this.settings.consolePath;
         this.context.get(this.settings.consolePath, this.consoleHandler(this.apiPath, this.settings.consolePath));
         this.context.get(url.resolve(this.settings.consolePath + '/', 'index.html'), this.consoleHandler(this.apiPath, this.settings.consolePath));
         this.context.use(this.settings.consolePath, express["static"](path.join(__dirname, 'assets/console')));
-        this.context.get(this.apiPath, this.ramlHandler(this.apiPath, this.settings.ramlFile));
-        this.context.use(this.apiPath, express["static"](path.dirname(this.settings.ramlFile)));
-        return this.logger.info("Osprey::APIConsole has been initialized successfully listening at " + this.settings.consolePath);
+        this.context.get('/', this.ramlHandler(this.settings.ramlFile));
+        this.context.use('/', express["static"](path.dirname(this.settings.ramlFile)));
+        return this.logger.info("Osprey::APIConsole has been initialized successfully listening at " + (this.apiPath + this.settings.consolePath));
       }
     };
 
@@ -63,14 +62,14 @@
         filePath = path.join(__dirname, '/assets/console/index.html');
         return fs.readFile(filePath, function(err, data) {
           data = data.toString().replace(/apiPath/gi, apiPath);
-          data = data.toString().replace(/resourcesPath/gi, consolePath);
+          data = data.toString().replace(/resourcesPath/gi, apiPath + consolePath);
           res.set('Content-Type', 'text/html');
           return res.send(data);
         });
       };
     };
 
-    Osprey.prototype.ramlHandler = function(apiPath, ramlPath) {
+    Osprey.prototype.ramlHandler = function(ramlPath) {
       return function(req, res) {
         var baseUri;
         if (req.accepts('application/raml+yaml') != null) {
@@ -89,7 +88,7 @@
     Osprey.prototype.load = function(err, uriTemplateReader, resources) {
       if (err == null) {
         if ((this.apiDescriptor != null) && typeof this.apiDescriptor === 'function') {
-          this.apiDescriptor(this, this.context);
+          this.apiDescriptor(this, this.container);
         }
         return this.register(uriTemplateReader, resources);
       }
@@ -97,7 +96,7 @@
 
     Osprey.prototype.describe = function(descriptor) {
       this.apiDescriptor = descriptor;
-      return Promise.resolve(this.context);
+      return Promise.resolve(this.container);
     };
 
     return Osprey;

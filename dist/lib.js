@@ -1,5 +1,5 @@
 (function() {
-  var Osprey, UriTemplateReader, logger, parser, path;
+  var Osprey, UriTemplateReader, express, logger, parser, path;
 
   UriTemplateReader = require('./uri-template-reader');
 
@@ -13,12 +13,16 @@
 
   path = require('path');
 
+  express = require('express');
+
   exports.create = function(apiPath, context, settings) {
-    var osprey;
+    var osprey, ospreyApp;
     if (!settings.ramlFile) {
       settings.ramlFile = path.join(process.cwd(), '/src/assets/raml/api.raml');
     }
-    osprey = new Osprey(apiPath, context, settings, logger);
+    ospreyApp = express();
+    context.use(apiPath, ospreyApp);
+    osprey = new Osprey(apiPath, ospreyApp, settings, logger, context);
     logger.setLevel(settings.logLevel);
     parser.loadRaml(settings.ramlFile, logger, function(wrapper) {
       var resources, uriTemplateReader;

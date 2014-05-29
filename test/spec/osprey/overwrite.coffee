@@ -28,7 +28,7 @@ describe 'OSPREY - OVERWRITE', =>
 
       # Assert
       context.getMethods.should.have.lengthOf 1
-      context.getMethods[0].should.eql '/api/resource'
+      context.getMethods[0].should.eql '/resource'
 
   it 'Should be able to overwrite an existing resource - POST', () =>
     # Arrange
@@ -45,7 +45,7 @@ describe 'OSPREY - OVERWRITE', =>
 
       # Assert
       context.postMethods.should.have.lengthOf 1
-      context.postMethods[0].should.eql '/api/resource'
+      context.postMethods[0].should.eql '/resource'
 
   it 'Should be able to overwrite an existing resource - PUT', () =>
     # Arrange
@@ -62,7 +62,7 @@ describe 'OSPREY - OVERWRITE', =>
 
       # Assert
       context.putMethods.should.have.lengthOf 1
-      context.putMethods[0].should.eql '/api/resource'
+      context.putMethods[0].should.eql '/resource'
 
   it 'Should be able to overwrite an existing resource - DELETE', () =>
     # Arrange
@@ -79,7 +79,7 @@ describe 'OSPREY - OVERWRITE', =>
 
       # Assert
       context.deleteMethods.should.have.lengthOf 1
-      context.deleteMethods[0].should.eql '/api/resource'
+      context.deleteMethods[0].should.eql '/resource'
 
   it 'Should be able to overwrite an existing resource - HEAD', () =>
     # Arrange
@@ -96,7 +96,7 @@ describe 'OSPREY - OVERWRITE', =>
 
       # Assert
       context.headMethods.should.have.lengthOf 1
-      context.headMethods[0].should.eql '/api/resource'
+      context.headMethods[0].should.eql '/resource'
 
   it 'Should be able to overwrite an existing resource - PATCH', () =>
     # Arrange
@@ -113,4 +113,4 @@ describe 'OSPREY - OVERWRITE', =>
 
       # Assert
       context.patchMethods.should.have.lengthOf 1
-      context.patchMethods[0].should.eql '/api/resource'
+      context.patchMethods[0].should.eql '/resource'

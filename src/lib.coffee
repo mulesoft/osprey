@@ -4,12 +4,16 @@ Osprey = require './osprey'
 UriTemplateReader = require './uri-template-reader'
 logger = require './utils/logger'
 path = require 'path'
+express = require 'express'
 
 exports.create = (apiPath, context, settings) ->
   unless settings.ramlFile
     settings.ramlFile = path.join process.cwd(), '/src/assets/raml/api.raml'
 
-  osprey = new Osprey apiPath, context, settings, logger
+  ospreyApp = express()
+  context.use apiPath, ospreyApp
+
+  osprey = new Osprey apiPath, ospreyApp, settings, logger, context
 
   logger.setLevel settings.logLevel
 

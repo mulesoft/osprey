@@ -13,6 +13,7 @@ var api = osprey.create('/api', app, {
   ramlFile: path.join(__dirname, '/assets/raml/api.raml'),
   logLevel: 'debug',
   enableMocks: true,
+  enableConsole: true,
   exceptionHandler: {
     InvalidUriParameterError: function (err, req, res) {
       res.send(400);
@@ -38,6 +39,7 @@ api.describe(function (api) {
   });
 })
 .then(function (app) {
+  console.log('ops');
   if (!module.parent) {
     var port = app.get('port');
     app.listen(port);

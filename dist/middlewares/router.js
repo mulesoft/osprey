@@ -60,31 +60,22 @@
     }
 
     OspreyRouter.prototype.exec = function(req, res, next) {
-      if (req.path.indexOf(this.apiPath) >= 0) {
-        return this.resolveMock(req, res, next, this.settings.enableMocks);
-      } else {
-        return next();
-      }
+      return this.resolveMock(req, res, next, this.settings.enableMocks);
     };
 
     OspreyRouter.prototype.resolveMock = function(req, res, next, enableMocks) {
-      var method, methodInfo, regex, reqUrl, template, uri, urlPath;
-      regex = new RegExp("^\\" + this.apiPath + "(.*)");
-      urlPath = regex.exec(req.url);
-      if (urlPath && urlPath.length > 1) {
-        uri = urlPath[1].split('?')[0];
-        reqUrl = req.url.split('?')[0];
-        template = this.uriTemplateReader.getTemplateFor(uri);
-        method = req.method.toLowerCase();
-        if (enableMocks == null) {
-          enableMocks = true;
-        }
-        if ((template != null) && !this.routerExists(method, reqUrl)) {
-          methodInfo = this.methodLookup(this.resources, method, template.uriTemplate);
-          if ((methodInfo != null) && enableMocks) {
-            this.mockMethodHandlers[method].resolve(req, res, methodInfo);
-            return;
-          }
+      var method, methodInfo, template, uri;
+      uri = req.url.split('?')[0];
+      template = this.uriTemplateReader.getTemplateFor(uri);
+      method = req.method.toLowerCase();
+      if (enableMocks == null) {
+        enableMocks = true;
+      }
+      if ((template != null) && !this.routerExists(method, uri)) {
+        methodInfo = this.methodLookup(this.resources, method, template.uriTemplate);
+        if ((methodInfo != null) && enableMocks) {
+          this.mockMethodHandlers[method].resolve(req, res, methodInfo);
+          return;
         }
       }
       return next();

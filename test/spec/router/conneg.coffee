@@ -19,7 +19,7 @@ describe 'OSPREY ROUTER - CONTENT NEGOTIATION', =>
     # Arrange
     context = new Express
     res = new Response
-    req = new Request 'GET', '/api/resource/1', 'application/xml'
+    req = new Request 'GET', '/resource/1', 'application/xml'
     router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
@@ -33,7 +33,7 @@ describe 'OSPREY ROUTER - CONTENT NEGOTIATION', =>
     # Arrange
     context = new Express
     res = new Response
-    req = new Request 'GET', '/api/resource/1'
+    req = new Request 'GET', '/resource/1'
     router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
@@ -47,7 +47,7 @@ describe 'OSPREY ROUTER - CONTENT NEGOTIATION', =>
     # Arrange
     context = new Express
     res = new Response
-    req = new Request 'GET', '/api/resource/1', 'text/plain'
+    req = new Request 'GET', '/resource/1', 'text/plain'
     router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Assert
@@ -59,7 +59,7 @@ describe 'OSPREY ROUTER - CONTENT NEGOTIATION', =>
     # Arrange
     context = new Express
     res = new Response
-    req = new Request 'POST', '/api/resource', 'application/json', 'application/json'
+    req = new Request 'POST', '/resource', 'application/json', 'application/json'
     router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Act
@@ -72,7 +72,7 @@ describe 'OSPREY ROUTER - CONTENT NEGOTIATION', =>
     # Arrange
     context = new Express
     res = new Response
-    req = new Request 'POST', '/api/resource', 'text/plain'
+    req = new Request 'POST', '/resource', 'text/plain'
     router = new OspreyRouter '/api', context, {}, @resources, @uriTemplateReader, new Logger
 
     # Assert

@@ -12,9 +12,7 @@ class PatchHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
 
   resolve: (uriTemplate, handler) =>
-    template = "#{@apiPath}#{uriTemplate}"
-
-    @context.patch template, (req, res) =>
+    @context.patch uriTemplate, (req, res) =>
       methodInfo = @methodLookup @resources, 'patch', uriTemplate
       @negotiateContentType req, res, methodInfo
       @negotiateAcceptType req, res, methodInfo, handler

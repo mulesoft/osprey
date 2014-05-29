@@ -17,19 +17,15 @@
     }
 
     DefaultParameters.prototype.exec = function(req, res, next) {
-      var httpMethod, regex, resource, template, uri, urlPath;
-      regex = new RegExp("^\\" + this.apiPath + "(.*)");
-      urlPath = regex.exec(req.url);
-      if (urlPath && urlPath.length > 1) {
-        uri = urlPath[1].split('?')[0];
-        template = this.uriTemplateReader.getTemplateFor(uri);
-        if (template != null) {
-          resource = this.resources[template.uriTemplate];
-          if (resource != null) {
-            httpMethod = this.getMethodInfoFrom(req.method, resource);
-            if (httpMethod != null) {
-              this.loadDefaults(req, httpMethod);
-            }
+      var httpMethod, resource, template, uri;
+      uri = req.url.split('?')[0];
+      template = this.uriTemplateReader.getTemplateFor(uri);
+      if (template != null) {
+        resource = this.resources[template.uriTemplate];
+        if (resource != null) {
+          httpMethod = this.getMethodInfoFrom(req.method, resource);
+          if (httpMethod != null) {
+            this.loadDefaults(req, httpMethod);
           }
         }
       }

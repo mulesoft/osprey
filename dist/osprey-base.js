@@ -3,11 +3,12 @@
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   OspreyBase = (function() {
-    function OspreyBase(apiPath, context, settings, logger) {
+    function OspreyBase(apiPath, context, settings, logger, container) {
       this.apiPath = apiPath;
       this.context = context;
       this.settings = settings;
       this.logger = logger;
+      this.container = container;
       this.patch = __bind(this.patch, this);
       this.head = __bind(this.head, this);
       this["delete"] = __bind(this["delete"], this);

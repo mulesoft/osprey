@@ -37,9 +37,7 @@
     }
 
     PutHandler.prototype.resolve = function(uriTemplate, handler) {
-      var template;
-      template = "" + this.apiPath + uriTemplate;
-      return this.context.put(template, (function(_this) {
+      return this.context.put(uriTemplate, (function(_this) {
         return function(req, res) {
           var methodInfo;
           methodInfo = _this.methodLookup(_this.resources, 'put', uriTemplate);

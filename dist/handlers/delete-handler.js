@@ -36,9 +36,7 @@
     }
 
     DeleteHandler.prototype.resolve = function(uriTemplate, handler) {
-      var template;
-      template = "" + this.apiPath + uriTemplate;
-      return this.context["delete"](template, function(req, res) {
+      return this.context["delete"](uriTemplate, function(req, res) {
         return handler(req, res);
       });
     };

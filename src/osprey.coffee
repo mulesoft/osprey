@@ -25,16 +25,14 @@ class Osprey extends OspreyBase
 
   registerConsole: () =>
     if @settings.enableConsole
-      @settings.consolePath = @apiPath + @settings.consolePath
-
       @context.get @settings.consolePath, @consoleHandler(@apiPath, @settings.consolePath)
       @context.get url.resolve(@settings.consolePath + '/', 'index.html'), @consoleHandler(@apiPath, @settings.consolePath)
       @context.use @settings.consolePath, express.static(path.join(__dirname, 'assets/console'))
 
-      @context.get @apiPath, @ramlHandler(@apiPath, @settings.ramlFile)
-      @context.use @apiPath, express.static(path.dirname(@settings.ramlFile))
+      @context.get '/', @ramlHandler(@settings.ramlFile)
+      @context.use '/', express.static(path.dirname(@settings.ramlFile))
 
-      @logger.info "Osprey::APIConsole has been initialized successfully listening at #{@settings.consolePath}"
+      @logger.info "Osprey::APIConsole has been initialized successfully listening at #{@apiPath + @settings.consolePath}"
 
   consoleHandler: (apiPath, consolePath) ->
     (req, res) ->
@@ -42,11 +40,11 @@ class Osprey extends OspreyBase
 
       fs.readFile filePath, (err, data) ->
         data = data.toString().replace(/apiPath/gi, apiPath)
-        data = data.toString().replace(/resourcesPath/gi, consolePath)
+        data = data.toString().replace(/resourcesPath/gi, apiPath+consolePath)
         res.set 'Content-Type', 'text/html'
         res.send data
 
-  ramlHandler: (apiPath, ramlPath) ->
+  ramlHandler: (ramlPath) ->
     (req, res) ->
       if req.accepts('application/raml+yaml')?
         baseUri = "http#{if req.secure then 's' else ''}://#{req.headers.host}#{req.originalUrl}"
@@ -61,12 +59,12 @@ class Osprey extends OspreyBase
   load: (err, uriTemplateReader, resources) ->
     unless err?
       if @apiDescriptor? and typeof @apiDescriptor == 'function'
-        @apiDescriptor this, @context
+        @apiDescriptor this, @container
 
       @register(uriTemplateReader, resources)
 
   describe: (descriptor) ->
     @apiDescriptor = descriptor
-    Promise.resolve @context
+    Promise.resolve @container
 
 module.exports = Osprey

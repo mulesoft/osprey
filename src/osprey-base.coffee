@@ -1,5 +1,5 @@
 class OspreyBase
-  constructor: (@apiPath, @context, @settings, @logger) ->
+  constructor: (@apiPath, @context, @settings, @logger, @container) ->
     unless @settings?
       @settings = {}
 

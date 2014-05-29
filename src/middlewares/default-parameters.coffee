@@ -3,22 +3,18 @@ class DefaultParameters
     @logger.info 'Osprey::DefaultParameters has been initialized successfully'
 
   exec: (req, res, next) =>
-    regex = new RegExp "^\\" + @apiPath + "(.*)"
-    urlPath = regex.exec req.url
+    uri = req.url.split('?')[0]
 
-    if urlPath and urlPath.length > 1
-      uri = urlPath[1].split('?')[0]
+    template = @uriTemplateReader.getTemplateFor(uri)
 
-      template = @uriTemplateReader.getTemplateFor(uri)
-      
-      if template?
-        resource = @resources[template.uriTemplate]
+    if template?
+      resource = @resources[template.uriTemplate]
 
-        if resource?
-          httpMethod = @getMethodInfoFrom req.method, resource
+      if resource?
+        httpMethod = @getMethodInfoFrom req.method, resource
 
-          if httpMethod?
-            @loadDefaults req, httpMethod
+        if httpMethod?
+          @loadDefaults req, httpMethod
 
     next()
 

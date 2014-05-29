@@ -24,7 +24,7 @@ describe 'OSPREY ROUTER - OVERWRITE', =>
     router.resolveMethod method: 'get', template: '/resource', handler: () ->
 
     # Assert
-    context.getMethods[0].should.be.eql '/api/resource'
+    context.getMethods[0].should.be.eql '/resource'
 
   it 'Should not be able to overwrite a resource which does not exists in the RAML file', () =>
     # Arrange
