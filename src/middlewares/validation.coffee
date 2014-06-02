@@ -55,7 +55,7 @@ class Validation
 
   validateSchema: (method, req) =>
     if method.body?
-      contentType = method.body[req?.headers?['content-type']?.split(/;/)?[0]];
+      contentType = method.body[req?.headers?['content-type']?.split(/;/)?[0]]
 
       if contentType?.schema?
         if @isJson req
