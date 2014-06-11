@@ -26,9 +26,10 @@ class Osprey extends OspreyBase
   registerConsole: () =>
     if @settings.enableConsole
       @settings.consolePath = @apiPath + @settings.consolePath
+      pathToRaml = "#{@apiPath}/#{path.basename @settings.ramlFile}"
 
-      @context.get @settings.consolePath, @consoleHandler(@apiPath, @settings.consolePath)
-      @context.get url.resolve(@settings.consolePath + '/', 'index.html'), @consoleHandler(@apiPath, @settings.consolePath)
+      @context.get @settings.consolePath, @consoleHandler(pathToRaml, @settings.consolePath)
+      @context.get url.resolve(@settings.consolePath + '/', 'index.html'), @consoleHandler(pathToRaml, @settings.consolePath)
       @context.use @settings.consolePath, express.static(path.join(__dirname, 'assets/console'))
 
       @context.get @apiPath, @ramlHandler(@apiPath, @settings.ramlFile)
