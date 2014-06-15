@@ -53,9 +53,9 @@ class DefaultParameters
 
   checkFormParameters: (req, method) =>
     if req.headers['content-type'] in ['application/x-www-form-urlencoded', 'multipart/form-data']
-      formParameters = method.body['multipart/form-data']
-      formParameters = method.body['application/x-www-form-urlencoded'] unless formParameters?
-      formParameters = formParameters.formParameters
+      formParameters = method.body?['multipart/form-data']
+      formParameters = method.body?['application/x-www-form-urlencoded'] unless formParameters?
+      formParameters = formParameters?.formParameters
 
       for key, parameterSettings of formParameters
         parameter = req.body[key]
