@@ -95,13 +95,13 @@
     };
 
     DefaultParameters.prototype.checkFormParameters = function(req, method) {
-      var formParameters, key, parameter, parameterSettings, _ref, _results;
+      var formParameters, key, parameter, parameterSettings, _ref, _ref1, _ref2, _results;
       if ((_ref = req.headers['content-type']) === 'application/x-www-form-urlencoded' || _ref === 'multipart/form-data') {
-        formParameters = method.body['multipart/form-data'];
+        formParameters = (_ref1 = method.body) != null ? _ref1['multipart/form-data'] : void 0;
         if (formParameters == null) {
-          formParameters = method.body['application/x-www-form-urlencoded'];
+          formParameters = (_ref2 = method.body) != null ? _ref2['application/x-www-form-urlencoded'] : void 0;
         }
-        formParameters = formParameters.formParameters;
+        formParameters = formParameters != null ? formParameters.formParameters : void 0;
         _results = [];
         for (key in formParameters) {
           parameterSettings = formParameters[key];

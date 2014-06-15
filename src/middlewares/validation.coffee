@@ -102,9 +102,9 @@ class Validation
 
   validateFormParams: (method, req) =>
     if @isForm req
-      formParameters = method.body['multipart/form-data']
-      formParameters = method.body['application/x-www-form-urlencoded'] unless formParameters?
-      formParameters = formParameters.formParameters
+      formParameters = method.body?['multipart/form-data']
+      formParameters = method.body?['application/x-www-form-urlencoded'] unless formParameters?
+      formParameters = formParameters?.formParameters
 
       for key, ramlFormParameter of formParameters
         reqFormParam = req.body[key]

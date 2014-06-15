@@ -155,13 +155,13 @@
     };
 
     Validation.prototype.validateFormParams = function(method, req) {
-      var formParameters, key, ramlFormParameter, reqFormParam, _results;
+      var formParameters, key, ramlFormParameter, reqFormParam, _ref, _ref1, _results;
       if (this.isForm(req)) {
-        formParameters = method.body['multipart/form-data'];
+        formParameters = (_ref = method.body) != null ? _ref['multipart/form-data'] : void 0;
         if (formParameters == null) {
-          formParameters = method.body['application/x-www-form-urlencoded'];
+          formParameters = (_ref1 = method.body) != null ? _ref1['application/x-www-form-urlencoded'] : void 0;
         }
-        formParameters = formParameters.formParameters;
+        formParameters = formParameters != null ? formParameters.formParameters : void 0;
         _results = [];
         for (key in formParameters) {
           ramlFormParameter = formParameters[key];
