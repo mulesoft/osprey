@@ -15,7 +15,7 @@
       return MockHeadHandler.__super__.constructor.apply(this, arguments);
     }
 
-    MockHeadHandler.prototype.resolve = function(req, res, methodInfo) {
+    MockHeadHandler.prototype.resolve = function(req, res, next, methodInfo) {
       logger.debug("Mock resolved - HEAD " + req.url);
       this.setDefaultHeaders(res, methodInfo);
       return res.send(this.readStatusCode(methodInfo));

@@ -29,7 +29,7 @@ class HttpUtils extends RamlHelper
     unless isValid
       throw new InvalidContentTypeError
 
-  negotiateAcceptType: (req, res, methodInfo, customHandler) ->
+  negotiateAcceptType: (req, res, next, methodInfo, customHandler) ->
     statusCode = @readStatusCode(methodInfo)
     isValid = false
     response = {}
@@ -45,7 +45,7 @@ class HttpUtils extends RamlHelper
       throw new InvalidAcceptTypeError
 
     if customHandler
-      customHandler req, res
+      customHandler req, res, next
     else
       res.status(statusCode).send(response)
 

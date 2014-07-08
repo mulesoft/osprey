@@ -15,7 +15,7 @@
       return MockDeleteHandler.__super__.constructor.apply(this, arguments);
     }
 
-    MockDeleteHandler.prototype.resolve = function(req, res, methodInfo) {
+    MockDeleteHandler.prototype.resolve = function(req, res, next, methodInfo) {
       logger.debug("Mock resolved - DELETE " + req.url);
       this.setDefaultHeaders(res, methodInfo);
       return res.send(this.readStatusCode(methodInfo));

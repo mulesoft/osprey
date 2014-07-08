@@ -82,7 +82,7 @@
         if ((template != null) && !this.routerExists(method, reqUrl)) {
           methodInfo = this.methodLookup(this.resources, method, template.uriTemplate);
           if ((methodInfo != null) && enableMocks) {
-            this.mockMethodHandlers[method].resolve(req, res, methodInfo);
+            this.mockMethodHandlers[method].resolve(req, res, next, methodInfo);
             return;
           }
         }

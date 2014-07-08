@@ -15,10 +15,10 @@
       return MockGetHandler.__super__.constructor.apply(this, arguments);
     }
 
-    MockGetHandler.prototype.resolve = function(req, res, methodInfo) {
+    MockGetHandler.prototype.resolve = function(req, res, next, methodInfo) {
       logger.debug("Mock resolved - GET " + req.url);
       this.setDefaultHeaders(res, methodInfo);
-      return this.negotiateAcceptType(req, res, methodInfo);
+      return this.negotiateAcceptType(req, res, next, methodInfo);
     };
 
     return MockGetHandler;
@@ -39,10 +39,10 @@
       var template;
       template = "" + this.apiPath + uriTemplate;
       return this.context.get(template, (function(_this) {
-        return function(req, res) {
+        return function(req, res, next) {
           var methodInfo;
           methodInfo = _this.methodLookup(_this.resources, 'get', uriTemplate);
-          return _this.negotiateAcceptType(req, res, methodInfo, handler);
+          return _this.negotiateAcceptType(req, res, next, methodInfo, handler);
         };
       })(this));
     };

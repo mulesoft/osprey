@@ -15,11 +15,11 @@
       return MockPatchHandler.__super__.constructor.apply(this, arguments);
     }
 
-    MockPatchHandler.prototype.resolve = function(req, res, methodInfo) {
+    MockPatchHandler.prototype.resolve = function(req, res, next, methodInfo) {
       logger.debug("Mock resolved - PATCH " + req.url);
       this.setDefaultHeaders(res, methodInfo);
       this.negotiateContentType(req, res, methodInfo);
-      return this.negotiateAcceptType(req, res, methodInfo);
+      return this.negotiateAcceptType(req, res, next, methodInfo);
     };
 
     return MockPatchHandler;
@@ -40,11 +40,11 @@
       var template;
       template = "" + this.apiPath + uriTemplate;
       return this.context.patch(template, (function(_this) {
-        return function(req, res) {
+        return function(req, res, next) {
           var methodInfo;
           methodInfo = _this.methodLookup(_this.resources, 'patch', uriTemplate);
           _this.negotiateContentType(req, res, methodInfo);
-          return _this.negotiateAcceptType(req, res, methodInfo, handler);
+          return _this.negotiateAcceptType(req, res, next, methodInfo, handler);
         };
       })(this));
     };
