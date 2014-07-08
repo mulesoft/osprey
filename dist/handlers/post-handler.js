@@ -15,11 +15,11 @@
       return MockPostHandler.__super__.constructor.apply(this, arguments);
     }
 
-    MockPostHandler.prototype.resolve = function(req, res, methodInfo) {
+    MockPostHandler.prototype.resolve = function(req, res, next, methodInfo) {
       logger.debug("Mock resolved - POST " + req.url);
       this.setDefaultHeaders(res, methodInfo);
       this.negotiateContentType(req, res, methodInfo);
-      return this.negotiateAcceptType(req, res, methodInfo);
+      return this.negotiateAcceptType(req, res, next, methodInfo);
     };
 
     return MockPostHandler;
@@ -40,11 +40,11 @@
       var template;
       template = "" + this.apiPath + uriTemplate;
       return this.context.post(template, (function(_this) {
-        return function(req, res) {
+        return function(req, res, next) {
           var methodInfo;
           methodInfo = _this.methodLookup(_this.resources, 'post', uriTemplate);
           _this.negotiateContentType(req, res, methodInfo);
-          return _this.negotiateAcceptType(req, res, methodInfo, handler);
+          return _this.negotiateAcceptType(req, res, next, methodInfo, handler);
         };
       })(this));
     };

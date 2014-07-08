@@ -51,7 +51,7 @@ class OspreyRouter extends RamlHelper
         methodInfo = @methodLookup @resources, method, template.uriTemplate
 
         if methodInfo? and enableMocks
-          @mockMethodHandlers[method].resolve req, res, methodInfo
+          @mockMethodHandlers[method].resolve req, res, next, methodInfo
           return
 
     next()

@@ -56,7 +56,7 @@
       }
     };
 
-    HttpUtils.prototype.negotiateAcceptType = function(req, res, methodInfo, customHandler) {
+    HttpUtils.prototype.negotiateAcceptType = function(req, res, next, methodInfo, customHandler) {
       var isValid, mimeType, response, statusCode, _ref, _ref1, _ref2, _ref3, _ref4;
       statusCode = this.readStatusCode(methodInfo);
       isValid = false;
@@ -73,7 +73,7 @@
         throw new InvalidAcceptTypeError;
       }
       if (customHandler) {
-        return customHandler(req, res);
+        return customHandler(req, res, next);
       } else {
         return res.status(statusCode).send(response);
       }

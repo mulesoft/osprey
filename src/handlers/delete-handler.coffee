@@ -2,7 +2,7 @@ HttpUtils = require '../utils/http-utils'
 logger = require '../utils/logger'
 
 class MockDeleteHandler extends HttpUtils
-  resolve: (req, res, methodInfo) ->
+  resolve: (req, res, next, methodInfo) ->
     logger.debug "Mock resolved - DELETE #{req.url}"
     @setDefaultHeaders res, methodInfo
     res.send @readStatusCode(methodInfo)
