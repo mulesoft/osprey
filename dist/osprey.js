@@ -46,10 +46,12 @@
     };
 
     Osprey.prototype.registerConsole = function() {
+      var pathToRaml;
       if (this.settings.enableConsole) {
         this.settings.consolePath = this.apiPath + this.settings.consolePath;
-        this.context.get(this.settings.consolePath, this.consoleHandler(this.apiPath, this.settings.consolePath));
-        this.context.get(url.resolve(this.settings.consolePath + '/', 'index.html'), this.consoleHandler(this.apiPath, this.settings.consolePath));
+        pathToRaml = "" + this.apiPath + "/" + (path.basename(this.settings.ramlFile));
+        this.context.get(this.settings.consolePath, this.consoleHandler(pathToRaml, this.settings.consolePath));
+        this.context.get(url.resolve(this.settings.consolePath + '/', 'index.html'), this.consoleHandler(pathToRaml, this.settings.consolePath));
         this.context.use(this.settings.consolePath, express["static"](path.join(__dirname, 'assets/console')));
         this.context.get(this.apiPath, this.ramlHandler(this.apiPath, this.settings.ramlFile));
         this.context.use(this.apiPath, express["static"](path.dirname(this.settings.ramlFile)));
