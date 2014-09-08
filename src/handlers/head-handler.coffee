@@ -13,9 +13,9 @@ class MockHeadHandler extends HttpUtils
 class HeadHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
 
-  resolve: (uriTemplate, handlers) =>
-    helper.resolveWithMiddlewares 'head', @context, "#{@apiPath}#{uriTemplate}", handlers, (handler) => 
-      (req, res, next) =>
+  resolve: (uriTemplate, handlers) ->
+    helper.resolveWithMiddlewares 'head', @context, "#{@apiPath}#{uriTemplate}", handlers, (handler) ->
+      (req, res, next) ->
         handler req, res
 
 exports.MockHandler = MockHeadHandler

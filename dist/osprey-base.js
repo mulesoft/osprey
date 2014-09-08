@@ -1,6 +1,7 @@
 (function() {
   var OspreyBase,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __slice = [].slice;
 
   OspreyBase = (function() {
     function OspreyBase(apiPath, context, settings, logger) {
@@ -45,51 +46,63 @@
       return _results;
     };
 
-    OspreyBase.prototype.get = function(uriTemplate, handler) {
+    OspreyBase.prototype.get = function() {
+      var handlers, uriTemplate;
+      uriTemplate = arguments[0], handlers = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return this.settings.handlers.push({
         method: 'get',
         template: uriTemplate,
-        handler: handler
+        handler: handlers
       });
     };
 
-    OspreyBase.prototype.post = function(uriTemplate, handler) {
+    OspreyBase.prototype.post = function() {
+      var handlers, uriTemplate;
+      uriTemplate = arguments[0], handlers = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return this.settings.handlers.push({
         method: 'post',
         template: uriTemplate,
-        handler: handler
+        handler: handlers
       });
     };
 
-    OspreyBase.prototype.put = function(uriTemplate, handler) {
+    OspreyBase.prototype.put = function() {
+      var handlers, uriTemplate;
+      uriTemplate = arguments[0], handlers = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return this.settings.handlers.push({
         method: 'put',
         template: uriTemplate,
-        handler: handler
+        handler: handlers
       });
     };
 
-    OspreyBase.prototype["delete"] = function(uriTemplate, handler) {
+    OspreyBase.prototype["delete"] = function() {
+      var handlers, uriTemplate;
+      uriTemplate = arguments[0], handlers = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return this.settings.handlers.push({
         method: 'delete',
         template: uriTemplate,
-        handler: handler
+        handler: handlers
       });
     };
 
-    OspreyBase.prototype.head = function(uriTemplate, handler) {
+    OspreyBase.prototype.head = function() {
+      var handlers, uriTemplate;
+      uriTemplate = arguments[0], handlers = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return this.settings.handlers.push({
         method: 'head',
         template: uriTemplate,
-        handler: handler
+        handler: handlers
       });
     };
 
-    OspreyBase.prototype.patch = function(uriTemplate, handler) {
+    OspreyBase.prototype.patch = function() {
+      var handlers, uriTemplate;
+      uriTemplate = arguments[0], handlers = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return this.settings.handlers.push({
         method: 'patch',
         template: uriTemplate,
-        handler: handler
+        handler: handlers
       });
     };
 

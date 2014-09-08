@@ -12,8 +12,8 @@ class DeleteHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
     
   resolve: (uriTemplate, handlers) =>
-    helper.resolveWithMiddlewares 'delete', @context, "#{@apiPath}#{uriTemplate}", handlers, (handler) => 
-      (req, res, next) =>
+    helper.resolveWithMiddlewares 'delete', @context, "#{@apiPath}#{uriTemplate}", handlers, (handler) ->
+      (req, res, next) ->
         handler req, res
 
 exports.MockHandler = MockDeleteHandler

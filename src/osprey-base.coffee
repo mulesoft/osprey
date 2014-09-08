@@ -17,7 +17,7 @@ class OspreyBase
       temp = new middleware apiPath, context, settings, resources, uriTemplateReader, logger
       @context.use temp.exec
 
-  get: (uriTemplate, handlers...) => 
+  get: (uriTemplate, handlers...) =>
     @settings.handlers.push { method: 'get', template: uriTemplate, handler: handlers }
 
   post: (uriTemplate, handlers...) =>

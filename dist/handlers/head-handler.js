@@ -1,10 +1,11 @@
 (function() {
-  var HeadHandler, HttpUtils, MockHeadHandler, logger,
+  var HeadHandler, HttpUtils, MockHeadHandler, helper, logger,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   HttpUtils = require('../utils/http-utils');
+
+  helper = require('../utils/handler-utils');
 
   logger = require('../utils/logger');
 
@@ -32,14 +33,13 @@
       this.apiPath = apiPath;
       this.context = context;
       this.resources = resources;
-      this.resolve = __bind(this.resolve, this);
     }
 
-    HeadHandler.prototype.resolve = function(uriTemplate, handler) {
-      var template;
-      template = "" + this.apiPath + uriTemplate;
-      return this.context.head(template, function(req, res) {
-        return handler(req, res);
+    HeadHandler.prototype.resolve = function(uriTemplate, handlers) {
+      return helper.resolveWithMiddlewares('head', this.context, "" + this.apiPath + uriTemplate, handlers, function(handler) {
+        return function(req, res, next) {
+          return handler(req, res);
+        };
       });
     };
 
