@@ -1,4 +1,5 @@
 HttpUtils = require '../utils/http-utils'
+helper = require '../utils/handler-utils'
 logger = require '../utils/logger'
 
 class MockPatchHandler extends HttpUtils
@@ -11,13 +12,12 @@ class MockPatchHandler extends HttpUtils
 class PatchHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
 
-  resolve: (uriTemplate, handler) =>
-    template = "#{@apiPath}#{uriTemplate}"
-
-    @context.patch template, (req, res, next) =>
-      methodInfo = @methodLookup @resources, 'patch', uriTemplate
-      @negotiateContentType req, res, methodInfo
-      @negotiateAcceptType req, res, next, methodInfo, handler
+  resolve: (uriTemplate, handlers) =>
+    helper.resolveWithMiddlewares 'patch', @context, "#{@apiPath}#{uriTemplate}", handlers, (handler) => 
+      (req, res, next) =>
+        methodInfo = @methodLookup @resources, 'patch', uriTemplate
+        @negotiateContentType req, res, methodInfo
+        @negotiateAcceptType req, res, next, methodInfo, handler
 
 exports.MockHandler = MockPatchHandler
 exports.Handler = PatchHandler

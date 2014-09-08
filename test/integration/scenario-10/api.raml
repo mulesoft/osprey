@@ -1,0 +1,28 @@
+#%RAML 0.8
+---
+title: scenario-10
+version: 1.0
+baseUri: http://localhost:8002/api
+/resources:
+  post:
+    body:
+      application/json:
+        schema: |
+          {
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "properties": {
+              "data": {
+                "description": "Some data",
+                "type": "string"
+              }
+            },
+            "type": "object",
+            "name": "resource"
+          }
+  /{id}:
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+    delete:

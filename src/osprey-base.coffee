@@ -17,22 +17,22 @@ class OspreyBase
       temp = new middleware apiPath, context, settings, resources, uriTemplateReader, logger
       @context.use temp.exec
 
-  get: (uriTemplate, handler) =>
-    @settings.handlers.push { method: 'get', template: uriTemplate, handler: handler }
+  get: (uriTemplate, handlers...) => 
+    @settings.handlers.push { method: 'get', template: uriTemplate, handler: handlers }
 
-  post: (uriTemplate, handler) =>
-    @settings.handlers.push { method: 'post', template: uriTemplate, handler: handler }
+  post: (uriTemplate, handlers...) =>
+    @settings.handlers.push { method: 'post', template: uriTemplate, handler: handlers }
 
-  put: (uriTemplate, handler) =>
-    @settings.handlers.push { method: 'put', template: uriTemplate, handler: handler }
+  put: (uriTemplate, handlers...) =>
+    @settings.handlers.push { method: 'put', template: uriTemplate, handler: handlers }
 
-  delete: (uriTemplate, handler) =>
-    @settings.handlers.push { method: 'delete', template: uriTemplate, handler: handler }
+  delete: (uriTemplate, handlers...) =>
+    @settings.handlers.push { method: 'delete', template: uriTemplate, handler: handlers }
 
-  head: (uriTemplate, handler) =>
-    @settings.handlers.push { method: 'head', template: uriTemplate, handler: handler }
+  head: (uriTemplate, handlers...) =>
+    @settings.handlers.push { method: 'head', template: uriTemplate, handler: handlers }
 
-  patch: (uriTemplate, handler) =>
-    @settings.handlers.push { method: 'patch', template: uriTemplate, handler: handler }
+  patch: (uriTemplate, handlers...) =>
+    @settings.handlers.push { method: 'patch', template: uriTemplate, handler: handlers }
 
 module.exports = OspreyBase
