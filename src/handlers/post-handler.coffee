@@ -1,4 +1,5 @@
 HttpUtils = require '../utils/http-utils'
+helper = require '../utils/handler-utils'
 logger = require '../utils/logger'
 
 class MockPostHandler extends HttpUtils
@@ -11,13 +12,12 @@ class MockPostHandler extends HttpUtils
 class PostHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
 
-  resolve: (uriTemplate, handler) =>
-    template = "#{@apiPath}#{uriTemplate}"
-
-    @context.post template, (req, res, next) =>
-      methodInfo = @methodLookup @resources, 'post', uriTemplate
-      @negotiateContentType req, res, methodInfo
-      @negotiateAcceptType req, res, next, methodInfo, handler
+  resolve: (uriTemplate, handlers) =>
+    helper.resolveWithMiddlewares 'post', @context, "#{@apiPath}#{uriTemplate}", handlers, (handler) =>
+      (req, res, next) =>
+        methodInfo = @methodLookup @resources, 'post', uriTemplate
+        @negotiateContentType req, res, methodInfo
+        @negotiateAcceptType req, res, next, methodInfo, handler
 
 exports.MockHandler = MockPostHandler
 exports.Handler = PostHandler

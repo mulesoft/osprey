@@ -1,10 +1,12 @@
 (function() {
-  var HttpUtils, MockPatchHandler, PatchHandler, logger,
+  var HttpUtils, MockPatchHandler, PatchHandler, helper, logger,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   HttpUtils = require('../utils/http-utils');
+
+  helper = require('../utils/handler-utils');
 
   logger = require('../utils/logger');
 
@@ -36,15 +38,15 @@
       this.resolve = __bind(this.resolve, this);
     }
 
-    PatchHandler.prototype.resolve = function(uriTemplate, handler) {
-      var template;
-      template = "" + this.apiPath + uriTemplate;
-      return this.context.patch(template, (function(_this) {
-        return function(req, res, next) {
-          var methodInfo;
-          methodInfo = _this.methodLookup(_this.resources, 'patch', uriTemplate);
-          _this.negotiateContentType(req, res, methodInfo);
-          return _this.negotiateAcceptType(req, res, next, methodInfo, handler);
+    PatchHandler.prototype.resolve = function(uriTemplate, handlers) {
+      return helper.resolveWithMiddlewares('patch', this.context, "" + this.apiPath + uriTemplate, handlers, (function(_this) {
+        return function(handler) {
+          return function(req, res, next) {
+            var methodInfo;
+            methodInfo = _this.methodLookup(_this.resources, 'patch', uriTemplate);
+            _this.negotiateContentType(req, res, methodInfo);
+            return _this.negotiateAcceptType(req, res, next, methodInfo, handler);
+          };
         };
       })(this));
     };

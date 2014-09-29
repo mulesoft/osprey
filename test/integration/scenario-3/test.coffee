@@ -50,7 +50,7 @@ describe 'SCENARIO 3 - OVERWRITE RESOURCES', ->
             # Assert
             res.status.should.be.eql 201
             res.body.description.should.eql 'POST'
-          
+
             done()
           )
 
@@ -60,7 +60,7 @@ describe 'SCENARIO 3 - OVERWRITE RESOURCES', ->
           .end((err, res) ->
             # Assert
             res.headers['content-type'].should.be.eql 'application/json'
-          
+
             done()
           )
 
@@ -138,7 +138,7 @@ describe 'SCENARIO 3 - OVERWRITE RESOURCES', ->
             res.status.should.be.eql 204
             res.headers['header'] .should.be.eql 'PUT'
             res.body.should.eql {}
-          
+
             done()
           )
 
@@ -160,7 +160,7 @@ describe 'SCENARIO 3 - OVERWRITE RESOURCES', ->
             res.status.should.be.eql 204
             res.headers['header'] .should.be.eql 'PATCH'
             res.body.should.eql {}
-          
+
             done()
           )
 

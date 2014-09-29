@@ -1,4 +1,5 @@
 HttpUtils = require '../utils/http-utils'
+helper = require '../utils/handler-utils'
 logger = require '../utils/logger'
 
 class MockDeleteHandler extends HttpUtils
@@ -9,12 +10,11 @@ class MockDeleteHandler extends HttpUtils
 
 class DeleteHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
-
-  resolve: (uriTemplate, handler) =>
-    template = "#{@apiPath}#{uriTemplate}"
     
-    @context.delete template, (req, res) ->
-      handler req, res
+  resolve: (uriTemplate, handlers) =>
+    helper.resolveWithMiddlewares 'delete', @context, "#{@apiPath}#{uriTemplate}", handlers, (handler) ->
+      (req, res, next) ->
+        handler req, res
 
 exports.MockHandler = MockDeleteHandler
 exports.Handler = DeleteHandler

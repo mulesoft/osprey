@@ -13,6 +13,7 @@ describe 'OSPREY - OVERWRITE', =>
       templates = wrapper.getUriTemplates()
       @uriTemplateReader = new UriTemplateReader templates
 
+
   it 'Should be able to overwrite an existing resource - GET', () =>
     # Arrange
     context = new Express

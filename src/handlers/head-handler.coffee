@@ -1,4 +1,5 @@
 HttpUtils = require '../utils/http-utils'
+helper = require '../utils/handler-utils'
 logger = require '../utils/logger'
 
 class MockHeadHandler extends HttpUtils
@@ -12,11 +13,10 @@ class MockHeadHandler extends HttpUtils
 class HeadHandler extends HttpUtils
   constructor: (@apiPath, @context, @resources) ->
 
-  resolve: (uriTemplate, handler) =>
-    template = "#{@apiPath}#{uriTemplate}"
-    
-    @context.head template, (req, res) ->
-      handler req, res
+  resolve: (uriTemplate, handlers) ->
+    helper.resolveWithMiddlewares 'head', @context, "#{@apiPath}#{uriTemplate}", handlers, (handler) ->
+      (req, res, next) ->
+        handler req, res
 
 exports.MockHandler = MockHeadHandler
 exports.Handler = HeadHandler
