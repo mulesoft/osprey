@@ -115,7 +115,10 @@ describe('osprey', function () {
       });
 
       it('should reject invalid query parameters', function () {
-
+        return popsicle(proxy.url('/query?hello=12345'))
+          .then(function (res) {
+            expect(res.status).to.equal(400);
+          });
       });
     });
 
