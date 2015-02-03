@@ -27,8 +27,16 @@ Generate an API proxy from a RAML definition, which can be used locally or globa
   * Optionally mount API documentation generated from your RAML definition
 * Example Responses **Coming soon**
 * Error Handling **Coming soon**
+* Response validation **Coming soon**
 
 ## Usage
+
+Osprey is built to enforce a documentation-first approach to APIs. It achieves this by:
+
+1. `404`ing on undocumented resources
+2. Rejecting invalid requests bodies, headers and query parameters
+3. Filtering undocumented headers and query parameters
+4. Validating API responses **Coming soon**
 
 ### Global
 
@@ -70,6 +78,36 @@ osprey(__dirname + '/api.raml', {
 **Options**
 
 * `documentationPath` Optional path to serve API documentation
+
+#### Handling Requests
+
+Undefined API requests will always be rejected with a 404.
+
+##### Invalid Headers and Query Parameters
+
+Invalid headers and query parameters will be removed from the request. In order to read them, they need to be documented in the RAML definition.
+
+##### Request Bodies
+
+Request bodies are already parsed and validated for you.
+
+For `application/json` and `application/x-www-form-urlencoded`, the data will be an object under `req.body`. For `text/xml`, the body is stored as a string under `req.body` while the parsed XML document is under `req.xml` (uses [LibXMLJS](https://github.com/polotek/libxmljs)). For `multipart/form-data`, you will need to attach field and file listeners to the request form (uses [Busboy](https://github.com/mscdex/busboy)):
+
+```js
+app.post('/users/{userId}', function (req, res, next) {
+  req.form.on('field', function (name, value) {
+    console.log(name + '=' + value);
+  });
+
+  req.form.on('file', function (name, stream, filename) {
+    stream.pipe(fs.createWriteStream(__dirname + '/../tmp/' + filename));
+  });
+
+  req.form.on('error', next);
+
+  req.pipe(req.form);
+});
+```
 
 ## License
 
