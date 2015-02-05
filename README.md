@@ -40,13 +40,14 @@ Osprey is built to enforce a documentation-first approach to APIs. It achieves t
 
 ### Global
 
+```
+npm install osprey -g
+```
+
 Osprey can be used as a proxy with any other API server. Just install the module globally and use the CLI to set up the application endpoint(s) to proxy, as well as the RAML definition to use. Invalid API requests will be blocked before they reach your application server.
 
 ```
-# Install Osprey as a global node module
-npm install osprey -g
-
-# Proxy to an already running application (with optional documentation)
+# Proxy to a running application (with optional documentation)
 osprey -f api.raml -p 8000 -a localhost:8080 --docs /documentation
 ```
 
@@ -58,6 +59,10 @@ osprey -f api.raml -p 8000 -a localhost:8080 --docs /documentation
 * `--docs` Optional path to serve API documentation
 
 ### Locally
+
+```
+npm install osprey --save
+```
 
 Osprey can also be used as a local node module and is compatible with Express and Connect, as well as plain HTTP. Just require the module locally and generate the middleware from a RAML definition file. It accepts the file location, an options object and a callback that'll receive the middleware.
 
