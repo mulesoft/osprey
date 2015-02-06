@@ -26,7 +26,7 @@ Generate an API proxy from a RAML definition, which can be used locally or globa
   * Uses [osprey-router](https://github.com/mulesoft-labs/osprey-router) to accept RAML paths
 * Integrates with Express-format middleware servers
   * Simple `req`/`res`/`next` middleware format that works with Connect, Express and even `http`
-* API documentation
+* API documentation **Currenly disabled**
   * Optionally mount API documentation generated from your RAML definition
 * Error Handling **Coming soon**
   * I18n support
@@ -78,15 +78,17 @@ Osprey can also be used as a local node module and is compatible with Express an
 ```js
 var osprey = require('osprey');
 var express = require('express');
+var parser = require('raml-parser');
 var app = express();
 
-osprey(__dirname + '/api.raml', {
-  documentationPath: '/documentation'
-}, function (err, middleware) {
-  app.use(middleware);
+parser.loadFile(__dirname + '/api.raml')
+  .then(function (raml) {
+    app.use(osprey.createServer(raml, {
+      documentationPath: '/documentation'
+    }));
 
-  app.listen(3000);
-});
+    app.listen(3000);
+  });
 ```
 
 **Options**

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var osprey = require('../');
+var parser = require('raml-parser');
 
 var argv = require('yargs')
     .usage(
@@ -14,17 +15,13 @@ var argv = require('yargs')
     .describe('docs', 'Serve documentation from a path')
     .argv;
 
-// Create the proxy.
-osprey(argv.f, {
-  documentationPath: argv.docs
-}, function (err, app) {
-  if (err) {
-    console.error(err.toString());
+parser.loadFile(argv.f)
+  .then(function (raml) {
+    var app = osprey.createServer(raml, {
+      documentationPath: argv.docs
+    });
 
-    return process.exit(1);
-  }
+    var proxy = osprey.createProxy(app, argv.a).listen(argv.p);
 
-  var proxy = osprey.createProxy(app, argv.a).listen(argv.p);
-
-  console.log('Osprey is now listening on port ' + proxy.address().port);
-});
+    console.log('Osprey is now listening on port ' + proxy.address().port);
+  });
