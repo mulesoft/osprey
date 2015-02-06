@@ -19,15 +19,22 @@ Generate an API proxy from a RAML definition, which can be used locally or globa
     * XML schemas
   * Headers
   * Query parameters
+* Automatic Request Parameters
+  * Default Headers
+  * Default Parameters
 * RAML Router
   * Uses [osprey-router](https://github.com/mulesoft-labs/osprey-router) to accept RAML paths
 * Integrates with Express-format middleware servers
   * Simple `req`/`res`/`next` middleware format that works with Connect, Express and even `http`
 * API documentation
   * Optionally mount API documentation generated from your RAML definition
-* Example Responses **Coming soon**
 * Error Handling **Coming soon**
-* Response validation **Coming soon**
+  * I18n support
+  * Map validation paths to readable strings (with i18n support)
+* Response Handling (validation and automatic headers) **Coming soon**
+  * Validate response bodies against status code definition
+  * Automatically fill response headers
+* Mocking Service (as a separate CLI module) **Coming soon**
 
 ## Usage
 
@@ -35,8 +42,10 @@ Osprey is built to enforce a documentation-first approach to APIs. It achieves t
 
 1. `404`ing on undocumented resources
 2. Rejecting invalid requests bodies, headers and query parameters
-3. Filtering undocumented headers and query parameters
-4. Validating API responses **Coming soon**
+3. Automatically filling default headers and query parameters
+4. Filtering undocumented headers and query parameters
+5. Validating API responses **Coming soon**
+6. Automatically filling default response headers **Coming soon**
 
 ### Global
 
