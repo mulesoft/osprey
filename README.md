@@ -34,6 +34,11 @@ Generate an API proxy from a RAML definition, which can be used locally or globa
 * Response Handling (validation and automatic headers) **Coming soon**
   * Validate response bodies against status code definition
   * Automatically fill response headers
+* Authentication **Coming soon**
+  * OAuth 1.0
+  * OAuth 2.0
+  * Basic Authentication
+  * Custom Authentication Schemes
 * Mocking Service (as a separate CLI module) **Coming soon**
 
 ## Usage
