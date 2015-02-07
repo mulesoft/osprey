@@ -36,7 +36,7 @@
     "raml-parser": "^0.8.10",
     "raml2html": "^1.4.0",
     "type-is": "^1.5.5",
-    "yargs": "^1.3.3"
+    "yargs": "^2.1.1"
   },
   "devDependencies": {
     "body-parser": "^1.11.0",
