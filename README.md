@@ -26,7 +26,7 @@ Generate an API proxy from a RAML definition, which can be used locally or globa
   * Uses [osprey-router](https://github.com/mulesoft-labs/osprey-router) to accept RAML paths
 * Integrates with Express-format middleware servers
   * Simple `req`/`res`/`next` middleware format that works with Connect, Express and even `http`
-* API documentation **Currenly disabled**
+* API documentation **Currently disabled**
   * Optionally mount API documentation generated from your RAML definition
 * Error Handling **Coming soon**
   * I18n support
