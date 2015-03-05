@@ -5,8 +5,6 @@
 [![Build status][travis-image]][travis-url]
 [![Test coverage][coveralls-image]][coveralls-url]
 
-**v0.2.0 Beta**
-
 Generate an API proxy from a RAML definition, which can be used locally or globally for validating API requests and responses.
 
 ## Features
