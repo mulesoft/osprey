@@ -14,8 +14,9 @@
   },
   "scripts": {
     "jshint": "jshint .",
-    "mocha": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --bail",
-    "test": "npm run jshint && npm run mocha"
+    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --bail",
+    "test-spec": "mocha -R spec --bail",
+    "test": "npm run jshint && npm run test-cov"
   },
   "repository": {
     "type": "git",
