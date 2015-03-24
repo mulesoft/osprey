@@ -37,7 +37,7 @@ Generate an API proxy from a RAML definition, which can be used locally or globa
   * OAuth 2.0
   * Basic Authentication
   * Custom Authentication Schemes
-* Mocking Service (as a separate CLI module) **Coming soon**
+* [RAML Mock Service](https://github.com/mulesoft-labs/osprey-mock-service)
 
 ## Usage
 
