@@ -81,14 +81,11 @@ Osprey can also be used as a local node module and is compatible with Express an
 ```js
 var osprey = require('osprey');
 var express = require('express');
-var parser = require('raml-parser');
 var app = express();
 
-parser.loadFile(__dirname + '/api.raml')
-  .then(function (raml) {
-    app.use(osprey.createServer(raml, {
-      documentationPath: '/documentation'
-    }));
+osprey.loadFile(__dirname + '/api.raml')
+  .then(function (middleware) {
+    app.use(middleware);
 
     app.listen(3000);
   });
