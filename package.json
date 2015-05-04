@@ -33,7 +33,7 @@
     "finalhandler": "^0.3.3",
     "form-data": "^0.2.0",
     "osprey-resources": "^0.1.0",
-    "osprey-router": "0.0.4",
+    "osprey-router": "^0.0.5",
     "raml-parser": "^0.8.10",
     "type-is": "^1.5.5",
     "yargs": "^3.4.5"
