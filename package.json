@@ -35,7 +35,6 @@
     "osprey-resources": "^0.1.0",
     "osprey-router": "0.0.4",
     "raml-parser": "^0.8.10",
-    "raml2html": "^1.4.0",
     "type-is": "^1.5.5",
     "yargs": "^3.4.5"
   },
