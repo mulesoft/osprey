@@ -49,8 +49,8 @@
     "jshint": "^2.6.0",
     "mocha": "^2.1.0",
     "popsicle": "^0.5.7",
-    "popsicle-server": "^0.1.1",
+    "popsicle-server": "^1.0.0",
     "pre-commit": "^1.0.5",
-    "server-address": "0.0.2"
+    "server-address": "^1.0.1"
   }
 }
