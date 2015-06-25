@@ -50,7 +50,9 @@ Osprey is built to enforce a documentation-first approach to APIs. It achieves t
 5. Validating API responses **Coming soon**
 6. Automatically filling default response headers **Coming soon**
 
-### Global
+### Installation
+
+#### Global
 
 ```
 npm install osprey -g
@@ -70,7 +72,7 @@ osprey -f api.raml -p 8000 -a localhost:8080 --docs /documentation
 * `-p` Port number to bind the proxy locally
 * `--docs` Optional path to serve API documentation
 
-### Locally
+#### Locally
 
 ```
 npm install osprey --save
@@ -95,15 +97,17 @@ osprey.loadFile(__dirname + '/api.raml')
 
 * `documentationPath` Optional path to serve API documentation
 
-#### Handling Requests
+**Please note:** The middleware function does not use the RAML `baseUri`. Make sure you mount the application under the correct path. E.g. `app.use('/v1', ospreyMiddleware)`.
+
+### Handling Requests
 
 Undefined API requests will always be rejected with a 404.
 
-##### Invalid Headers and Query Parameters
+#### Invalid Headers and Query Parameters
 
 Invalid headers and query parameters will be removed from the request. In order to read them, they need to be documented in the RAML definition.
 
-##### Request Bodies
+#### Request Bodies
 
 Request bodies are already parsed and validated for you.
 
