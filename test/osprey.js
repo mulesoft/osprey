@@ -1,9 +1,6 @@
 /* global describe, beforeEach, afterEach, it */
 
-/* istanbul ignore next */
-if (!global.Promise) {
-  require('es6-promise').polyfill()
-}
+require('es6-promise').polyfill()
 
 var expect = require('chai').expect
 var popsicle = require('popsicle')
