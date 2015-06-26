@@ -81,17 +81,17 @@ npm install osprey --save
 Osprey can also be used as a local node module and is compatible with Express and Connect, as well as plain HTTP. Just require the module locally and generate the middleware from a RAML definition file. It accepts the file location, an options object and a callback that'll receive the middleware.
 
 ```js
-var osprey = require('osprey');
-var express = require('express');
-var join = require('path').join;
-var app = express();
+var osprey = require('osprey')
+var express = require('express')
+var join = require('path').join
+var app = express()
 
 osprey.loadFile(join(__dirname, 'api.raml'))
   .then(function (middleware) {
-    app.use(middleware);
+    app.use(middleware)
 
-    app.listen(3000);
-  });
+    app.listen(3000)
+  })
 ```
 
 **Options**
@@ -117,17 +117,17 @@ For `application/json` and `application/x-www-form-urlencoded`, the data will be
 ```js
 app.post('/users/{userId}', function (req, res, next) {
   req.form.on('field', function (name, value) {
-    console.log(name + '=' + value);
-  });
+    console.log(name + '=' + value)
+  })
 
   req.form.on('file', function (name, stream, filename) {
-    stream.pipe(fs.createWriteStream(__dirname + '/../tmp/' + filename));
-  });
+    stream.pipe(fs.createWriteStream(__dirname + '/../tmp/' + filename))
+  })
 
-  req.form.on('error', next);
+  req.form.on('error', next)
 
-  req.pipe(req.form);
-});
+  req.pipe(req.form)
+})
 ```
 
 ### Handling Errors
@@ -135,22 +135,22 @@ app.post('/users/{userId}', function (req, res, next) {
 Osprey exposes a middleware function, so errors will propagate through the application. For example, using Express:
 
 ```js
-var osprey = require('osprey');
-var express = require('express');
-var join = require('path').join;
-var app = express();
+var osprey = require('osprey')
+var express = require('express')
+var join = require('path').join
+var app = express()
 
 osprey.loadFile(join(__dirname, 'api.raml'))
   .then(function (middleware) {
-    app.use(middleware);
+    app.use(middleware)
 
     // See http://expressjs.com/guide/error-handling.html
     app.use(function (err, req, res, next) {
-      console.log(err); //=> Error
-    });
+      console.log(err) //=> Error
+    })
 
-    app.listen(3000);
-  });
+    app.listen(3000)
+  })
 ```
 
 ## License
