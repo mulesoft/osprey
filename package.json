@@ -13,10 +13,10 @@
     "osprey": "bin/osprey.js"
   },
   "scripts": {
-    "jshint": "jshint .",
+    "lint": "standard",
     "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --bail",
     "test-spec": "mocha -R spec --bail",
-    "test": "npm run jshint && npm run test-cov"
+    "test": "npm run lint && npm run test-cov"
   },
   "repository": {
     "type": "git",
@@ -46,11 +46,11 @@
     "chai": "^2.1.1",
     "es6-promise": "^2.0.1",
     "istanbul": "^0.3.5",
-    "jshint": "^2.6.0",
     "mocha": "^2.1.0",
     "popsicle": "^0.5.7",
     "popsicle-server": "^1.0.0",
     "pre-commit": "^1.0.5",
-    "server-address": "^1.0.1"
+    "server-address": "^1.0.1",
+    "standard": "^4.3.2"
   }
 }
