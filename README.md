@@ -90,6 +90,10 @@ osprey.loadFile(join(__dirname, 'api.raml'))
   .then(function (middleware) {
     app.use(middleware)
 
+    app.use(function (err, req, res, next) {
+      // Logic.
+    })
+
     app.listen(3000)
   })
 ```
@@ -132,24 +136,19 @@ app.post('/users/{userId}', function (req, res, next) {
 
 ### Handling Errors
 
-Osprey exposes a middleware function, so errors will propagate through the application. For example, using Express:
+Osprey returns a [middleware router instance](https://github.com/pillarjs/router), so you can mount this within any compatible application and handle errors with the framework. For example, using HTTP:
 
 ```js
+var http = require('http')
 var osprey = require('osprey')
-var express = require('express')
+var finalhandler = require('finalhandler')
 var join = require('path').join
-var app = express()
 
 osprey.loadFile(join(__dirname, 'api.raml'))
   .then(function (middleware) {
-    app.use(middleware)
-
-    // See http://expressjs.com/guide/error-handling.html
-    app.use(function (err, req, res, next) {
-      console.log(err) //=> Error
-    })
-
-    app.listen(3000)
+    http.createServer(function (req, res) {
+      middleware(req, res, finalhandler(req, res))
+    }).listen(process.env.PORT || 3000)
   })
 ```
 
