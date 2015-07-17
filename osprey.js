@@ -1,20 +1,15 @@
-var createServer = require('./lib/create-server')
-var createProxy = require('./lib/create-proxy')
+var Router = require('osprey-router')
+var server = require('./lib/server')
+var proxy = require('./lib/proxy')
+var security = require('./lib/security')
 
 /**
- * Expose the router.
+ * Expose functions.
  */
-exports.Router = require('osprey-router')
-
-/**
- * Expose creating a server from a JavaScript object.
- */
-exports.createServer = createServer
-
-/**
- * Expose creating a proxy using an Osprey instance.
- */
-exports.createProxy = createProxy
+exports.Router = Router
+exports.server = server
+exports.proxy = proxy
+exports.security = security
 
 /**
  * Load an Osprey server directly from a RAML file.
@@ -24,8 +19,17 @@ exports.createProxy = createProxy
  * @return {Promise}
  */
 exports.loadFile = function (path, options) {
-  return require('raml-parser').loadFile(path)
+  options = options || {}
+
+  return require('raml-parser')
+    .loadFile(path)
     .then(function (raml) {
-      return createServer(raml, options)
+      var app = new Router()
+
+      // Mount security middleware before validation.
+      app.use(security(raml, options.security))
+      app.use(server(raml, options.server))
+
+      return app
     })
 }
