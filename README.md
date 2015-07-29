@@ -21,48 +21,54 @@ Generate an API proxy from a RAML definition, which can be used locally or globa
   * Default Headers
   * Default Parameters
 * RAML Router
-  * Uses [osprey-router](https://github.com/mulesoft-labs/osprey-router) to accept RAML paths
+  * Uses [osprey-router](https://github.com/mulesoft-labs/osprey-router) for RAML paths
 * Integrates with Express-format middleware servers
   * Simple `req`/`res`/`next` middleware format that works with Connect, Express and even `http`
 * API documentation **Currently disabled**
   * Optionally mount API documentation generated from your RAML definition
-* Error Handling **Coming soon**
+* Built-in Error Handling Middleware **Coming soon**
   * I18n support
   * Map validation paths to readable strings (with i18n support)
-* Response Handling (validation and automatic headers) **Coming soon**
+* Built-in Response Handling **Coming soon**
   * Validate response bodies against status code definition
-  * Automatically fill response headers
-* Authentication **Coming soon**
-  * OAuth 1.0
+  * Automatically fill default response headers
+* Authentication
+  * OAuth 1.0 **Coming Soon**
   * OAuth 2.0
-  * Basic Authentication
-  * Custom Authentication Schemes
+  * Basic Authentication **Coming soon**
+  * Digest Authentication **Coming soon**
+  * Custom Security Schemes
 * [RAML Mock Service](https://github.com/mulesoft-labs/osprey-mock-service)
 
-## Usage
+Osprey is built to enforce a **documentation-first** approach to APIs. It achieves this by:
 
-Osprey is built to enforce a documentation-first approach to APIs. It achieves this by:
+**Server**
 
 1. `404`ing on undocumented resources
 2. Rejecting invalid requests bodies, headers and query parameters
-3. Automatically filling default headers and query parameters
+3. Automatically populating default headers and query parameters
 4. Filtering undocumented headers and query parameters
 5. Validating API responses **Coming soon**
 6. Automatically filling default response headers **Coming soon**
 
-### Installation
+**Security**
 
-#### Global
+1. Setting up authentication mechanisms for you
+2. Automatically authenticating endpoints defined in RAML
+
+## Installation
+
+### Global
 
 ```
 npm install osprey -g
 ```
 
-Osprey can be used as a proxy with any other API server. Just install the module globally and use the CLI to set up the application endpoint(s) to proxy, as well as the RAML definition to use. Invalid API requests will be blocked before they reach your application server.
+Osprey can be used as a validation proxy with any other API server. Just install the module globally and use the CLI to set up the application endpoint(s) to proxy, as well as the RAML definition to use. Invalid API requests will be blocked before they reach your application server.
 
-```
+```sh
 # Proxy to a running application (with optional documentation)
-osprey -f api.raml -p 8000 -a localhost:8080 --docs /documentation
+osprey -f api.raml -p 3000 -a localhost:8080
 ```
 
 **Options**
@@ -70,15 +76,16 @@ osprey -f api.raml -p 8000 -a localhost:8080 --docs /documentation
 * `-a` Application endpoint address (can be fully qualified URLs) and specify multiple addresses
 * `-f` Path to the root RAML definition (E.g. `/path/to/api.raml`)
 * `-p` Port number to bind the proxy locally
-* `--docs` Optional path to serve API documentation
 
-#### Locally
+### Locally
 
 ```
 npm install osprey --save
 ```
 
-Osprey can also be used as a local node module and is compatible with Express and Connect, as well as plain HTTP. Just require the module locally and generate the middleware from a RAML definition file. It accepts the file location, an options object and a callback that'll receive the middleware.
+## Usage
+
+Osprey is normally used as a local node module and is compatible with any library accepting HTTP middleware, including Express and Connect. Just require the module locally and generate the middleware from a RAML definition file. It accepts the file location, an options object and a callback that'll receive the middleware.
 
 ```js
 var osprey = require('osprey')
@@ -86,35 +93,41 @@ var express = require('express')
 var join = require('path').join
 var app = express()
 
-osprey.loadFile(join(__dirname, 'api.raml'))
+var path = join(__dirname, 'assets', 'api.raml')
+
+// Be careful, this uses all middleware functions by default. You might just
+// want to use each one separately instead - `osprey.server`, etc.
+osprey.loadFile(path)
   .then(function (middleware) {
     app.use(middleware)
 
     app.use(function (err, req, res, next) {
-      // Logic.
+      // Handle errors.
     })
 
     app.listen(3000)
   })
 ```
 
-**Options**
+**Please note:** The middleware function does not use the RAML `baseUri`. Make sure you mount the application under the correct path. E.g. `app.use('/v1', middleware)`.
 
-* `documentationPath` Optional path to serve API documentation
+**Please note:** `osprey.loadFile` is shorthand for `ramlParser.loadFile -> [osprey.security, osprey.server]`.
 
-**Please note:** The middleware function does not use the RAML `baseUri`. Make sure you mount the application under the correct path. E.g. `app.use('/v1', ospreyMiddleware)`.
+### Server (Resource Handling)
 
-### Handling Requests
+```js
+osprey.server(raml, options)
+```
 
-Undefined API requests will always be rejected with a 404.
+Undefined API requests will _always_ be rejected with a 404.
 
 #### Invalid Headers and Query Parameters
 
-Invalid headers and query parameters will be removed from the request. In order to read them, they need to be documented in the RAML definition.
+Invalid headers and query parameters will be removed from the request. To read them they need to be documented in the RAML definition.
 
 #### Request Bodies
 
-Request bodies are already parsed and validated for you.
+Request bodies are parsed and validated for you.
 
 For `application/json` and `application/x-www-form-urlencoded`, the data will be an object under `req.body`. For `text/xml`, the body is stored as a string under `req.body` while the parsed XML document is under `req.xml` (uses [LibXMLJS](https://github.com/polotek/libxmljs)). For `multipart/form-data`, you will need to attach field and file listeners to the request form (uses [Busboy](https://github.com/mscdex/busboy)):
 
@@ -125,7 +138,7 @@ app.post('/users/{userId}', function (req, res, next) {
   })
 
   req.form.on('file', function (name, stream, filename) {
-    stream.pipe(fs.createWriteStream(__dirname + '/../tmp/' + filename))
+    stream.pipe(fs.createWriteStream(join(os.tmpDir(), filename)))
   })
 
   req.form.on('error', next)
@@ -134,9 +147,13 @@ app.post('/users/{userId}', function (req, res, next) {
 })
 ```
 
+### Headers, Parameters and Query Parameters
+
+All parameters are automatically validated and parsed to the correct types according to the RAML document using [raml-validate](https://github.com/mulesoft/node-raml-validate) and [raml-sanitize](https://github.com/mulesoft/node-raml-sanitize). URL parameter validation comes with [Osprey Router](https://github.com/mulesoft-labs/osprey-router), available using `osprey.Router`.
+
 ### Handling Errors
 
-Osprey returns a [middleware router instance](https://github.com/pillarjs/router), so you can mount this within any compatible application and handle errors with the framework. For example, using HTTP:
+Osprey returns a [middleware router instance](https://github.com/pillarjs/router), so you can mount this within any compatible application and handle errors with the framework. For example, using HTTP with [finalhandler](https://github.com/pillarjs/finalhandler) (the same module Express uses):
 
 ```js
 var http = require('http')
@@ -151,6 +168,274 @@ osprey.loadFile(join(__dirname, 'api.raml'))
     }).listen(process.env.PORT || 3000)
   })
 ```
+
+### Security
+
+```js
+osprey.security(raml, options)
+```
+
+Osprey accepts an options object that maps object keys to the security scheme name in the RAML definition.
+
+### OAuth 2.0
+
+Provided by [OAuth2orize](https://github.com/jaredhanson/oauth2orize) and [Passport](https://github.com/jaredhanson/passport).
+
+```raml
+securitySchemes:
+  - oauth_2_0:
+      type: OAuth 2.0
+      settings:
+        authorizationUri: https://example.com/oauth/authorize
+        accessTokenUri: https://example.com/oauth/token
+        authorizationGrants: [ code, token, owner, credentials ]
+        scopes:
+          - profile
+          - history
+          - history_lite
+          - request
+          - request_receipt
+```
+
+OAuth 2.0 can be fairly tricky to enforce on your own. With **Osprey**, any endpoint with `securedBy` will automatically be enforced.
+
+**Required Options (by grant type)**
+
+- **All**
+  - `authenticateClient`
+  - `exchange.refresh` **When refresh tokens are used**
+
+- **Code** and **Token**
+  - `serializeClient`
+  - `deserializeClient`
+  - `authorizeClient`
+  - `sessionKeys`
+  - `ensureLoggedIn` **Has access to `req.session`**
+  - `serveAuthorizationPage` **Has access to `req.session`**
+
+- **Code**
+  - `grant.code`
+  - `exchange.code`
+
+- **Token**
+  - `grant.token`
+
+- **Credentials**
+  - `exchange.credentials`
+
+- **Owner**
+  - `exchange.owner`
+
+The authorization page must submit a POST request to the same URL with the `transaction_id` and `scope` properties set (from `req.oauth2`). If the dialog was denied, submit `cancel=true` with the POST body. If you wish to enable the ability to skip the authorization page (E.g. user already authorized or first-class client), use the `immediateAuthorization` option.
+
+```js
+osprey.security(raml, {
+  oauth_2_0: {
+    // Optionally override `accessTokenUri` and `authorizationUri` when needed.
+    // They need to match the suffix defined in the security scheme.
+    accessTokenUri: '/oauth/token',
+    authorizationUri: '/oauth/authorize',
+    // Serialize the client object into the session.
+    serializeClient: function (application, done) {
+      return done(null, application.id)
+    },
+    // Deserialize client objects out of the session.
+    deserializeClient: function (id, done) {
+      Client.findById(id, function (err, client) {
+        done(err, client)
+      })
+    },
+    authorizeClient: function (clientId, redirectUri, scope, type, done) {
+      Clients.findOne(clientId, function (err, client) {
+        if (err) { return done(err) }
+        if (!client) { return done(null, false) }
+        if (!client.redirectUri != redirectUri) { return done(null, false) }
+        return done(null, client, client.redirectUri)
+      })
+    },
+    authenticateClient: function (clientId, clientSecret, done) {
+      Clients.findOne({ clientId: clientId }, function (err, client) {
+        if (err) { return done(err) }
+        if (!client) { return done(null, false) }
+        if (client.clientSecret != clientSecret) { return done(null, false) }
+        return done(null, client)
+      })
+    },
+    findUserByToken: function (token, done) {
+      User.findOne({ token: token }, function (err, user) {
+        if (err) { return done(err) }
+        if (!user) { return done(null, false) }
+        return done(null, user, { scope: 'all' })
+      })
+    },
+    // An array of unique session keys to sign and verify cookies.
+    sessionKeys: ['a', 'b', 'c', ...],
+    ensureLoggedIn: function (req, res, next) {
+      // For example: https://github.com/jaredhanson/connect-ensure-login
+    },
+    immediateAuthorization: function (client, user, scope, done) {
+      return done(null, false)
+    },
+    serveAuthorizationPage: function (req, res) {
+      res.render('dialog', {
+        transactionId: req.oauth2.transactionID,
+        user: req.user,
+        client: req.oauth2.client
+      })
+    },
+    grant: {
+      code: function (client, redirectUri, user, ares, done) {
+        AuthorizationCode.create(client.id, redirectUri, user.id, ares.scope, function (err, code) {
+          if (err) { return done(err) }
+          done(null, code)
+        })
+      },
+      token: function (client, user, ares, done) {
+        AccessToken.create(client, user, ares.scope, function (err, accessToken) {
+          if (err) { return done(err) }
+          done(null, accessToken /*, params */)
+        })
+      }
+    },
+    exchange: {
+      code: function (client, code, redirectUri, done) {
+        AccessToken.create(client, code, redirectUri, function (err, accessToken) {
+          if (err) { return done(err) }
+          done(null, accessToken /*, refreshToken, params */)
+        })
+      },
+      credentials: function (client, scope, done) {
+        AccessToken.create(client, scope, function (err, accessToken) {
+          if (err) { return done(err) }
+          done(null, accessToken /*, refreshToken, params */)
+        })
+      },
+      owner: function (client, username, password, scope, done) {
+        AccessToken.create(client, username, password, scope, function (err, accessToken) {
+          if (err) { return done(err) }
+          done(null, accessToken /*, refreshToken, params */)
+        })
+      },
+      refresh: function (client, refreshToken, scope, done) {
+        AccessToken.create(client, refreshToken, scope, function (err, accessToken) {
+          if (err) { return done(err) }
+          done(null, accessToken /*, refreshToken, params */)
+        })
+      }
+    }
+  }
+})
+```
+
+**Osprey** will automatically block requests with invalid scopes, when defined in RAML using the [inline option](https://github.com/raml-org/raml-spec/blob/master/raml-0.8.md#usage-applying-a-security-scheme-to-an-api) syntax.
+
+```raml
+/example:
+  securedBy: [oauth_2_0: { scopes: [ ADMINISTRATOR ] } ]
+```
+
+To implement scope validation in your own application, without RAML, use `osprey.security.scope('example')` and users without the required scope will be rejected.
+
+```js
+app.get('/foo/bar', osprey.security.scope('example'), function (req, res) {
+  res.send('hello, world')
+})
+```
+
+**Please note:** OAuth 2.0 does not (currently) take into account security scheme `describedBy` of specification.
+
+### OAuth 1.0
+
+Coming soon...
+
+### Basic Authentication
+
+Provided by [Passport-HTTP](https://github.com/jaredhanson/passport-http).
+
+```raml
+securitySchemes:
+  - basic_auth:
+      type: Basic Authentication
+```
+
+```js
+osprey.security(raml, {
+  basic_auth: {
+    realm: 'Users', // Optional.
+    validateUser: function (username, password, done) {
+      User.findOne({ username: username }, function (err, user) {
+        if (err) { return done(err) }
+        if (!user) { return done(null, false) }
+        if (!user.verifyPassword(password)) { return done(null, false) }
+        return done(null, user)
+      })
+    }
+  }
+})
+```
+
+### Digest Authentication
+
+Provided by [Passport-HTTP](https://github.com/jaredhanson/passport-http).
+
+```raml
+securitySchemes:
+  - digest_auth:
+      type: Digest Authentication
+```
+
+```js
+osprey.security(raml, {
+  digest_auth: {
+    realm: 'Users', // Optional.
+    domain: 'example.com', // Optional.
+    findUserByUsername: function (username, done) {
+      User.findOne({ username: username }, function (err, user) {
+        if (err) { return done(err) }
+        if (!user) { return done(null, false) }
+        return done(null, user, user.password)
+      })
+    }
+  }
+})
+```
+
+### Custom Security Schemes
+
+To register a custom security scheme, you can pass in your own function.
+
+```raml
+securitySchemes:
+  - custom_auth:
+      type: x-custom
+```
+
+The function must return an object with a handler and, optionally, a router. The router will be mounted immediately and the handler will be called on every secured route with the secured by options and the RAML path.
+
+```js
+osprey.security(raml, {
+  custom_auth: function (scheme, name) {
+    return {
+      handler: function (options, path) {
+        return function (req, res, next) {
+          return next()
+        }
+      },
+      router: function (req, res, next) {
+        return next()
+      }
+    }
+  }
+})
+```
+
+### Proxy
+
+```js
+osprey.createProxy(middleware, addresses)
+```
+
+Pass in an Osprey middleware function with an array of addresses to proxy to and you have a fully-functioning validation proxy.
 
 ## License
 
