@@ -35,8 +35,8 @@ Generate an API proxy from a RAML definition, which can be used locally or globa
 * Authentication
   * OAuth 1.0 **Coming Soon**
   * OAuth 2.0
-  * Basic Authentication **Coming soon**
-  * Digest Authentication **Coming soon**
+  * Basic Authentication
+  * Digest Authentication
   * Custom Security Schemes
 * [RAML Mock Service](https://github.com/mulesoft-labs/osprey-mock-service)
 
@@ -432,10 +432,10 @@ osprey.security(raml, {
 ### Proxy
 
 ```js
-osprey.createProxy(middleware, addresses)
+osprey.proxy(middleware, addresses)
 ```
 
-Pass in an Osprey middleware function with an array of addresses to proxy to and you have a fully-functioning validation proxy.
+Pass in an Osprey middleware function with an array of addresses to proxy to and you have a fully-functioning validation and/or security proxy.
 
 ## License
 
