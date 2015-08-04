@@ -31,6 +31,7 @@
   "homepage": "https://github.com/mulesoft/osprey",
   "dependencies": {
     "arrify": "^1.0.0",
+    "body-parser": "^1.13.3",
     "cookie-session": "^1.2.0",
     "debug": "^2.2.0",
     "finalhandler": "^0.4.0",
@@ -52,7 +53,6 @@
     "yargs": "^3.4.5"
   },
   "devDependencies": {
-    "body-parser": "^1.11.0",
     "busboy": "^0.2.9",
     "chai": "^3.0.0",
     "client-oauth2": "^1.0.0",
