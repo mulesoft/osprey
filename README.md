@@ -5,7 +5,7 @@
 [![Build status][travis-image]][travis-url]
 [![Test coverage][coveralls-image]][coveralls-url]
 
-Generate an API proxy from a RAML definition, which can be used locally or globally for validating API requests and responses.
+Generate API middleware from a RAML definition, which can be used locally or globally for validating API requests and responses.
 
 ## Features
 
@@ -46,15 +46,15 @@ Osprey is built to enforce a **documentation-first** approach to APIs. It achiev
 
 1. `404`ing on undocumented resources
 2. Rejecting invalid requests bodies, headers and query parameters
-3. Automatically populating default headers and query parameters
+3. Populating default headers and query parameters
 4. Filtering undocumented headers and query parameters
 5. Validating API responses **Coming soon**
-6. Automatically filling default response headers **Coming soon**
+6. Filling default response headers **Coming soon**
 
 **Security**
 
-1. Setting up authentication mechanisms for you
-2. Automatically authenticating endpoints defined in RAML
+1. Setting up authentication endpoints and methods for you
+2. Authenticating endpoints as defined in RAML
 
 ## Installation
 
@@ -73,7 +73,7 @@ osprey -f api.raml -p 3000 -a localhost:8080
 
 **Options**
 
-* `-a` Application endpoint address (can be fully qualified URLs) and specify multiple addresses
+* `-a` Application endpoint address (can be fully qualified URLs) and specify multiple, comma-separated addresses
 * `-f` Path to the root RAML definition (E.g. `/path/to/api.raml`)
 * `-p` Port number to bind the proxy locally
 
@@ -85,7 +85,7 @@ npm install osprey@0.2.0-beta.3 --save
 
 ## Usage
 
-Osprey is normally used as a local node module and is compatible with any library accepting HTTP middleware, including Express and Connect. Just require the module locally and generate the middleware from a RAML definition file. It accepts the file location, an options object and a callback that'll receive the middleware.
+Osprey is normally used as a local node module and is compatible with any library supporting HTTP middleware, including Express and Connect. Just require the module locally and generate the middleware from a RAML definition file.
 
 ```js
 var osprey = require('osprey')
@@ -123,13 +123,13 @@ Undefined API requests will _always_ be rejected with a 404.
 
 #### Invalid Headers and Query Parameters
 
-Invalid headers and query parameters will be removed from the request. To read them they need to be documented in the RAML definition.
+Invalid headers and query parameters are removed from the request. To read them they need to be documented in the RAML definition.
 
 #### Request Bodies
 
-Request bodies are parsed and validated for you.
+Request bodies are parsed and validated for you, when you define the schema.
 
-For `application/json` and `application/x-www-form-urlencoded`, the data will be an object under `req.body`. For `text/xml`, the body is stored as a string under `req.body` while the parsed XML document is under `req.xml` (uses [LibXMLJS](https://github.com/polotek/libxmljs)). For `multipart/form-data`, you will need to attach field and file listeners to the request form (uses [Busboy](https://github.com/mscdex/busboy)):
+For `application/json` and `application/x-www-form-urlencoded`, the data will be an object under `req.body`. For `text/xml`, the body is stored as a string under `req.body` while the parsed XML document is under `req.xml` (uses [LibXMLJS](https://github.com/polotek/libxmljs), not included). For `multipart/form-data`, you will need to attach field and file listeners to the request form (uses [Busboy](https://github.com/mscdex/busboy)):
 
 ```js
 app.post('/users/{userId}', function (req, res, next) {
