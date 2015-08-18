@@ -169,6 +169,11 @@ osprey.loadFile(join(__dirname, 'api.raml'))
   })
 ```
 
+**Error Types**
+
+* `error.ramlAuthorization = true` An unauthorized error containing an array of errors that occured is set on `error.authorizationErrors`
+* `error.ramlValidation = type` (where `type` is one of "json", "xml", "form", "headers", "query") A request failed validation and an array of validation data is set on `error.validationErrors` (beware, different types contain different information)
+
 ### Security
 
 ```js
