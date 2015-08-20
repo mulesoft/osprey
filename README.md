@@ -121,6 +121,11 @@ osprey.server(raml, options)
 
 Undefined API requests will _always_ be rejected with a 404.
 
+**Options**
+
+* **cors** Enable CORS by setting to `true` or an object from [cors](https://github.com/expressjs/cors#configuration-options) (default: `false`)
+* **discardUnknownBodies** Discard undefined request bodies (default: `true`)
+
 #### Invalid Headers and Query Parameters
 
 Invalid headers and query parameters are removed from the request. To read them they need to be documented in the RAML definition.
