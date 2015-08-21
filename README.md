@@ -26,7 +26,7 @@ Generate API middleware from a RAML definition, which can be used locally or glo
   * Simple `req`/`res`/`next` middleware format that works with Connect, Express and even `http`
 * API documentation **Currently disabled**
   * Optionally mount API documentation generated from your RAML definition
-* Built-in Error Handling Middleware **Coming soon**
+* Built-in Error Handling Middleware
   * I18n support
   * Map validation paths to readable strings (with i18n support)
 * Built-in Response Handling **Coming soon**
@@ -49,7 +49,7 @@ Osprey is built to enforce a **documentation-first** approach to APIs. It achiev
 3. Populating default headers and query parameters
 4. Filtering undocumented headers and query parameters
 5. Validating API responses **Coming soon**
-6. Filling default response headers **Coming soon**
+6. Fill default response headers **Coming soon**
 
 **Security**
 
@@ -152,11 +152,11 @@ app.post('/users/{userId}', function (req, res, next) {
 })
 ```
 
-### Headers, Parameters and Query Parameters
+#### Headers, Parameters and Query Parameters
 
 All parameters are automatically validated and parsed to the correct types according to the RAML document using [raml-validate](https://github.com/mulesoft/node-raml-validate) and [raml-sanitize](https://github.com/mulesoft/node-raml-sanitize). URL parameter validation comes with [Osprey Router](https://github.com/mulesoft-labs/osprey-router), available using `osprey.Router`.
 
-### Handling Errors
+#### Handling Errors
 
 Osprey returns a [middleware router instance](https://github.com/pillarjs/router), so you can mount this within any compatible application and handle errors with the framework. For example, using HTTP with [finalhandler](https://github.com/pillarjs/finalhandler) (the same module Express uses):
 
@@ -179,6 +179,18 @@ osprey.loadFile(join(__dirname, 'api.raml'))
 * `error.ramlAuthorization = true` An unauthorized error containing an array of errors that occured is set on `error.authorizationErrors`
 * `error.ramlValidation = type` (where `type` is one of "json", "xml", "form", "headers", "query") A request failed validation and an array of validation data is set on `error.validationErrors` (beware, different types contain different information)
 
+### Error handler
+
+**Osprey** comes with a built-in error handler that formats RAML-based errors. Currently, this is only validation errors. It comes with built-in i18n with some languages already included for certain formats (_help us add more!_). The default fallback language is `en` and the default responder renders JSON, XML, HTML and plain text - both options are overridable.
+
+```js
+var osprey = require('osprey')
+var app = require('express')()
+
+// It's best to use the default responder, but it's overridable if you need it.
+app.use(osprey.errorHandler(function (req, res, errors) { /* Override */ }, 'en'))
+```
+
 ### Security
 
 ```js
@@ -187,7 +199,7 @@ osprey.security(raml, options)
 
 Osprey accepts an options object that maps object keys to the security scheme name in the RAML definition.
 
-### OAuth 2.0
+#### OAuth 2.0
 
 Provided by [OAuth2orize](https://github.com/jaredhanson/oauth2orize) and [Passport](https://github.com/jaredhanson/passport).
 
@@ -354,11 +366,11 @@ app.get('/foo/bar', osprey.security.scope('example'), function (req, res) {
 
 **Please note:** OAuth 2.0 does not (currently) take into account security scheme `describedBy` of specification.
 
-### OAuth 1.0
+#### OAuth 1.0
 
 Coming soon...
 
-### Basic Authentication
+#### Basic Authentication
 
 Provided by [Passport-HTTP](https://github.com/jaredhanson/passport-http).
 
@@ -384,7 +396,7 @@ osprey.security(raml, {
 })
 ```
 
-### Digest Authentication
+#### Digest Authentication
 
 Provided by [Passport-HTTP](https://github.com/jaredhanson/passport-http).
 
@@ -410,7 +422,7 @@ osprey.security(raml, {
 })
 ```
 
-### Custom Security Schemes
+#### Custom Security Schemes
 
 To register a custom security scheme, you can pass in your own function.
 
