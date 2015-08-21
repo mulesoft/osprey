@@ -695,7 +695,7 @@ describe('error handler', function () {
               schema: JSON.stringify({
                 type: 'object',
                 dependencies: {
-                  a: 'b'
+                  a: ['b']
                 }
               })
             }
