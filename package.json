@@ -61,7 +61,7 @@
     "busboy": "^0.2.9",
     "chai": "^3.0.0",
     "client-oauth2": "^1.0.0",
-    "es6-promise": "^2.0.1",
+    "es6-promise": "^3.0.2",
     "express": "^4.13.3",
     "istanbul": "^0.3.5",
     "mocha": "^2.1.0",
