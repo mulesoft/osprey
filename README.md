@@ -111,7 +111,7 @@ osprey.loadFile(path)
 
 **Please note:** The middleware function does not use the RAML `baseUri`. Make sure you mount the application under the correct path. E.g. `app.use('/v1', middleware)`.
 
-**Please note:** `osprey.loadFile` is shorthand for `ramlParser.loadFile -> [osprey.security, osprey.server]`.
+**Please note:** `osprey.loadFile` is shorthand for `ramlParser.loadFile -> [osprey.security, osprey.server, osprey.errorHandler]`.
 
 ### Server (Resource Handling)
 
