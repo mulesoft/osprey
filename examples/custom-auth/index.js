@@ -1,6 +1,7 @@
 var http = require('http')
 var osprey = require('../..')
 var finalhandler = require('finalhandler')
+var createError = require('http-errors')
 var join = require('path').join
 
 var PORT = process.env.PORT || 3000
@@ -9,7 +10,7 @@ var PORT = process.env.PORT || 3000
 function handler () {
   return function (req, res, next) {
     if (!req.headers.token) {
-      return next(new Error('No token'))
+      return next(createError(401, 'No token'))
     }
 
     // Check with the database and see if the token is valid.
