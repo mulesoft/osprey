@@ -73,7 +73,7 @@ describe('error handler', function () {
               message: 'String does not match pattern: ^[a-zA-Z][a-zA-Z0-9_-]+$',
               type: 'json',
               keyword: 'pattern',
-              dataPath: '.username',
+              dataPath: '/username',
               schema: '^[a-zA-Z][a-zA-Z0-9_-]+$',
               data: '$$$'
             }
@@ -87,7 +87,7 @@ describe('error handler', function () {
               message: '字符串不匹配模式: ^[a-zA-Z][a-zA-Z0-9_-]+$',
               type: 'json',
               keyword: 'pattern',
-              dataPath: '.username',
+              dataPath: '/username',
               schema: '^[a-zA-Z][a-zA-Z0-9_-]+$',
               data: '$$$'
             }
@@ -101,7 +101,7 @@ describe('error handler', function () {
               message: 'String does not match pattern: ^[a-zA-Z][a-zA-Z0-9_-]+$',
               type: 'json',
               keyword: 'pattern',
-              dataPath: '.username',
+              dataPath: '/username',
               schema: '^[a-zA-Z][a-zA-Z0-9_-]+$',
               data: '$$$'
             }
@@ -131,7 +131,7 @@ describe('error handler', function () {
 
     describe('plain', function () {
       function validate (res) {
-        expect(res.body).to.equal('json (.username): String does not match pattern: ^[a-zA-Z][a-zA-Z0-9_-]+$')
+        expect(res.body).to.equal('json (/username): String does not match pattern: ^[a-zA-Z][a-zA-Z0-9_-]+$')
         expect(res.headers['content-type']).to.equal('text/plain; charset=utf-8')
       }
 
@@ -499,9 +499,9 @@ describe('error handler', function () {
           .then(validateJsonResponse([
             {
               data: { b: true },
-              dataPath: '.a',
+              dataPath: '/a',
               keyword: 'required',
-              message: 'Missing required property: .a',
+              message: 'Missing required property: /a',
               schema: ['a'],
               type: 'json'
             }
@@ -632,7 +632,7 @@ describe('error handler', function () {
           .then(validateJsonResponse([
             {
               data: { a: 'b', c: 'd' },
-              dataPath: '[\'c\']',
+              dataPath: '/c',
               keyword: 'additionalProperties',
               message: 'Additional properties not allowed',
               schema: false,

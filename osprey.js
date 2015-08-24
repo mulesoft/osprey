@@ -1,4 +1,5 @@
 var Router = require('osprey-router')
+var compose = require('compose-middleware').compose
 var server = require('./lib/server')
 var proxy = require('./lib/proxy')
 var security = require('./lib/security')
@@ -26,13 +27,10 @@ exports.loadFile = function (path, options) {
   return require('raml-parser')
     .loadFile(path)
     .then(function (raml) {
-      var app = new Router()
-
-      // Mount security middleware before validation.
-      app.use(security(raml, options.security))
-      app.use(server(raml, options.server))
-      app.use(errorHandler())
-
-      return app
+      return compose(
+        security(raml, options.security),
+        server(raml, options.server),
+        errorHandler()
+      )
     })
 }
