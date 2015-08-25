@@ -54,4 +54,13 @@ describe('server', function () {
         expect(res.status).to.equal(200)
       })
   })
+
+  it('should have compression enabled', function () {
+    return popsicle('/users')
+      .use(server(http))
+      .then(function (res) {
+        expect(res.body).to.equal('success')
+        expect(res.headers['content-encoding']).to.equal('gzip')
+      })
+  })
 })

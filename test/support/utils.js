@@ -25,8 +25,9 @@ function createServer (router) {
  * @param  {*}        value
  * @return {Function}
  */
-function response (value) {
+function response (value, contentType) {
   return function success (req, res) {
+    res.writeHead(200, { 'Content-Type': contentType || 'text/plain' })
     res.end(value)
   }
 }

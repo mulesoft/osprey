@@ -124,6 +124,7 @@ Undefined API requests will _always_ be rejected with a 404.
 **Options**
 
 * **cors** Enable CORS by setting to `true` or an object from [cors](https://github.com/expressjs/cors#configuration-options) (default: `false`)
+* **compression** Enable response compression using [compression](https://github.com/expressjs/compression) (default: `true`)
 * **discardUnknownBodies** Discard undefined request bodies (default: `true`)
 
 #### Invalid Headers and Query Parameters
