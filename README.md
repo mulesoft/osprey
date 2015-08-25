@@ -61,7 +61,7 @@ Osprey is built to enforce a **documentation-first** approach to APIs. It achiev
 ### Global
 
 ```
-npm install osprey@0.2.0-beta.4 -g
+npm install osprey@0.2.0-beta.5 -g
 ```
 
 Osprey can be used as a validation proxy with any other API server. Just install the module globally and use the CLI to set up the application endpoint(s) to proxy, as well as the RAML definition to use. Invalid API requests will be blocked before they reach your application server.
@@ -80,7 +80,7 @@ osprey -f api.raml -p 3000 -a localhost:8080
 ### Locally
 
 ```
-npm install osprey@0.2.0-beta.4 --save
+npm install osprey@0.2.0-beta.5 --save
 ```
 
 ## Usage
