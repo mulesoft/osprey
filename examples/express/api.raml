@@ -5,3 +5,6 @@ baseUri: http://example.com/{version}
 
 /users:
   get:
+    queryParameters:
+      sort:
+        enum: [username, name]

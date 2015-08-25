@@ -19,8 +19,7 @@ osprey.loadFile(join(__dirname, 'api.raml'))
   .then(function (middleware) {
     var app = express()
 
-    app.use('/v1', middleware)
-    app.use('/v1', router)
+    app.use('/v1', middleware, router)
 
     app.listen(PORT, function () {
       console.log('Application listening on ' + PORT + '...')

@@ -36,6 +36,7 @@
     "cookie-session": "^1.2.0",
     "cors": "^2.7.1",
     "debug": "^2.2.0",
+    "dot": "^1.0.3",
     "escape-html": "^1.0.2",
     "finalhandler": "^0.4.0",
     "form-data": "^0.2.0",
@@ -52,7 +53,6 @@
     "passport-http-bearer": "^1.0.1",
     "passport-oauth2-client-password": "^0.1.2",
     "raml-parser": "^0.8.10",
-    "string-format": "^0.5.0",
     "type-is": "^1.5.5",
     "xtend": "^4.0.0",
     "yargs": "^3.4.5"

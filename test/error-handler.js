@@ -526,7 +526,7 @@ describe('error handler', function () {
               data: 'b',
               dataPath: '',
               keyword: 'enum',
-              message: 'No enum match for: ',
+              message: 'No enum match for: a',
               schema: ['a'],
               type: 'json'
             }
