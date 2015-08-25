@@ -22,7 +22,19 @@
     "type": "git",
     "url": "git://github.com/mulesoft/osprey.git"
   },
-  "keywords": [],
+  "keywords": [
+    "raml",
+    "api",
+    "validation",
+    "json",
+    "security",
+    "errors",
+    "proxy",
+    "xml",
+    "query",
+    "headers",
+    "form"
+  ],
   "author": "MuleSoft, Inc.",
   "license": "Apache-2.0",
   "bugs": {
