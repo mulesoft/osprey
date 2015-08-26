@@ -192,6 +192,20 @@ var app = require('express')()
 app.use(osprey.errorHandler(function (req, res, errors) { /* Override */ }, 'en'))
 ```
 
+The errors object format is:
+
+```js
+interface Error {
+  type: 'json' | 'form' | 'headers' | 'query' | 'xml'
+  message: string /* With i18n where possible */
+  keyword: string /* Keyword that failed validation */
+  dataPath: string /* Path to the error message (JSON Pointers when using JSON) */
+  data: any /* The data that failed validation */
+  schema: any /* The schema value that failed validation */
+  meta?: Object /* Meta data from the error (XML validation provides code, column, etc.) */
+}
+```
+
 ### Security
 
 ```js
