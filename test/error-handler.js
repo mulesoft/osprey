@@ -68,7 +68,7 @@ describe('error handler', function () {
     describe('json', function () {
       it('should format messages', function () {
         return standardTest()
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               message: 'String does not match pattern: ^[a-zA-Z][a-zA-Z0-9_-]+$',
               type: 'json',
@@ -82,7 +82,7 @@ describe('error handler', function () {
 
       it('should format messages with i18n', function () {
         return standardTest('zh-CN')
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               message: '字符串不匹配模式: ^[a-zA-Z][a-zA-Z0-9_-]+$',
               type: 'json',
@@ -96,7 +96,7 @@ describe('error handler', function () {
 
       it('should fallback to default language', function () {
         return standardTest('wt-FL')
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               message: 'String does not match pattern: ^[a-zA-Z][a-zA-Z0-9_-]+$',
               type: 'json',
@@ -169,7 +169,7 @@ describe('error handler', function () {
             'Accept': 'application/json'
           }
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: 'hello',
               dataPath: 'a',
@@ -195,7 +195,7 @@ describe('error handler', function () {
           '123',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: 123,
               dataPath: '',
@@ -220,7 +220,7 @@ describe('error handler', function () {
           '"abc"',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: 'abc',
               dataPath: '',
@@ -245,7 +245,7 @@ describe('error handler', function () {
           '["abc"]',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: ['abc'],
               dataPath: '',
@@ -270,7 +270,7 @@ describe('error handler', function () {
           '["abc",123]',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: ['abc', 123],
               dataPath: '',
@@ -295,7 +295,7 @@ describe('error handler', function () {
           '"abc"',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: 'abc',
               dataPath: '',
@@ -320,7 +320,7 @@ describe('error handler', function () {
           '"abc"',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: 'abc',
               dataPath: '',
@@ -345,7 +345,7 @@ describe('error handler', function () {
           '{"a":"b"}',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: { a: 'b' },
               dataPath: '',
@@ -370,7 +370,7 @@ describe('error handler', function () {
           '{"a":"b","c":"d"}',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: { a: 'b', c: 'd' },
               dataPath: '',
@@ -395,7 +395,7 @@ describe('error handler', function () {
           '5',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: 5,
               dataPath: '',
@@ -420,7 +420,7 @@ describe('error handler', function () {
           '100',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: 100,
               dataPath: '',
@@ -445,7 +445,7 @@ describe('error handler', function () {
           '5',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: 5,
               dataPath: '',
@@ -471,7 +471,7 @@ describe('error handler', function () {
           '"test"',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: 'test',
               dataPath: '',
@@ -496,7 +496,7 @@ describe('error handler', function () {
           '{"b":true}',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: { b: true },
               dataPath: '/a',
@@ -521,7 +521,7 @@ describe('error handler', function () {
           '"b"',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: 'b',
               dataPath: '',
@@ -546,7 +546,7 @@ describe('error handler', function () {
           '"hello"',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: 'hello',
               dataPath: '',
@@ -571,7 +571,7 @@ describe('error handler', function () {
           '[1,2,1]',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: [1, 2, 1],
               dataPath: '',
@@ -599,7 +599,7 @@ describe('error handler', function () {
           '["a","b"]',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: ['a', 'b'],
               dataPath: '',
@@ -629,7 +629,7 @@ describe('error handler', function () {
           '{"a":"b","c":"d"}',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: { a: 'b', c: 'd' },
               dataPath: '/c',
@@ -653,7 +653,7 @@ describe('error handler', function () {
           'true',
           JSON_HEADERS
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: true,
               dataPath: '',
@@ -706,7 +706,7 @@ describe('error handler', function () {
             'Content-Type': 'application/json'
           }
         )
-          .then(validateJsonResponse([
+          .then(validateJsonResponseErrors([
             {
               data: { a: 'b' },
               dataPath: '',
@@ -721,9 +721,12 @@ describe('error handler', function () {
   })
 })
 
-function validateJsonResponse (errors) {
+function validateJsonResponseErrors (errors) {
   return function (res) {
-    expect(JSON.parse(res.body)).to.deep.equal({ errors: errors })
+    var body = JSON.parse(res.body)
+
+    expect(body.stack).to.be.a('string')
+    expect(body.errors).to.deep.equal(errors)
     expect(res.status).to.equal(400)
   }
 }
