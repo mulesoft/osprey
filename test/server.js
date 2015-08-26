@@ -16,7 +16,7 @@ describe('server', function () {
   var http
 
   beforeEach(function () {
-    return osprey.loadFile(EXAMPLE_RAML_PATH, { server: { cors: true } })
+    return osprey.loadFile(EXAMPLE_RAML_PATH, { server: { cors: true, compression: true } })
       .then(function (middleware) {
         var app = router()
 
