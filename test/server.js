@@ -16,7 +16,7 @@ describe('server', function () {
   var http
 
   beforeEach(function () {
-    return osprey.loadFile(EXAMPLE_RAML_PATH, { cors: true })
+    return osprey.loadFile(EXAMPLE_RAML_PATH, { server: { cors: true } })
       .then(function (middleware) {
         var app = router()
 
@@ -50,8 +50,9 @@ describe('server', function () {
     return popsicle.options('/users')
       .use(server(http))
       .then(function (res) {
-        expect(res.headers.allow).to.equal('GET, HEAD')
-        expect(res.status).to.equal(200)
+        expect(res.status).to.equal(204)
+        expect(res.headers['access-control-allow-origin']).to.equal('*')
+        expect(res.headers['access-control-allow-methods']).to.equal('GET,HEAD,PUT,PATCH,POST,DELETE')
       })
   })
 
