@@ -178,33 +178,49 @@ osprey.loadFile(join(__dirname, 'api.raml'))
 **Error Types**
 
 * `error.ramlAuthorization = true` An unauthorized error containing an array of errors that occured is set on `error.authorizationErrors`
-* `error.ramlValidation = type` (where `type` is one of "json", "xml", "form", "headers", "query") A request failed validation and an array of validation data is set on `error.validationErrors` (beware, different types contain different information)
+* `error.ramlValidation = true` A request failed validation and an array of validation data is set on `error.requestErrors` (beware, different types contain different information)
 
-### Error handler
+### Error Handler
 
-**Osprey** comes with a built-in error handler that formats RAML-based errors. Currently, this is only validation errors. It comes with built-in i18n with some languages already included for certain formats (_help us add more!_). The default fallback language is `en` and the default responder renders JSON, XML, HTML and plain text - both options are overridable.
+**Osprey** comes with support for a built-in [error handler middleware](https://github.com/mulesoft-labs/node-request-error-handler) that formats request errors for APIs. It comes with built-in i18n with some languages already included for certain formats ([_help us add more!_](https://github.com/mulesoft-labs/node-request-error-handler/pulls)). The default fallback language is `en` and the default responder renders JSON, XML, HTML and plain text - all options are overridable.
 
 ```js
 var osprey = require('osprey')
 var app = require('express')()
 
 // It's best to use the default responder, but it's overridable if you need it.
-app.use(osprey.errorHandler(function (req, res, errors) { /* Override */ }, 'en'))
+app.use(osprey.errorHandler(function (req, res, errors, stack) { /* Override */ }, 'en'))
 ```
 
-The errors object format is:
+You can override the i18n messages or provide your own by passing a nested object that conforms to the following interface:
 
 ```js
-interface Error {
-  type: 'json' | 'form' | 'headers' | 'query' | 'xml'
-  message: string /* With i18n where possible */
-  keyword: string /* Keyword that failed validation */
-  dataPath: string /* Path to the error message (JSON Pointers when using JSON) */
-  data: any /* The data that failed validation */
-  schema: any /* The schema value that failed validation */
-  meta?: Object /* Meta data from the error (XML validation provides code, column, etc.) */
+interface CustomMessages {
+  [type: string]: {
+    [keyword: string]: {
+      [language: string]: (error: RequestError) => string
+    }
+  }
 }
 ```
+
+The request error interface is as follows:
+
+```js
+interface RequestError {
+  type: 'json' | 'form' | 'headers' | 'query' | 'xml' | string
+  message: string /* Merged with i18n when available */
+  keyword: string /* Keyword that failed validation */
+  id?: string /* A unique identifier for the instance of this error */
+  dataPath?: string /* Natural path to the error message (E.g. JSON Pointers when using JSON) */
+  data?: any /* The data that failed validation */
+  schema?: any /* The schema value that failed validation */
+  detail?: string /* Additional details about this specific error instance */
+  meta?: { [name: string]: string } /* Meta data from the error (XML validation provides a code, column, etc.) */
+}
+```
+
+**Want to format your own request errors?** If you emit an error with a `.status` property of "client error" (`400` - `499`) and an array of `requestErrors`, it will automatically be rendered as the API response (using `status` as the response status code).
 
 ### Security
 

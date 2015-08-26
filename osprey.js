@@ -3,7 +3,7 @@ var compose = require('compose-middleware').compose
 var server = require('./lib/server')
 var proxy = require('./lib/proxy')
 var security = require('./lib/security')
-var errorHandler = require('./lib/error-handler')
+var errorHandler = require('request-error-handler')
 
 /**
  * Expose functions.
