@@ -1,5 +1,6 @@
 var Router = require('osprey-router')
 var compose = require('compose-middleware').compose
+var methodHandler = require('osprey-method-handler')
 var server = require('./lib/server')
 var proxy = require('./lib/proxy')
 var security = require('./lib/security')
@@ -13,6 +14,13 @@ exports.server = server
 exports.proxy = proxy
 exports.security = security
 exports.errorHandler = errorHandler
+
+/**
+ * Proxy JSON schema addition to method handler.
+ */
+exports.addJsonSchema = function (schema, key) {
+  methodHandler.addJsonSchema(schema, key)
+}
 
 /**
  * Load an Osprey server directly from a RAML file.

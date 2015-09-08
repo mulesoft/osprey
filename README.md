@@ -180,6 +180,14 @@ osprey.loadFile(join(__dirname, 'api.raml'))
 * `error.ramlAuthorization = true` An unauthorized error containing an array of errors that occured is set on `error.authorizationErrors`
 * `error.ramlValidation = true` A request failed validation and an array of validation data is set on `error.requestErrors` (beware, different types contain different information)
 
+#### Add JSON Schemas
+
+JSON schemas can be added to the application for when external JSON references are needed. From [osprey-method-handler](https://github.com/mulesoft-labs/osprey-method-handler#adding-json-schemas).
+
+```js
+osprey.addJsonSchema(schema, key)
+```
+
 ### Error Handler
 
 **Osprey** comes with support for a built-in [error handler middleware](https://github.com/mulesoft-labs/node-request-error-handler) that formats request errors for APIs. It comes with built-in i18n with some languages already included for certain formats ([_help us add more!_](https://github.com/mulesoft-labs/node-request-error-handler/pulls)). The default fallback language is `en` and the default responder renders JSON, XML, HTML and plain text - all options are overridable.
