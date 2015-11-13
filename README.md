@@ -179,6 +179,7 @@ osprey.loadFile(join(__dirname, 'api.raml'))
 
 * `error.ramlAuthorization = true` An unauthorized error containing an array of errors that occured is set on `error.authorizationErrors`
 * `error.ramlValidation = true` A request failed validation and an array of validation data is set on `error.requestErrors` (beware, different types contain different information)
+* `error.ramlNotFound = true` A request 404'd because it was not specified in the RAML definition for the API
 
 #### Add JSON Schemas
 
