@@ -121,11 +121,22 @@ osprey.server(raml, options)
 
 Undefined API requests will _always_ be rejected with a 404.
 
-**Options**
+#### Options
+
+These are also passed along to [osprey-method-handler](https://github.com/mulesoft-labs/osprey-method-handler)).
 
 * **cors** Enable CORS by setting to `true` or an object from [cors](https://github.com/expressjs/cors#configuration-options) (default: `false`)
 * **compression** Enable response compression using [compression](https://github.com/expressjs/compression) (default: `false`)
+
+**From Osprey Method Handler:**
+
 * **discardUnknownBodies** Discard undefined request bodies (default: `true`)
+* **discardUnknownQueryParameters** Discard undefined query parameters (default: `true`)
+* **discardUnknownHeaders** Discard undefined header parameters (always includes known headers) (default: `true`)
+* **parseBodiesOnWildcard** Toggle parsing bodies on wildcard body support (default: `false`)
+* **reviver** The reviver passed to JSON.parse for JSON endpoints
+* **limit** The maximum bytes for XML, JSON and URL-encoded endpoints (default: `'100kb'`)
+* **parameterLimit** The maximum number of URL-encoded parameters (default: `1000`)
 
 #### Invalid Headers and Query Parameters
 
