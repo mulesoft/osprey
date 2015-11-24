@@ -127,6 +127,7 @@ These are also passed along to [osprey-method-handler](https://github.com/muleso
 
 * **cors** Enable CORS by setting to `true` or an object from [cors](https://github.com/expressjs/cors#configuration-options) (default: `false`)
 * **compression** Enable response compression using [compression](https://github.com/expressjs/compression) (default: `false`)
+* **notFoundHandler** Use a `404` error in middleware to skip over invalid/undefined routes from RAML (default: `true`)
 
 **From Osprey Method Handler:**
 
@@ -137,6 +138,8 @@ These are also passed along to [osprey-method-handler](https://github.com/muleso
 * **reviver** The reviver passed to JSON.parse for JSON endpoints
 * **limit** The maximum bytes for XML, JSON and URL-encoded endpoints (default: `'100kb'`)
 * **parameterLimit** The maximum number of URL-encoded parameters (default: `1000`)
+
+If you disable the default security handler, it can still be mounted later with `osprey.server.notFoundHandler`. For example, `app.use(osprey.server.notFoundHandler)`.
 
 #### Invalid Headers and Query Parameters
 
