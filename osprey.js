@@ -35,10 +35,18 @@ exports.loadFile = function (path, options) {
   return require('raml-parser')
     .loadFile(path)
     .then(function (raml) {
-      return compose(
-        security(raml, options.security),
+      var middleware = []
+
+      if (options.security) {
+        middleware.push(security(raml, options.security))
+      }
+
+      // Always compose the server and error handler.
+      middleware.push(
         server(raml, options.server),
-        errorHandler()
+        errorHandler(options.errorHandler)
       )
+
+      return compose(middleware)
     })
 }
