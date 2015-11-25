@@ -138,6 +138,7 @@ These are also passed along to [osprey-method-handler](https://github.com/muleso
 * **reviver** The reviver passed to JSON.parse for JSON endpoints
 * **limit** The maximum bytes for XML, JSON and URL-encoded endpoints (default: `'100kb'`)
 * **parameterLimit** The maximum number of URL-encoded parameters (default: `1000`)
+* **busboyLimits** The limits for [Busboy](https://github.com/mscdex/busboy#busboy-methods) multipart form parsing
 
 If you disable the default security handler, it can still be mounted later with `osprey.server.notFoundHandler`. For example, `app.use(osprey.server.notFoundHandler)`.
 
