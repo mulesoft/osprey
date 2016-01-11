@@ -187,24 +187,24 @@ describe('security', function () {
   })
 
   it('should use global securedBy when not defined', function () {
-    return popsicle(server.url('/default'))
+    return popsicle.default(server.url('/default'))
       .then(expectStatus(401))
   })
 
   describe('Basic Authentication', function () {
     it('should block access', function () {
-      return popsicle(server.url('/secured/basic'))
+      return popsicle.default(server.url('/secured/basic'))
         .then(expectStatus(401))
     })
 
     it('should allow access with basic authentication', function () {
-      return popsicle(server.url('/secured/basic'))
+      return popsicle.default(server.url('/secured/basic'))
         .use(auth('blakeembrey', 'hunter2'))
         .then(expectHelloWorld)
     })
 
     it('should reject invalid credentials', function () {
-      return popsicle(server.url('/secured/basic'))
+      return popsicle.default(server.url('/secured/basic'))
         .use(auth('blakeembrey', 'wrongpassword'))
         .then(expectStatus(401))
     })
@@ -212,12 +212,12 @@ describe('security', function () {
 
   describe('OAuth 2.0', function () {
     it('should protect endpoints', function () {
-      return popsicle(server.url('/secured/oauth2'))
+      return popsicle.default(server.url('/secured/oauth2'))
         .then(expectStatus(401))
     })
 
     it('should not protect undefined endpoints', function () {
-      return popsicle(server.url('/unsecured'))
+      return popsicle.default(server.url('/unsecured'))
         .then(expectHelloWorld)
     })
 
@@ -262,7 +262,7 @@ describe('security', function () {
           var url = localOAuth2.code.getUri()
           var jar = popsicle.jar()
 
-          return popsicle({
+          return popsicle.default({
             url: url,
             options: {
               jar: jar
@@ -289,7 +289,7 @@ describe('security', function () {
             .then(expectHelloWorld)
             // Subsequent authorizations should happen automatically.
             .then(function () {
-              return popsicle({
+              return popsicle.default({
                 url: url,
                 options: {
                   jar: jar,
@@ -309,7 +309,7 @@ describe('security', function () {
           var url = localOAuth2.token.getUri()
           var jar = popsicle.jar()
 
-          return popsicle({
+          return popsicle.default({
             url: url,
             options: {
               jar: jar
@@ -371,25 +371,25 @@ describe('security', function () {
 
   describe('Custom Authentication', function () {
     it('should accept a request', function () {
-      return popsicle(server.url('/secured/custom'))
+      return popsicle.default(server.url('/secured/custom'))
         .then(expectHelloWorld)
     })
 
     it('should reject a request', function () {
-      return popsicle(server.url('/secured/custom'))
+      return popsicle.default(server.url('/secured/custom'))
         .then(expectStatus(401))
     })
   })
 
   describe('combined', function () {
     it('should allow access', function () {
-      return popsicle(server.url('/secured/combined'))
+      return popsicle.default(server.url('/secured/combined'))
         .use(auth('blakeembrey', 'hunter2'))
         .then(expectHelloWorld)
     })
 
     it('should allow access with anonymous', function () {
-      return popsicle(server.url('/secured/combined/unauthed'))
+      return popsicle.default(server.url('/secured/combined/unauthed'))
         .then(expectHelloWorld)
     })
   })

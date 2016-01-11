@@ -45,7 +45,7 @@ describe('proxy', function () {
     it('should proxy defined routes', function () {
       app.get('/users', success)
 
-      return popsicle(proxy.url('/users'))
+      return popsicle.default(proxy.url('/users'))
         .then(function (res) {
           expect(res.body).to.equal('success')
           expect(res.status).to.equal(200)
@@ -55,7 +55,7 @@ describe('proxy', function () {
     it('should block undefined routes', function () {
       app.get('/unknown', success)
 
-      return popsicle(proxy.url('/unknown'))
+      return popsicle.default(proxy.url('/unknown'))
         .then(function (res) {
           expect(res.status).to.equal(404)
         })
@@ -70,7 +70,7 @@ describe('proxy', function () {
         return next()
       }, success)
 
-      return popsicle(proxy.url('/query?hello=world&test=true'))
+      return popsicle.default(proxy.url('/query?hello=world&test=true'))
         .then(function (res) {
           expect(res.body).to.equal('success')
           expect(res.status).to.equal(200)
@@ -78,7 +78,7 @@ describe('proxy', function () {
     })
 
     it('should reject invalid query parameters', function () {
-      return popsicle(proxy.url('/query?hello=12345'))
+      return popsicle.default(proxy.url('/query?hello=12345'))
         .then(function (res) {
           expect(res.status).to.equal(400)
         })
@@ -99,7 +99,7 @@ describe('proxy', function () {
           success
         )
 
-        return popsicle({
+        return popsicle.default({
           url: proxy.url('/json'),
           method: 'post',
           body: {
@@ -121,7 +121,7 @@ describe('proxy', function () {
           return next()
         }, success)
 
-        return popsicle({
+        return popsicle.default({
           url: proxy.url('/json'),
           method: 'post',
           body: {
@@ -148,7 +148,7 @@ describe('proxy', function () {
           success
         )
 
-        return popsicle({
+        return popsicle.default({
           url: proxy.url('/urlencoded'),
           method: 'post',
           body: {
@@ -173,7 +173,7 @@ describe('proxy', function () {
           return next()
         }, success)
 
-        return popsicle({
+        return popsicle.default({
           url: proxy.url('/urlencoded'),
           method: 'post',
           body: {
@@ -217,7 +217,7 @@ describe('proxy', function () {
           success
         )
 
-        return popsicle({
+        return popsicle.default({
           url: proxy.url('/formdata'),
           method: 'post',
           body: {
@@ -242,7 +242,7 @@ describe('proxy', function () {
           return next()
         }, success)
 
-        return popsicle({
+        return popsicle.default({
           url: proxy.url('/formdata'),
           method: 'post',
           body: {

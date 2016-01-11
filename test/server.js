@@ -31,7 +31,7 @@ describe('server', function () {
     })
 
     it('should accept defined routes', function () {
-      return popsicle('/users')
+      return popsicle.default('/users')
         .use(server(http))
         .then(function (res) {
           expect(res.body).to.equal('success')
@@ -40,7 +40,7 @@ describe('server', function () {
     })
 
     it('should reject undefined routes', function () {
-      return popsicle('/unknown')
+      return popsicle.default('/unknown')
         .use(server(http))
         .then(function (res) {
           expect(res.status).to.equal(404)
@@ -48,7 +48,7 @@ describe('server', function () {
     })
 
     it('should have cors enabled', function () {
-      return popsicle.options('/users')
+      return popsicle.default({ url: '/users', method: 'options' })
         .use(server(http))
         .then(function (res) {
           expect(res.status).to.equal(204)
@@ -58,7 +58,7 @@ describe('server', function () {
     })
 
     it('should have compression enabled', function () {
-      return popsicle('/users')
+      return popsicle.default('/users')
         .use(server(http))
         .then(function (res) {
           expect(res.body).to.equal('success')
@@ -82,7 +82,7 @@ describe('server', function () {
     })
 
     it('should accept defined routes', function () {
-      return popsicle('/definitelynotfound')
+      return popsicle.default('/definitelynotfound')
         .use(server(http))
         .then(function (res) {
           expect(res.body).to.equal('success')
