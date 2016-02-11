@@ -1,6 +1,6 @@
 {
   "name": "osprey",
-  "version": "0.2.0-beta.10",
+  "version": "0.2.0",
   "description": "Generate an API proxy from a RAML definition, which can be used locally or globally for validating API requests and responses",
   "main": "osprey.js",
   "files": [
