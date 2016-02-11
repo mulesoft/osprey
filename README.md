@@ -172,6 +172,25 @@ app.post('/users/{userId}', function (req, res, next) {
 
 All parameters are automatically validated and parsed to the correct types according to the RAML document using [raml-validate](https://github.com/mulesoft/node-raml-validate) and [raml-sanitize](https://github.com/mulesoft/node-raml-sanitize). URL parameter validation comes with [Osprey Router](https://github.com/mulesoft-labs/osprey-router), available using `osprey.Router`.
 
+```js
+// Similar to `express.Router`, but uses RAML paths.
+var Router = require('osprey').Router
+
+var app = new Router()
+
+app.use(...)
+
+app.get('/{slug}', {
+  slug: {
+    type: 'string'
+  }
+}, function (req, res) {
+  res.send('success')
+})
+
+module.exports = app
+```
+
 #### Handling Errors
 
 Osprey returns a [middleware router instance](https://github.com/pillarjs/router), so you can mount this within any compatible application and handle errors with the framework. For example, using HTTP with [finalhandler](https://github.com/pillarjs/finalhandler) (the same module Express uses):
