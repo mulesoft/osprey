@@ -66,7 +66,7 @@
     "request-error-handler": "^1.0.0",
     "type-is": "^1.5.5",
     "xtend": "^4.0.0",
-    "yargs": "^3.4.5"
+    "yargs": "^4.1.0"
   },
   "devDependencies": {
     "busboy": "^0.2.9",
