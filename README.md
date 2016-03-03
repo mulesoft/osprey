@@ -116,7 +116,11 @@ osprey.loadFile(path)
 ### Server (Resource Handling)
 
 ```js
-osprey.server(raml, options)
+var handler = osprey.server(raml, options)
+
+console.log(handler) //=> function (req, res, next) {}
+
+console.log(handler.ramlUriParameters) //=> {} // A merged object of used URI parameters.
 ```
 
 Undefined API requests will _always_ be rejected with a 404.
@@ -189,6 +193,16 @@ app.get('/{slug}', {
 })
 
 module.exports = app
+```
+
+You can initialize a `Router` with `ramlUriParameters`. This is helpful, since every router collects an object with merged URI parameters. For example, you can combine it with the `server` middleware to generate a router with your RAML URI parameters:
+
+```js
+var handler = osprey.server(raml)
+var router = osprey.Router({ ramlUriParameters: handler.ramlUriParameters })
+
+// Uses an existing `userId` URI parameter, if it exists.
+router.get('/{userId}', function (req, res, next) {})
 ```
 
 #### Handling Errors

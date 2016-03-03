@@ -39,3 +39,9 @@ baseUri: http://example.com
       hello:
         type: string
         pattern: "[a-z]+"
+
+/users/{userId}:
+  uriParameters:
+    userId:
+      type: number
+  get:

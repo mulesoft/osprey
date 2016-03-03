@@ -36,17 +36,17 @@ exports.loadFile = function (path, options) {
     .loadFile(path)
     .then(function (raml) {
       var middleware = []
+      var handler = server(raml, options.server)
+      var error = errorHandler(options.errorHandler)
 
       if (options.security) {
         middleware.push(security(raml, options.security))
       }
 
-      // Always compose the server and error handler.
-      middleware.push(
-        server(raml, options.server),
-        errorHandler(options.errorHandler)
-      )
+      middleware.push(handler, error)
 
-      return compose(middleware)
+      var result = compose(middleware)
+      result.ramlUriParameters = handler.ramlUriParameters
+      return result
     })
 }

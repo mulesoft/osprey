@@ -23,6 +23,14 @@ describe('server', function () {
 
           app.use(middleware)
 
+          expect(middleware.ramlUriParameters).to.deep.equal({
+            userId: {
+              type: 'number',
+              displayName: 'userId',
+              required: true
+            }
+          })
+
           app.get('/users', success)
           app.get('/unknown', success)
 
