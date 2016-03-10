@@ -75,7 +75,7 @@ describe('server', function () {
     })
   })
 
-  describe('normal usage', function () {
+  describe('not found handler', function () {
     beforeEach(function () {
       return osprey.loadFile(EXAMPLE_RAML_PATH, { server: { notFoundHandler: false } })
         .then(function (middleware) {
@@ -94,6 +94,33 @@ describe('server', function () {
         .use(server(http))
         .then(function (res) {
           expect(res.body).to.equal('success')
+          expect(res.status).to.equal(200)
+        })
+    })
+  })
+
+  describe('method handler options', function () {
+    beforeEach(function () {
+      return osprey.loadFile(EXAMPLE_RAML_PATH, { server: { discardUnknownQueryParameters: false } })
+        .then(function (middleware) {
+          var app = router()
+
+          app.use(middleware)
+
+          app.get('/users', function (req, res) {
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify(req.url))
+          })
+
+          http = utils.createServer(app)
+        })
+    })
+
+    it('should accept server options in the method handler', function () {
+      return popsicle.get('/users?x=1&y=2')
+        .use(server(http))
+        .then(function (res) {
+          expect(res.body).to.equal('/users?x=1&y=2')
           expect(res.status).to.equal(200)
         })
     })

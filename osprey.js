@@ -26,11 +26,11 @@ exports.addJsonSchema = function (schema, key) {
  * Load an Osprey server directly from a RAML file.
  *
  * @param  {String}  path
- * @param  {Object}  options
+ * @param  {Object}  opts
  * @return {Promise}
  */
-exports.loadFile = function (path, options) {
-  options = options || {}
+exports.loadFile = function (path, opts) {
+  var options = opts || {}
 
   return require('raml-parser')
     .loadFile(path)
