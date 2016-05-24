@@ -43,10 +43,15 @@ exports.loadFile = function (path, opts) {
         middleware.push(security(raml, options.security))
       }
 
-      middleware.push(handler, error)
+      middleware.push(handler)
+
+      if (!options.disableErrorInterception) {
+        middleware.push(error)
+      }
 
       var result = compose(middleware)
       result.ramlUriParameters = handler.ramlUriParameters
       return result
     })
 }
+
