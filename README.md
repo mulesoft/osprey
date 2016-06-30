@@ -107,6 +107,7 @@ osprey.loadFile(path)
 
     app.listen(3000)
   })
+   .catch(function(e) { console.error("Error: %s", e.message); });
 ```
 
 **Please note:** The middleware function does not use the RAML `baseUri`. Make sure you mount the application under the correct path. E.g. `app.use('/v1', middleware)`.
@@ -221,6 +222,7 @@ osprey.loadFile(join(__dirname, 'api.raml'))
       middleware(req, res, finalhandler(req, res))
     }).listen(process.env.PORT || 3000)
   })
+   .catch(function(e) { console.error("Error: %s", e.message); });
 ```
 
 **Error Types**
