@@ -32,9 +32,12 @@ exports.addJsonSchema = function (schema, key) {
 exports.loadFile = function (path, opts) {
   var options = opts || {}
 
-  return require('raml-parser')
-    .loadFile(path)
-    .then(function (raml) {
+  return require('raml-1-parser')
+    .loadRAML(path)
+    .then(function (ramlApi) {
+      var raml = ramlApi.toJSON({
+        serializeMetadata: false
+      })
       var middleware = []
       var handler = server(raml, options.server)
       var error = errorHandler(options.errorHandler)
@@ -54,4 +57,3 @@ exports.loadFile = function (path, opts) {
       return result
     })
 }
-

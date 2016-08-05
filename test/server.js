@@ -27,6 +27,8 @@ describe('server', function () {
             userId: {
               type: 'number',
               displayName: 'userId',
+              name: 'userId',
+              repeat: false,
               required: true
             }
           })

@@ -4,7 +4,7 @@ var expect = require('chai').expect
 var popsicle = require('popsicle')
 var router = require('osprey-router')
 var join = require('path').join
-var parser = require('raml-parser')
+var parser = require('raml-1-parser')
 var ClientOAuth2 = require('client-oauth2')
 var serverAddress = require('server-address')
 var auth = require('popsicle-basic-auth')
@@ -36,8 +36,11 @@ describe('security', function () {
 
   // Set up the server on each render.
   before(function () {
-    return parser.loadFile(SECURITY_RAML_PATH)
-      .then(function (raml) {
+    return parser.loadRAML(SECURITY_RAML_PATH)
+      .then(function (ramlApi) {
+        var raml = ramlApi.toJSON({
+          serializeMetadata: false
+        })
         var app = router()
 
         app.use(osprey.security(raml, {
