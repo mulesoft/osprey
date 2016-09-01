@@ -1,6 +1,6 @@
 {
   "name": "osprey",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Generate an API proxy from a RAML definition, which can be used locally or globally for validating API requests and responses",
   "main": "osprey.js",
   "files": [
@@ -63,7 +63,7 @@
     "passport-http-bearer": "^1.0.1",
     "passport-oauth2-client-password": "^0.1.2",
     "raml-parser": "^0.8.10",
-    "request-error-handler": "^1.0.0",
+    "request-error-handler": "^1.0.3",
     "type-is": "^1.5.5",
     "xtend": "^4.0.0",
     "yargs": "^4.1.0"
