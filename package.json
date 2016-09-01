@@ -63,7 +63,7 @@
     "passport-http-bearer": "^1.0.1",
     "passport-oauth2-client-password": "^0.1.2",
     "raml-parser": "^0.8.10",
-    "request-error-handler": "^1.0.2",
+    "request-error-handler": "^1.0.3",
     "type-is": "^1.5.5",
     "xtend": "^4.0.0",
     "yargs": "^4.1.0"
