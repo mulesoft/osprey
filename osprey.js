@@ -33,9 +33,9 @@ exports.loadFile = function (path, opts) {
   var options = opts || {}
 
   return require('raml-1-parser')
-    .loadRAML(path)
+    .loadRAML(path, { rejectOnErrors: true })
     .then(function (ramlApi) {
-      var raml = ramlApi.toJSON({
+      var raml = ramlApi.expand(true).toJSON({
         serializeMetadata: false
       })
       var middleware = []
