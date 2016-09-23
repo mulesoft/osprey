@@ -1,13 +1,13 @@
-#%RAML 0.8
+#%RAML 1.0
 title: Example API
 version: v1
 baseUri: http://example.com/{version}
 
 securitySchemes:
-  - token_auth:
-      type: x-my-token
+  token_auth:
+    type: x-my-token
 
-securedBy: [token_auth]
+securedBy: token_auth
 
 /posts:
   get:
