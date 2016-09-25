@@ -1,12 +1,9 @@
 #%RAML 1.0
 title: Messages API
-version: v1
-baseUri: http://example.com/{version}
 
 /message:
   post:
-    description: |
-      Send a message to a user.
+    description: Send a message to a user
     body:
       application/json:
         properties:
