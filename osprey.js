@@ -5,6 +5,7 @@ var server = require('./lib/server')
 var proxy = require('./lib/proxy')
 var security = require('./lib/security')
 var errorHandler = require('request-error-handler')
+var extend = require('xtend')
 
 /**
  * Expose functions.
@@ -39,7 +40,7 @@ exports.loadFile = function (path, opts) {
         serializeMetadata: false
       })
       var middleware = []
-      var handler = server(raml, options.server)
+      var handler = server(raml, extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server))
       var error = errorHandler(options.errorHandler)
 
       if (options.security) {

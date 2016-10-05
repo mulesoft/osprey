@@ -1,0 +1,67 @@
+#%RAML 1.0
+title: People API
+
+/object:
+  post:
+    body:
+      application/json:
+        properties:
+          object:
+            type: object
+            properties:
+              existing_property: string
+            additionalProperties: false
+
+/any:
+  post:
+    body:
+      application/json:
+        properties:
+          anyone: any
+          anytwo: any
+          anythree: any
+
+/people:
+  post:
+    body:
+      application/json:
+        properties:
+          firstname: string
+          lastname: string
+          phone:
+            type: string
+            pattern: ^[0-9]{3}-[0-9]{3}-[0-9]{4}$
+          birthday:
+            type: date-only
+          head:
+            type: number
+            minimum: 1
+            maximum: 1
+          emails:
+            type: array
+            minItems: 1
+            items:
+              type: string
+              pattern: ^.+@.+\..+$
+          married: boolean
+/json:
+  post:
+    body:
+      application/json:
+        properties:
+          hello: string
+
+/json2:
+  post:
+    body:
+      application/json:
+        schema: |
+          {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "type": "object",
+            "properties": {
+              "hello": {
+                "type": "string"
+              }
+            }
+          }
