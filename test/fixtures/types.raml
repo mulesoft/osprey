@@ -1,17 +1,6 @@
 #%RAML 1.0
 title: People API
 
-/object:
-  post:
-    body:
-      application/json:
-        properties:
-          object:
-            type: object
-            properties:
-              existing_property: string
-            additionalProperties: false
-
 /any:
   post:
     body:
@@ -20,6 +9,28 @@ title: People API
           anyone: any
           anytwo: any
           anythree: any
+
+/object:
+  post:
+    body:
+      application/json:
+        properties:
+          obj:
+            type: object
+            properties:
+              existing_property: string
+            additionalProperties: false
+
+/array:
+  post:
+    body:
+      application/json:
+        properties:
+          choices:
+            type: array
+            items: string
+            maxItems: 3
+            uniqueItems: true
 
 /people:
   post:
@@ -44,6 +55,27 @@ title: People API
               type: string
               pattern: ^.+@.+\..+$
           married: boolean
+          dogOrCat:
+            type: string
+            enum: [dog, cat]
+          optionalTastes?:
+            type: array
+            minItems: 1
+
+types:
+  User:
+    type: object
+    properties:
+      firstname: string
+      lastname:  string
+      age:       number
+
+/users:
+  post:
+    body:
+      application/json:
+        type: User
+
 /json:
   post:
     body:

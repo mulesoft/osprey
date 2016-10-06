@@ -1,8 +1,17 @@
-#%RAML 0.8
+#%RAML 1.0
 title: Example API
 baseUri: http://example.com
 /users:
   get:
+  #   headers:
+  #     foo: string
+  #     bar?: number
+  # post:
+  #   body:
+  #     application/json:
+  #       properties:
+  #         firstname: string
+  #         lastname?: string
 /json:
   post:
     body:
@@ -21,7 +30,7 @@ baseUri: http://example.com
   post:
     body:
       application/x-www-form-urlencoded:
-        formParameters:
+        properties:
           hello:
             type: string
             pattern: "[a-z]+"
@@ -29,7 +38,7 @@ baseUri: http://example.com
   post:
     body:
       multipart/form-data:
-        formParameters:
+        properties:
           hello:
             type: string
             pattern: "[a-z]+"

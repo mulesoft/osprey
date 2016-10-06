@@ -25,10 +25,9 @@ describe('server', function () {
 
           expect(middleware.ramlUriParameters).to.deep.equal({
             userId: {
-              type: 'number',
+              type: ['number'],
               displayName: 'userId',
               name: 'userId',
-              repeat: false,
               required: true
             }
           })

@@ -11,7 +11,7 @@ var parser = require('raml-1-parser')
 var osprey = require('../')
 var utils = require('./support/utils')
 
-var EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/people.raml')
+var EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/types.raml')
 
 var success = utils.response('success')
 
@@ -69,13 +69,59 @@ describe('RAML types', function () {
         url: proxy.url('/object'),
         method: 'post',
         body: {
-          object: {
+          obj: {
             existing_property: 'valid'
           }
         }
       }).then(function (res) {
         expect(res.body).to.equal('success')
         expect(res.status).to.equal(200)
+      })
+    })
+
+    it('should reject invalid object properties', function () {
+      app.post('/object', success)
+
+      return popsicle.default({
+        url: proxy.url('/object'),
+        method: 'post',
+        body: {
+          obj: {
+            existing_property: 'valid',
+            additional_property: 'invalid'
+          }
+        }
+      }).then(function (res) {
+        expect(res.status).to.equal(400)
+      })
+    })
+
+    it('should accept valid array properties', function () {
+      app.post('/array', success)
+
+      return popsicle.default({
+        url: proxy.url('/array'),
+        method: 'post',
+        body: {
+          choices: ['a', 'b', 'c']
+        }
+      }).then(function (res) {
+        expect(res.body).to.equal('success')
+        expect(res.status).to.equal(200)
+      })
+    })
+
+    it('should reject invalid array properties', function () {
+      app.post('/array', success)
+
+      return popsicle.default({
+        url: proxy.url('/array'),
+        method: 'post',
+        body: {
+          choices: ['a', 'b', 'c', 'a']
+        }
+      }).then(function (res) {
+        expect(res.status).to.equal(400)
       })
     })
   })
@@ -94,7 +140,8 @@ describe('RAML types', function () {
           birthday: '1999-12-31',
           head: 1,
           emails: ['john@doe.com'],
-          married: false
+          married: false,
+          dogOrCat: 'cat'
         }
       }).then(function (res) {
         expect(res.body).to.equal('success')
@@ -116,7 +163,9 @@ describe('RAML types', function () {
           birthday: '1999-12',
           head: 3,
           emails: [],
-          married: 'false'
+          married: 'false',
+          dogOrCat: 'fish',
+          optionalTastes: []
         }
       }).then(function (res) {
         expect(res.status).to.equal(400)
