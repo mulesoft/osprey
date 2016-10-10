@@ -31,7 +31,7 @@ describe('RAML 0.8', function () {
         var raml = ramlApi.toJSON({
           serializeMetadata: false
         })
-        var ospreyApp = osprey.server(raml)
+        var ospreyApp = osprey.server(raml, { RAMLVersion: ramlApi.RAMLVersion() })
         var proxyApp = osprey.proxy(ospreyApp, server.url())
 
         proxy = serverAddress(proxyApp)
