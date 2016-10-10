@@ -4,9 +4,7 @@ var expect = require('chai').expect
 var popsicle = require('popsicle')
 var router = require('osprey-router')
 var join = require('path').join
-// var bodyParser = require('body-parser')
 var serverAddress = require('server-address')
-// var Busboy = require('busboy')
 var parser = require('raml-1-parser')
 var osprey = require('../')
 var utils = require('./support/utils')
@@ -28,10 +26,10 @@ describe('RAML types', function () {
 
     return parser.loadRAML(EXAMPLE_RAML_PATH)
       .then(function (ramlApi) {
-        var raml = ramlApi.toJSON({
+        var raml = ramlApi.expand(true).toJSON({
           serializeMetadata: false
         })
-        var ospreyApp = osprey.server(raml)
+        var ospreyApp = osprey.server(raml, { RAMLVersion: ramlApi.RAMLVersion() })
         var proxyApp = osprey.proxy(ospreyApp, server.url())
 
         proxy = serverAddress(proxyApp)
@@ -44,8 +42,62 @@ describe('RAML types', function () {
     server.close()
   })
 
+  describe('libs', function () {
+    it('should accept valid data', function () {
+      app.post('/users', success)
+
+      return popsicle.default({
+        url: proxy.url('/users'),
+        method: 'post',
+        body: {
+          firstname: 'john',
+          lastname: 'doe',
+          age: 1
+        }
+      }).then(function (res) {
+        expect(res.body).to.equal('success')
+        expect(res.status).to.equal(200)
+      })
+    })
+
+    it('should reject invalid data', function () {
+      app.post('/users', success)
+
+      return popsicle.default({
+        url: proxy.url('/users'),
+        method: 'post',
+        body: {}
+      }).then(function (res) {
+        expect(res.status).to.equal(400)
+      })
+    })
+
+    it('should accept valid query types', function () {
+      app.get('/users', success)
+
+      return popsicle.default({
+        url: proxy.url('/users?sort=asc'),
+        method: 'get'
+      }).then(function (res) {
+        expect(res.body).to.equal('success')
+        expect(res.status).to.equal(200)
+      })
+    })
+
+    it('should reject invalid query types', function () {
+      app.get('/users', success)
+
+      return popsicle.default({
+        url: proxy.url('/users'),
+        method: 'get'
+      }).then(function (res) {
+        expect(res.status).to.equal(400)
+      })
+    })
+  })
+
   describe('built-in types', function () {
-    it('should accept any types when type: any', function () {
+    it('should accept any type of data when type: any', function () {
       app.post('/any', success)
 
       return popsicle.default({
