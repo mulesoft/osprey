@@ -1,6 +1,6 @@
 {
   "name": "osprey",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "Generate an API proxy from a RAML definition, which can be used locally or globally for validating API requests and responses",
   "main": "osprey.js",
   "files": [
@@ -71,18 +71,18 @@
   },
   "devDependencies": {
     "busboy": "^0.2.9",
-    "chai": "^3.0.0",
+    "chai": "^3.5.0",
     "client-oauth2": "^2.0.0",
     "es6-promise": "^3.0.2",
     "express": "^4.13.3",
-    "istanbul": "^0.4.0",
-    "mocha": "^2.1.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.1.0",
     "popsicle": "^5.0.0",
     "popsicle-basic-auth": "^0.1.0",
     "popsicle-server": "^1.0.0",
     "pre-commit": "^1.0.5",
     "server-address": "^1.0.1",
     "rewire": "^2.5.2",
-    "standard": "^6.0.4"
+    "standard": "^8.3.0"
   }
 }

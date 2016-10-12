@@ -233,10 +233,7 @@ describe('security', function () {
     })
   })
 
-
-
   describe('Digest Authentication', function () {
-
     function simpleDigestAuth (username) {
       // This header has 'response' encoded for username 'bob'
       // and password 'secret'
@@ -265,8 +262,6 @@ describe('security', function () {
         .then(expectStatus(401))
     })
   })
-
-
 
   describe('OAuth 2.0', function () {
     it('should protect endpoints', function () {

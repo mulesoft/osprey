@@ -17,6 +17,7 @@ Generate API middleware from a RAML definition, which can be used locally or glo
     * XML schemas
   * Headers
   * Query parameters
+  * RAML 1.0 types
 * Automatic Request Parameters
   * Default Headers
   * Default Parameters
