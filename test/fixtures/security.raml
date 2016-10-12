@@ -44,6 +44,9 @@ securedBy: [ oauth_2_0 ]
   /basic:
     get:
       securedBy: [ basic_auth ]
+  /digest:
+    get:
+      securedBy: [ digest_auth ]
   /custom:
     get:
       securedBy: [ custom_auth ]

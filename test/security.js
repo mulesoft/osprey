@@ -23,10 +23,16 @@ describe('security', function () {
       secret: '123'
     }
   }
+  // NOTE: If you change user 'bob', 'response' in digest authentication
+  // header will have to be re-encoded and that's a big issue.
   var users = {
     'blakeembrey': {
       username: 'blakeembrey',
       password: 'hunter2'
+    },
+    'bob': {
+      username: 'bob',
+      password: 'secret'
     }
   }
   var localOAuth2
@@ -137,6 +143,17 @@ describe('security', function () {
               return done(null, false)
             }
           },
+          digest_auth: {
+            findUserByUsername: function (username, done) {
+              var user = users[username]
+              if (user) {
+                return done(null, user, user.password)
+              }
+
+              return done(null, false)
+            },
+            realm: 'Users'
+          },
           custom_auth: function () {
             var count = 0
 
@@ -165,6 +182,7 @@ describe('security', function () {
         app.get('/secured/oauth2', helloWorld)
         app.get('/secured/oauth2/scoped', helloWorld)
         app.get('/secured/basic', helloWorld)
+        app.get('/secured/digest', helloWorld)
         app.get('/secured/custom', helloWorld)
         app.get('/secured/combined', helloWorld)
         app.get('/secured/combined/unauthed', helloWorld)
@@ -214,6 +232,41 @@ describe('security', function () {
         .then(expectStatus(401))
     })
   })
+
+
+
+  describe('Digest Authentication', function () {
+
+    function simpleDigestAuth (username) {
+      // This header has 'response' encoded for username 'bob'
+      // and password 'secret'
+      var header = 'Digest username="' + username + '", ' +
+        'realm="Users", nonce="ImAnAwesomeNonce", uri="/secured/digest", ' +
+        'response="ba7687213adfa6ccddda9dc247030232"'
+      return function (req) {
+        req.set('Authorization', header)
+      }
+    }
+
+    it('should block not authenticated access', function () {
+      return popsicle.default(server.url('/secured/digest'))
+        .then(expectStatus(401))
+    })
+
+    it('should allow access with digest authentication', function () {
+      return popsicle.default(server.url('/secured/digest'))
+        .use(simpleDigestAuth('bob'))
+        .then(expectHelloWorld)
+    })
+
+    it('should reject access with invalid credentials', function () {
+      return popsicle.default(server.url('/secured/digest'))
+        .use(simpleDigestAuth('jake'))
+        .then(expectStatus(401))
+    })
+  })
+
+
 
   describe('OAuth 2.0', function () {
     it('should protect endpoints', function () {
