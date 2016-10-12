@@ -23,8 +23,6 @@ describe('security', function () {
       secret: '123'
     }
   }
-  // NOTE: If you change user 'bob', 'response' in digest authentication
-  // header will have to be re-encoded and that's a big issue.
   var users = {
     'blakeembrey': {
       username: 'blakeembrey',
