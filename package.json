@@ -82,6 +82,7 @@
     "popsicle-server": "^1.0.0",
     "pre-commit": "^1.0.5",
     "server-address": "^1.0.1",
+    "rewire": "^2.5.2",
     "standard": "^8.3.0"
   }
 }

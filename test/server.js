@@ -5,6 +5,7 @@ var popsicle = require('popsicle')
 var server = require('popsicle-server')
 var router = require('osprey-router')
 var join = require('path').join
+var auth = require('popsicle-basic-auth')
 var osprey = require('../')
 var utils = require('./support/utils')
 
@@ -95,6 +96,59 @@ describe('server', function () {
         .use(server(http))
         .then(function (res) {
           expect(res.body).to.equal('success')
+          expect(res.status).to.equal(200)
+        })
+    })
+  })
+
+  describe('secured handler', function () {
+    beforeEach(function () {
+      var users = {
+        'blakeembrey': {
+          username: 'blakeembrey',
+          password: 'hunter2'
+        }
+      }
+      var securityRAMLPath = join(__dirname, 'fixtures/security.raml')
+      var options = {
+        server: {notFoundHandler: false},
+        security: {
+          basic_auth: {
+            validateUser: function (username, password, done) {
+              if (users[username] && users[username].password === password) {
+                return done(null, true)
+              }
+
+              return done(null, false)
+            }
+          }
+        }
+      }
+      return osprey.loadFile(securityRAMLPath, options)
+        .then(function (middleware) {
+          var app = router()
+
+          app.use(middleware)
+
+          app.get('/secured/basic', success)
+
+          http = utils.createServer(app)
+        })
+    })
+
+    it('should block unauthenticated access', function () {
+      return popsicle.default('/secured/basic')
+        .use(server(http))
+        .then(function (res) {
+          expect(res.status).to.equal(401)
+        })
+    })
+
+    it('should allow access with basic authentication', function () {
+      return popsicle.default('/secured/basic')
+        .use(server(http))
+        .use(auth('blakeembrey', 'hunter2'))
+        .then(function (res) {
           expect(res.status).to.equal(200)
         })
     })
