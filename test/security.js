@@ -1,4 +1,4 @@
-/* global describe, before, after, beforeEach, it */
+/* global describe, before, after, beforeEach, it, context */
 
 var expect = require('chai').expect
 var popsicle = require('popsicle')
@@ -10,6 +10,8 @@ var serverAddress = require('server-address')
 var auth = require('popsicle-basic-auth')
 var utils = require('./support/utils')
 var osprey = require('../')
+var securityHandler = require('../lib/security/handler')
+
 
 var SECURITY_RAML_PATH = join(__dirname, 'fixtures/security.raml')
 
@@ -394,6 +396,20 @@ describe('security', function () {
     it('should allow access with anonymous', function () {
       return popsicle.default(server.url('/secured/combined/unauthed'))
         .then(expectHelloWorld)
+    })
+  })
+})
+
+describe('lib.security.handler.createHandler', function () {
+  context('when handle function for custom type is not provided', function () {
+    it('should throw an error', function () {
+      try {
+        securityHandler({'type': 'Foo'}, null, null)
+      } catch (error) {
+        expect(error).to.not.be.null
+        expect(error.message).to.contain(
+          'To enable Foo, you must provide a function')
+      }
     })
   })
 })
