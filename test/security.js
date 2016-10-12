@@ -11,7 +11,7 @@ var auth = require('popsicle-basic-auth')
 var utils = require('./support/utils')
 var osprey = require('../')
 var securityHandler = require('../lib/security/handler')
-
+var securityScope = require('../lib/security/scope')
 
 var SECURITY_RAML_PATH = join(__dirname, 'fixtures/security.raml')
 
@@ -409,6 +409,20 @@ describe('lib.security.handler.createHandler', function () {
         expect(error).to.not.be.null
         expect(error.message).to.contain(
           'To enable Foo, you must provide a function')
+      }
+    })
+  })
+})
+
+describe('lib.security.scope.enforceScope', function () {
+  context('when empty scope is passed', function () {
+    it('should throw an error', function () {
+      try {
+        securityScope([])
+      } catch (error) {
+        expect(error).to.not.be.null
+        expect(error.message).to.contain(
+          'Expected a scope or array of scopes')
       }
     })
   })
