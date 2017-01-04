@@ -29,7 +29,8 @@ describe('server', function () {
               type: ['number'],
               displayName: 'userId',
               name: 'userId',
-              required: true
+              required: true,
+              typePropertyKind: 'TYPE_EXPRESSION'
             }
           })
 
