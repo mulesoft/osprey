@@ -7,7 +7,7 @@ var join = require('path').join
 var bodyParser = require('body-parser')
 var serverAddress = require('server-address')
 var Busboy = require('busboy')
-var parser = require('raml-parser')
+var parser = require('raml-1-parser')
 var osprey = require('../')
 var utils = require('./support/utils')
 
@@ -26,9 +26,12 @@ describe('proxy', function () {
 
     server.listen()
 
-    return parser.loadFile(EXAMPLE_RAML_PATH)
-      .then(function (raml) {
-        var ospreyApp = osprey.server(raml)
+    return parser.loadRAML(EXAMPLE_RAML_PATH)
+      .then(function (ramlApi) {
+        var raml = ramlApi.toJSON({
+          serializeMetadata: false
+        })
+        var ospreyApp = osprey.server(raml, { RAMLVersion: ramlApi.RAMLVersion() })
         var proxyApp = osprey.proxy(ospreyApp, server.url())
 
         proxy = serverAddress(proxyApp)

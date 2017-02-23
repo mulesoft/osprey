@@ -1,15 +1,17 @@
-/* global describe, before, after, beforeEach, it */
+/* global describe, before, after, beforeEach, it, context */
 
 var expect = require('chai').expect
 var popsicle = require('popsicle')
 var router = require('osprey-router')
 var join = require('path').join
-var parser = require('raml-parser')
+var parser = require('raml-1-parser')
 var ClientOAuth2 = require('client-oauth2')
 var serverAddress = require('server-address')
 var auth = require('popsicle-basic-auth')
 var utils = require('./support/utils')
 var osprey = require('../')
+var securityHandler = require('../lib/security/handler')
+var securityScope = require('../lib/security/scope')
 
 var SECURITY_RAML_PATH = join(__dirname, 'fixtures/security.raml')
 
@@ -25,6 +27,10 @@ describe('security', function () {
     'blakeembrey': {
       username: 'blakeembrey',
       password: 'hunter2'
+    },
+    'bob': {
+      username: 'bob',
+      password: 'secret'
     }
   }
   var localOAuth2
@@ -36,8 +42,11 @@ describe('security', function () {
 
   // Set up the server on each render.
   before(function () {
-    return parser.loadFile(SECURITY_RAML_PATH)
-      .then(function (raml) {
+    return parser.loadRAML(SECURITY_RAML_PATH)
+      .then(function (ramlApi) {
+        var raml = ramlApi.toJSON({
+          serializeMetadata: false
+        })
         var app = router()
 
         app.use(osprey.security(raml, {
@@ -132,6 +141,17 @@ describe('security', function () {
               return done(null, false)
             }
           },
+          digest_auth: {
+            findUserByUsername: function (username, done) {
+              var user = users[username]
+              if (user) {
+                return done(null, user, user.password)
+              }
+
+              return done(null, false)
+            },
+            realm: 'Users'
+          },
           custom_auth: function () {
             var count = 0
 
@@ -160,6 +180,7 @@ describe('security', function () {
         app.get('/secured/oauth2', helloWorld)
         app.get('/secured/oauth2/scoped', helloWorld)
         app.get('/secured/basic', helloWorld)
+        app.get('/secured/digest', helloWorld)
         app.get('/secured/custom', helloWorld)
         app.get('/secured/combined', helloWorld)
         app.get('/secured/combined/unauthed', helloWorld)
@@ -206,6 +227,36 @@ describe('security', function () {
     it('should reject invalid credentials', function () {
       return popsicle.default(server.url('/secured/basic'))
         .use(auth('blakeembrey', 'wrongpassword'))
+        .then(expectStatus(401))
+    })
+  })
+
+  describe('Digest Authentication', function () {
+    function simpleDigestAuth (username) {
+      // This header has 'response' encoded for username 'bob'
+      // and password 'secret'
+      var header = 'Digest username="' + username + '", ' +
+        'realm="Users", nonce="ImAnAwesomeNonce", uri="/secured/digest", ' +
+        'response="ba7687213adfa6ccddda9dc247030232"'
+      return function (req) {
+        req.set('Authorization', header)
+      }
+    }
+
+    it('should block not authenticated access', function () {
+      return popsicle.default(server.url('/secured/digest'))
+        .then(expectStatus(401))
+    })
+
+    it('should allow access with digest authentication', function () {
+      return popsicle.default(server.url('/secured/digest'))
+        .use(simpleDigestAuth('bob'))
+        .then(expectHelloWorld)
+    })
+
+    it('should reject access with invalid credentials', function () {
+      return popsicle.default(server.url('/secured/digest'))
+        .use(simpleDigestAuth('jake'))
         .then(expectStatus(401))
     })
   })
@@ -391,6 +442,34 @@ describe('security', function () {
     it('should allow access with anonymous', function () {
       return popsicle.default(server.url('/secured/combined/unauthed'))
         .then(expectHelloWorld)
+    })
+  })
+})
+
+describe('lib.security.handler.createHandler', function () {
+  context('when handle function for custom type is not provided', function () {
+    it('should throw an error', function () {
+      try {
+        securityHandler({'type': 'Foo'}, null, null)
+      } catch (error) {
+        expect(error).to.not.be.null
+        expect(error.message).to.contain(
+          'To enable Foo, you must provide a function')
+      }
+    })
+  })
+})
+
+describe('lib.security.scope.enforceScope', function () {
+  context('when empty scope is passed', function () {
+    it('should throw an error', function () {
+      try {
+        securityScope([])
+      } catch (error) {
+        expect(error).to.not.be.null
+        expect(error.message).to.contain(
+          'Expected a scope or array of scopes')
+      }
     })
   })
 })

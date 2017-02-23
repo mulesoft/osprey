@@ -1,24 +1,12 @@
-#%RAML 0.8
+#%RAML 1.0
 title: Messages API
-version: v1
-baseUri: http://example.com/{version}
+
 /message:
   post:
-    description: |
-      Send a message to a user.
+    description: Send a message to a user
     body:
       application/json:
-        schema: |
-          {
-            "$schema": "http:\/\/json-schema.org\/draft-03\/schema",
-            "type": "object",
-            "required": true,
-            "properties": {
-              "userId": {
-                "type": "string",
-                "pattern": "[a-zA-Z0-9]+",
-                "required": true
-              }
-            }
-          }
-
+        properties:
+          userId:
+            type: string
+            pattern: "[a-zA-Z0-9]+"

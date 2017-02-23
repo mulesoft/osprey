@@ -5,6 +5,7 @@ var server = require('./lib/server')
 var proxy = require('./lib/proxy')
 var security = require('./lib/security')
 var errorHandler = require('request-error-handler')
+var extend = require('xtend')
 
 /**
  * Expose functions.
@@ -32,11 +33,14 @@ exports.addJsonSchema = function (schema, key) {
 exports.loadFile = function (path, opts) {
   var options = opts || {}
 
-  return require('raml-parser')
-    .loadFile(path)
-    .then(function (raml) {
+  return require('raml-1-parser')
+    .loadRAML(path, { rejectOnErrors: true })
+    .then(function (ramlApi) {
+      var raml = ramlApi.expand(true).toJSON({
+        serializeMetadata: false
+      })
       var middleware = []
-      var handler = server(raml, options.server)
+      var handler = server(raml, extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server))
       var error = errorHandler(options.errorHandler)
 
       if (options.security) {
@@ -54,4 +58,3 @@ exports.loadFile = function (path, opts) {
       return result
     })
 }
-

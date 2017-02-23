@@ -1,0 +1,25 @@
+#%RAML 0.8
+title: Example API
+baseUri: http://example.com
+/urlencoded:
+  post:
+    body:
+      application/x-www-form-urlencoded:
+        formParameters:
+          hello:
+            type: string
+            pattern: "[a-z]+"
+/formdata:
+  post:
+    body:
+      multipart/form-data:
+        formParameters:
+          hello:
+            type: string
+            pattern: "[a-z]+"
+/query:
+  get:
+    queryParameters:
+      hello:
+        type: string
+        pattern: "[a-z]+"
