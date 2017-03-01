@@ -55,7 +55,7 @@
     "http-errors": "^1.3.1",
     "invariant": "^2.1.0",
     "oauth2orize": "^1.0.1",
-    "osprey-method-handler": "jstoiko/osprey-method-handler#raml1.0",
+    "osprey-method-handler": "^0.11.0",
     "osprey-resources": "^0.7.0",
     "osprey-router": "^0.4.0",
     "parseurl": "^1.3.0",
