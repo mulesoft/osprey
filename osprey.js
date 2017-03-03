@@ -41,7 +41,7 @@ exports.loadFile = function (path, opts) {
       })
       var middleware = []
       var handler = server(raml, extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server))
-      var error = errorHandler(options.errorHandler)
+      var error = errorHandler(options.errorHandler, options.defaultLanguage)
 
       if (options.security) {
         middleware.push(security(raml, options.security))
