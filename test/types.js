@@ -224,4 +224,65 @@ describe('RAML types', function () {
       })
     })
   })
+
+  describe('resource types', function () {
+    it('should accept valid Client bodies', function () {
+      app.post('/clients', success)
+
+      return popsicle.default({
+        url: proxy.url('/clients'),
+        method: 'post',
+        body: {
+          id: 7,
+          name: 'very important client'
+        }
+      }).then(function (res) {
+        expect(res.body).to.equal('success')
+        expect(res.status).to.equal(200)
+      })
+    })
+
+    it('should reject invalid Client bodies', function () {
+      app.post('/clients', success)
+
+      return popsicle.default({
+        url: proxy.url('/clients'),
+        method: 'post',
+        body: {
+          id: '7'
+        }
+      }).then(function (res) {
+        expect(res.status).to.equal(400)
+      })
+    })
+
+    it('should accept valid Resource bodies', function () {
+      app.post('/resource', success)
+
+      return popsicle.default({
+        url: proxy.url('/resource'),
+        method: 'post',
+        body: {
+          name: 'amazing resource'
+        }
+      }).then(function (res) {
+        expect(res.body).to.equal('success')
+        expect(res.status).to.equal(200)
+      })
+    })
+
+    it('should reject invalid Resource bodies', function () {
+      app.post('/resource', success)
+
+      return popsicle.default({
+        url: proxy.url('/resource'),
+        method: 'post',
+        body: {
+          name: 1234
+        }
+      }).then(function (res) {
+        expect(res.status).to.equal(400)
+      })
+    })
+  })
 })
