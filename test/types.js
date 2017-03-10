@@ -176,6 +176,35 @@ describe('RAML types', function () {
         expect(res.status).to.equal(400)
       })
     })
+
+    it('should accept arrays as root element', function () {
+      app.post('/arrayRoot', success)
+
+      return popsicle.default({
+        url: proxy.url('/arrayRoot'),
+        method: 'post',
+        body: [
+          'a', 'b', 'c', 'd'
+        ]
+      }).then(function (res) {
+        expect(res.body).to.equal('success')
+        expect(res.status).to.equal(200)
+      })
+    })
+  })
+
+  it('should reject objects when an array is expected as root element', function () {
+    app.post('/arrayRoot', success)
+
+    return popsicle.default({
+      url: proxy.url('/arrayRoot'),
+      method: 'post',
+      body: {
+        foo: 'bar'
+      }
+    }).then(function (res) {
+      expect(res.status).to.equal(400)
+    })
   })
 
   describe('scalar types', function () {
@@ -219,6 +248,33 @@ describe('RAML types', function () {
           dogOrCat: 'fish',
           optionalTastes: []
         }
+      }).then(function (res) {
+        expect(res.status).to.equal(400)
+      })
+    })
+
+    it('should accept strings as root element', function () {
+      app.post('/stringRoot', success)
+
+      return popsicle.default({
+        url: proxy.url('/stringRoot'),
+        method: 'post',
+        body: '"test"',
+        headers: { 'Content-Type': 'application/json' }
+      }).then(function (res) {
+        expect(res.body).to.equal('success')
+        expect(res.status).to.equal(200)
+      })
+    })
+
+    it('should reject integers when a string is expected as root element', function () {
+      app.post('/stringRoot', success)
+
+      return popsicle.default({
+        url: proxy.url('/stringRoot'),
+        method: 'post',
+        body: 7,
+        headers: { 'Content-Type': 'application/json' }
       }).then(function (res) {
         expect(res.status).to.equal(400)
       })

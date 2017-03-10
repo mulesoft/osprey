@@ -67,6 +67,16 @@ resourceTypes:
             items: string
             maxItems: 3
             uniqueItems: true
+/arrayRoot:
+  post:
+    body:
+      application/json:
+        type: string[]
+/stringRoot:
+  post:
+    body:
+      application/json:
+        type: string
 /people:
   post:
     body:
