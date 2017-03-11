@@ -281,6 +281,35 @@ describe('RAML types', function () {
     })
   })
 
+  it('should accept objects as root element', function () {
+    app.post('/objectRoot', success)
+
+    return popsicle.default({
+      url: proxy.url('/objectRoot'),
+      method: 'post',
+      body: {
+        foo: 'bar'
+      },
+      headers: { 'Content-Type': 'application/json' }
+    }).then(function (res) {
+      expect(res.body).to.equal('success')
+      expect(res.status).to.equal(200)
+    })
+  })
+
+  it('should reject integers when an object is expected as root element', function () {
+    app.post('/objectRoot', success)
+
+    return popsicle.default({
+      url: proxy.url('/stringRoot'),
+      method: 'post',
+      body: 7,
+      headers: { 'Content-Type': 'application/json' }
+    }).then(function (res) {
+      expect(res.status).to.equal(400)
+    })
+  })
+
   describe('resource types', function () {
     it('should accept valid Client bodies', function () {
       app.post('/clients', success)
