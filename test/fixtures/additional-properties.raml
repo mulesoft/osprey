@@ -1,0 +1,17 @@
+#%RAML 1.0
+title: Test Additional Properties API
+
+types:
+  Test:
+    type: object
+    properties:
+      test1: string
+      test2: number
+    additionalProperties: false
+
+/test:
+  post:
+    body:
+      application/json: Test
+    responses:
+      200:
