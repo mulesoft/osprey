@@ -72,7 +72,7 @@
   "devDependencies": {
     "busboy": "^0.2.9",
     "chai": "^4.1.2",
-    "client-oauth2": "^2.0.0",
+    "client-oauth2": "^4.1.0",
     "es6-promise": "^4.2.4",
     "express": "^4.13.3",
     "istanbul": "^0.4.5",
