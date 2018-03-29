@@ -132,7 +132,7 @@ describe('proxy', function () {
           }
         })
           .then(function (res) {
-            expect(run).to.be.false
+            expect(run).to.equal(false)
             expect(res.status).to.equal(400)
           })
       })
@@ -187,8 +187,8 @@ describe('proxy', function () {
           }
         })
           .then(function (res) {
-            expect(run).to.be.false
             expect(res.status).to.equal(400)
+            expect(run).to.equal(false)
           })
       })
     })
@@ -256,7 +256,7 @@ describe('proxy', function () {
           }
         })
           .then(function (res) {
-            expect(run).to.be.false
+            expect(run).to.equal(false)
             expect(res.status).to.equal(400)
           })
       })

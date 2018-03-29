@@ -452,7 +452,7 @@ describe('lib.security.handler.createHandler', function () {
       try {
         securityHandler({'type': 'Foo'}, null, null)
       } catch (error) {
-        expect(error).to.not.be.null
+        expect(error).to.not.equal(null)
         expect(error.message).to.contain(
           'To enable Foo, you must provide a function')
       }
@@ -466,7 +466,7 @@ describe('lib.security.scope.enforceScope', function () {
       try {
         securityScope([])
       } catch (error) {
-        expect(error).to.not.be.null
+        expect(error).to.not.equal(null)
         expect(error.message).to.contain(
           'Expected a scope or array of scopes')
       }
