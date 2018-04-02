@@ -116,7 +116,7 @@ describe('RAML 0.8', function () {
         }
       })
         .then(function (res) {
-          expect(run).to.be.false
+          expect(run).to.equal(false)
           expect(res.status).to.equal(400)
         })
     })
@@ -185,7 +185,7 @@ describe('RAML 0.8', function () {
         }
       })
         .then(function (res) {
-          expect(run).to.be.false
+          expect(run).to.equal(false)
           expect(res.status).to.equal(400)
         })
     })

@@ -277,7 +277,9 @@ describe('security', function () {
         it('should authenticate', function () {
           return localOAuth2.credentials.getToken()
             .then(function (user) {
-              return user.request({ url: server.url('/secured/oauth2') })
+              return popsicle.request(user.sign({
+                url: server.url('/secured/oauth2')
+              }))
             })
             .then(expectHelloWorld)
         })
@@ -297,7 +299,9 @@ describe('security', function () {
         it('should authenticate', function () {
           return localOAuth2.owner.getToken('blakeembrey', 'hunter2')
             .then(function (user) {
-              return user.request({ url: server.url('/secured/oauth2') })
+              return popsicle.request(user.sign({
+                url: server.url('/secured/oauth2')
+              }))
             })
             .then(expectHelloWorld)
         })
@@ -335,7 +339,9 @@ describe('security', function () {
               return localOAuth2.code.getToken(res.get('Location'))
             })
             .then(function (user) {
-              return user.request({ url: server.url('/secured/oauth2') })
+              return popsicle.request(user.sign({
+                url: server.url('/secured/oauth2')
+              }))
             })
             .then(expectHelloWorld)
             // Subsequent authorizations should happen automatically.
@@ -382,7 +388,9 @@ describe('security', function () {
               return localOAuth2.token.getToken(res.get('Location'))
             })
             .then(function (user) {
-              return user.request({ url: server.url('/secured/oauth2') })
+              return popsicle.request(user.sign({
+                url: server.url('/secured/oauth2')
+              }))
             })
             .then(expectHelloWorld)
         })
@@ -407,14 +415,18 @@ describe('security', function () {
       it('should authorize valid scopes', function () {
         var user = localOAuth2.createToken(token, { token_type: 'bearer' })
 
-        return user.request({ url: server.url('/secured/oauth2/scoped') })
+        return popsicle.request(user.sign({
+          url: server.url('/secured/oauth2/scoped')
+        }))
           .then(expectHelloWorld)
       })
 
       it('should reject invalid scopes', function () {
         var user = localOAuth2.createToken(altToken, { token_type: 'bearer' })
 
-        return user.request({ url: server.url('/secured/oauth2/scoped') })
+        return popsicle.request(user.sign({
+          url: server.url('/secured/oauth2/scoped')
+        }))
           .then(expectStatus(400))
       })
     })
@@ -452,7 +464,7 @@ describe('lib.security.handler.createHandler', function () {
       try {
         securityHandler({'type': 'Foo'}, null, null)
       } catch (error) {
-        expect(error).to.not.be.null
+        expect(error).to.not.equal(null)
         expect(error.message).to.contain(
           'To enable Foo, you must provide a function')
       }
@@ -466,7 +478,7 @@ describe('lib.security.scope.enforceScope', function () {
       try {
         securityScope([])
       } catch (error) {
-        expect(error).to.not.be.null
+        expect(error).to.not.equal(null)
         expect(error.message).to.contain(
           'Expected a scope or array of scopes')
       }

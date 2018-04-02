@@ -7,7 +7,7 @@ var argv = require('yargs')
   .usage(
     'Generate an API proxy from a RAML definition.\n\n' +
     'Usage: $0 -f [file] -a [address] -p [port number]'
-)
+  )
   .demand(['a', 'f', 'p'])
   .describe('a', 'Proxy endpoint address')
   .describe('f', 'Path to the RAML definition')
