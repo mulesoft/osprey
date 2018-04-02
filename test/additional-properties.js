@@ -17,7 +17,7 @@ describe('Additional properties', function () {
         raml = expandTypes(raml)
         expect(
           raml.resources[0].methods[0].body['application/json'].additionalProperties
-        ).to.be.false
+        ).to.equal(false)
       })
   })
 })
