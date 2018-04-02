@@ -475,6 +475,7 @@ securitySchemes:
 osprey.security(raml, {
   basic_auth: {
     realm: 'Users', // Optional.
+    passReqToCallback: false, // Optional. Default value: false. If true "req" is added as the first callback argument. 
     validateUser: function (username, password, done) {
       User.findOne({ username: username }, function (err, user) {
         if (err) { return done(err) }
