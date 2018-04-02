@@ -1,0 +1,13 @@
+#%RAML 0.8
+title: Example API
+baseUri: https://example.com/api
+securitySchemes:
+  - custom_auth:
+      type: x-custom
+      describedBy:
+        headers:
+          Custom-Token:
+            type: string
+/foo:
+  get:
+    securedBy: [ custom_auth ]
