@@ -81,7 +81,7 @@
     "popsicle-basic-auth": "^0.1.0",
     "popsicle-server": "^1.0.0",
     "pre-commit": "^1.0.5",
-    "rewire": "^3.0.2",
+    "rewire": "^4.0.0",
     "server-address": "^2.0.0",
     "standard": "^11.0.0"
   }
