@@ -44,7 +44,7 @@
   "dependencies": {
     "arrify": "^1.0.0",
     "body-parser": "^1.15.2",
-    "compose-middleware": "^4.0.0",
+    "compose-middleware": "^5.0.0",
     "compression": "^1.5.2",
     "cookie-session": "^1.2.0",
     "cors": "^2.7.1",
