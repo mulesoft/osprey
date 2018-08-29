@@ -83,6 +83,6 @@
     "pre-commit": "^1.0.5",
     "rewire": "^3.0.2",
     "server-address": "^2.0.0",
-    "standard": "^11.0.0"
+    "standard": "^12.0.0"
   }
 }
