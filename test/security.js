@@ -462,7 +462,7 @@ describe('lib.security.handler.createHandler', function () {
   context('when handle function for custom type is not provided', function () {
     it('should throw an error', function () {
       try {
-        securityHandler({'type': 'Foo'}, null, null)
+        securityHandler({ 'type': 'Foo' }, null, null)
       } catch (error) {
         expect(error).to.not.equal(null)
         expect(error.message).to.contain(

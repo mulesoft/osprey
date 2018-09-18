@@ -9,7 +9,7 @@ var expandTypes = require('../lib/raml')
 describe('Additional properties', function () {
   it('should be expanded correctly', function () {
     return require('raml-1-parser')
-      .loadRAML('test/fixtures/additional-properties.raml', {rejectOnErrors: true})
+      .loadRAML('test/fixtures/additional-properties.raml', { rejectOnErrors: true })
       .then(function (ramlApi) {
         var raml = ramlApi.expand(true).toJSON({
           serializeMetadata: false
