@@ -25,7 +25,7 @@ describe('osprey.addJsonSchema', function () {
     }
     expect(schemas).to.be.deep.equal({})
     osprey.addJsonSchema(schema, 'cats')
-    expect(schemas).to.be.deep.equal({'cats': schema})
+    expect(schemas).to.be.deep.equal({ 'cats': schema })
   })
 })
 describe('server.addSecurityHeaders()', function () {

@@ -112,7 +112,7 @@ describe('server', function () {
       }
       var securityRAMLPath = join(__dirname, 'fixtures/security.raml')
       var options = {
-        server: {notFoundHandler: false},
+        server: { notFoundHandler: false },
         security: {
           basic_auth: {
             validateUser: function (username, password, done) {
