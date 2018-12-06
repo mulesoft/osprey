@@ -238,8 +238,9 @@ describe('security', function () {
       var header = 'Digest username="' + username + '", ' +
         'realm="Users", nonce="ImAnAwesomeNonce", uri="/secured/digest", ' +
         'response="ba7687213adfa6ccddda9dc247030232"'
-      return function (req) {
+      return function (req, next) {
         req.set('Authorization', header)
+        return next()
       }
     }
 
@@ -315,28 +316,23 @@ describe('security', function () {
       describe('code', function () {
         it('should authenticate', function () {
           var url = localOAuth2.code.getUri()
-          var jar = popsicle.jar()
+          expect(url).to.not.contain(localOAuth2.options.redirectUri)
+          var transp = popsicle.createTransport({ jar: popsicle.jar() })
 
-          return popsicle.default({
+          return popsicle.get({
             url: url,
-            options: {
-              jar: jar
-            }
+            transport: transp
           })
             .then(function (res) {
               return popsicle.post({
                 url: url,
-                body: res.body,
-                options: {
-                  jar: jar,
-                  followRedirects: false
-                }
+                body: JSON.parse(res.body),
+                transport: transp
               })
             })
             .then(function (res) {
-              expect(res.status).to.equal(302)
-
-              return localOAuth2.code.getToken(res.get('Location'))
+              expect(res.url).to.contain(localOAuth2.options.redirectUri)
+              return localOAuth2.code.getToken(res.url)
             })
             .then(function (user) {
               return popsicle.request(user.sign({
@@ -346,17 +342,13 @@ describe('security', function () {
             .then(expectHelloWorld)
             // Subsequent authorizations should happen automatically.
             .then(function () {
-              return popsicle.default({
+              return popsicle.get({
                 url: url,
-                options: {
-                  jar: jar,
-                  followRedirects: false
-                }
+                transport: transp
               })
             })
             .then(function (res) {
-              expect(res.status).to.equal(302)
-              expect(res.get('Location')).to.be.a('string')
+              expect(res.url).to.contain(localOAuth2.options.redirectUri)
             })
         })
       })
@@ -364,28 +356,23 @@ describe('security', function () {
       describe('token', function () {
         it('should authenticate', function () {
           var url = localOAuth2.token.getUri()
-          var jar = popsicle.jar()
+          expect(url).to.not.contain(localOAuth2.options.redirectUri)
+          var transp = popsicle.createTransport({ jar: popsicle.jar() })
 
-          return popsicle.default({
+          return popsicle.get({
             url: url,
-            options: {
-              jar: jar
-            }
+            transport: transp
           })
             .then(function (res) {
               return popsicle.post({
                 url: url,
-                body: res.body,
-                options: {
-                  jar: jar,
-                  followRedirects: false
-                }
+                body: JSON.parse(res.body),
+                transport: transp
               })
             })
             .then(function (res) {
-              expect(res.status).to.equal(302)
-
-              return localOAuth2.token.getToken(res.get('Location'))
+              expect(res.url).to.contain(localOAuth2.options.redirectUri)
+              return localOAuth2.token.getToken(res.url)
             })
             .then(function (user) {
               return popsicle.request(user.sign({
