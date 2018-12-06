@@ -165,7 +165,7 @@ describe('server', function () {
 
           app.get('/users', function (req, res) {
             res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify(req.url))
+            res.end(req.url)
           })
 
           http = utils.createServer(app)

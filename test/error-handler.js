@@ -34,7 +34,7 @@ describe('error handler', function () {
       url: path,
       body: requestBody,
       headers: headers,
-      use: [popsicle.plugins.concatStream('string'), popsicle.plugins.headers()]
+      use: [popsicle.plugins.headers()]
     })
       .use(server(utils.createServer(app)))
   }
