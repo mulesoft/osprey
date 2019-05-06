@@ -14,7 +14,7 @@
   },
   "scripts": {
     "lint": "standard",
-    "test-cov": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec --bail --require test/support/globals",
+    "test-cov": "nyc node_modules/mocha/bin/_mocha -- -R spec --bail --require test/support/globals",
     "test-spec": "mocha -R spec --bail --require test/support/globals",
     "test": "npm run lint && npm run test-cov"
   },
@@ -75,8 +75,8 @@
     "client-oauth2": "^4.2.0",
     "es6-promise": "^4.2.4",
     "express": "^4.13.3",
-    "istanbul": "^0.4.5",
     "mocha": "^6.1.4",
+    "nyc": "^14.1.0",
     "popsicle": "^10.0.0",
     "popsicle-basic-auth": "^1.0.0",
     "popsicle-server": "^2.0.0",
