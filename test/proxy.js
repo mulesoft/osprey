@@ -1,7 +1,6 @@
 /* global describe, before, after, it */
 
 var expect = require('chai').expect
-var popsicle = require('popsicle')
 var router = require('osprey-router')
 var join = require('path').join
 var bodyParser = require('body-parser')
@@ -10,6 +9,7 @@ var Busboy = require('busboy')
 var parser = require('raml-1-parser')
 var osprey = require('../')
 var utils = require('./support/utils')
+var FormData = require('form-data')
 
 var EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/example.raml')
 
@@ -48,7 +48,9 @@ describe('proxy', function () {
     it('should proxy defined routes', function () {
       app.get('/users', success)
 
-      return popsicle.default(proxy.url('/users'))
+      return utils.makeFetcher().fetch(proxy.url('/users'), {
+        method: 'GET'
+      })
         .then(function (res) {
           expect(res.body).to.equal('success')
           expect(res.status).to.equal(200)
@@ -58,7 +60,9 @@ describe('proxy', function () {
     it('should block undefined routes', function () {
       app.get('/unknown', success)
 
-      return popsicle.default(proxy.url('/unknown'))
+      return utils.makeFetcher().fetch(proxy.url('/unknown'), {
+        method: 'GET'
+      })
         .then(function (res) {
           expect(res.status).to.equal(404)
         })
@@ -73,7 +77,9 @@ describe('proxy', function () {
         return next()
       }, success)
 
-      return popsicle.default(proxy.url('/query?hello=world&test=true'))
+      return utils.makeFetcher().fetch(proxy.url('/query?hello=world&test=true'), {
+        method: 'GET'
+      })
         .then(function (res) {
           expect(res.body).to.equal('success')
           expect(res.status).to.equal(200)
@@ -81,7 +87,9 @@ describe('proxy', function () {
     })
 
     it('should reject invalid query parameters', function () {
-      return popsicle.default(proxy.url('/query?hello=12345'))
+      return utils.makeFetcher().fetch(proxy.url('/query?hello=12345'), {
+        method: 'GET'
+      })
         .then(function (res) {
           expect(res.status).to.equal(400)
         })
@@ -102,12 +110,12 @@ describe('proxy', function () {
           success
         )
 
-        return popsicle.default({
-          url: proxy.url('/json'),
-          method: 'post',
-          body: {
+        return utils.makeFetcher().fetch(proxy.url('/json'), {
+          method: 'POST',
+          body: JSON.stringify({
             hello: 'world'
-          }
+          }),
+          headers: { 'Content-Type': 'application/json' }
         })
           .then(function (res) {
             expect(res.body).to.equal('success')
@@ -124,12 +132,12 @@ describe('proxy', function () {
           return next()
         }, success)
 
-        return popsicle.default({
-          url: proxy.url('/json'),
-          method: 'post',
-          body: {
+        return utils.makeFetcher().fetch(proxy.url('/json'), {
+          method: 'POST',
+          body: JSON.stringify({
             hello: 12345
-          }
+          }),
+          headers: { 'Content-Type': 'application/json' }
         })
           .then(function (res) {
             expect(run).to.equal(false)
@@ -151,14 +159,14 @@ describe('proxy', function () {
           success
         )
 
-        return popsicle.default({
-          url: proxy.url('/urlencoded'),
-          method: 'post',
-          body: {
-            hello: 'world'
-          },
+        var form = new FormData()
+        form.append('hello', 'world')
+
+        return utils.makeFetcher().fetch(proxy.url('/urlencoded'), {
+          method: 'POST',
+          body: form,
           headers: {
-            'content-type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded'
           }
         })
           .then(function (res) {
@@ -176,14 +184,14 @@ describe('proxy', function () {
           return next()
         }, success)
 
-        return popsicle.default({
-          url: proxy.url('/urlencoded'),
-          method: 'post',
-          body: {
-            hello: 12345
-          },
+        var form = new FormData()
+        form.append('hello', 12345)
+
+        return utils.makeFetcher().fetch(proxy.url('/urlencoded'), {
+          method: 'POST',
+          body: form,
           headers: {
-            'content-type': 'application/x-www-form-urlencoded'
+            'Content-Type': 'application/x-www-form-urlencoded'
           }
         })
           .then(function (res) {
@@ -220,14 +228,14 @@ describe('proxy', function () {
           success
         )
 
-        return popsicle.default({
-          url: proxy.url('/formdata'),
-          method: 'post',
-          body: {
-            hello: 'world'
-          },
+        var form = new FormData()
+        form.append('hello', 'world')
+
+        return utils.makeFetcher().fetch(proxy.url('/formdata'), {
+          method: 'POST',
+          body: form,
           headers: {
-            'content-type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data'
           }
         })
           .then(function (res) {
@@ -245,14 +253,14 @@ describe('proxy', function () {
           return next()
         }, success)
 
-        return popsicle.default({
-          url: proxy.url('/formdata'),
-          method: 'post',
-          body: {
-            hello: 12345
-          },
+        var form = new FormData()
+        form.append('hello', 12345)
+
+        return utils.makeFetcher().fetch(proxy.url('/formdata'), {
+          method: 'POST',
+          body: form,
           headers: {
-            'content-type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data'
           }
         })
           .then(function (res) {

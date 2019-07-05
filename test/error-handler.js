@@ -1,10 +1,9 @@
 /* global describe, beforeEach, it */
 
 var expect = require('chai').expect
-var popsicle = require('popsicle')
-var server = require('popsicle-server')
 var utils = require('./support/utils')
 var osprey = require('../')
+var popsicleServer = require('popsicle-server')
 
 describe('error handler', function () {
   var app
@@ -30,13 +29,12 @@ describe('error handler', function () {
 
     app.post(path, utils.response('bad bad bad'))
 
-    return popsicle.post({
-      url: path,
+    var mw = popsicleServer(utils.createServer(app))
+    return utils.makeFetcher(mw).fetch(path, {
+      method: 'POST',
       body: requestBody,
-      headers: headers,
-      use: [popsicle.plugins.headers()]
+      headers: headers
     })
-      .use(server(utils.createServer(app)))
   }
 
   describe('json', function () {
@@ -50,7 +48,7 @@ describe('error handler', function () {
         'Content-Type': 'application/json'
       })
         .then(function (res) {
-          expect(res.headers['content-type']).to.equal('application/json')
+          expect(res.headers.get('Content-Type')).to.equal('application/json')
         })
     })
   })

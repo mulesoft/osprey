@@ -208,25 +208,27 @@ describe('security', function () {
   })
 
   it('should use global securedBy when not defined', function () {
-    return popsicle.default(server.url('/default'))
+    return utils.makeFetcher()
+      .fetch(server.url('/default'), { method: 'GET' })
       .then(expectStatus(401))
   })
 
   describe('Basic Authentication', function () {
     it('should block access', function () {
-      return popsicle.default(server.url('/secured/basic'))
+      return utils.makeFetcher()
+        .fetch(server.url('/secured/basic'), { method: 'GET' })
         .then(expectStatus(401))
     })
 
     it('should allow access with basic authentication', function () {
-      return popsicle.default(server.url('/secured/basic'))
-        .use(auth('blakeembrey', 'hunter2'))
+      return utils.makeFetcher(auth('blakeembrey', 'hunter2'))
+        .fetch(server.url('/secured/basic'), { method: 'GET' })
         .then(expectHelloWorld)
     })
 
     it('should reject invalid credentials', function () {
-      return popsicle.default(server.url('/secured/basic'))
-        .use(auth('blakeembrey', 'wrongpassword'))
+      return utils.makeFetcher(auth('blakeembrey', 'wrongpassword'))
+        .fetch(server.url('/secured/basic'), { method: 'GET' })
         .then(expectStatus(401))
     })
   })
@@ -245,31 +247,34 @@ describe('security', function () {
     }
 
     it('should block not authenticated access', function () {
-      return popsicle.default(server.url('/secured/digest'))
+      return utils.makeFetcher()
+        .fetch(server.url('/secured/digest'), { method: 'GET' })
         .then(expectStatus(401))
     })
 
     it('should allow access with digest authentication', function () {
-      return popsicle.default(server.url('/secured/digest'))
-        .use(simpleDigestAuth('bob'))
+      return utils.makeFetcher(simpleDigestAuth('bob'))
+        .fetch(server.url('/secured/digest'), { method: 'GET' })
         .then(expectHelloWorld)
     })
 
     it('should reject access with invalid credentials', function () {
-      return popsicle.default(server.url('/secured/digest'))
-        .use(simpleDigestAuth('jake'))
+      return utils.makeFetcher(simpleDigestAuth('jake'))
+        .fetch(server.url('/secured/digest'), { method: 'GET' })
         .then(expectStatus(401))
     })
   })
 
   describe('OAuth 2.0', function () {
     it('should protect endpoints', function () {
-      return popsicle.default(server.url('/secured/oauth2'))
+      return utils.makeFetcher()
+        .fetch(server.url('/secured/oauth2'), { method: 'GET' })
         .then(expectStatus(401))
     })
 
     it('should not protect undefined endpoints', function () {
-      return popsicle.default(server.url('/unsecured'))
+      return utils.makeFetcher()
+        .fetch(server.url('/unsecured'), { method: 'GET' })
         .then(expectHelloWorld)
     })
 
@@ -421,25 +426,28 @@ describe('security', function () {
 
   describe('Custom Authentication', function () {
     it('should accept a request', function () {
-      return popsicle.default(server.url('/secured/custom'))
+      return utils.makeFetcher()
+        .fetch(server.url('/secured/custom'), { method: 'GET' })
         .then(expectHelloWorld)
     })
 
     it('should reject a request', function () {
-      return popsicle.default(server.url('/secured/custom'))
+      return utils.makeFetcher()
+        .fetch(server.url('/secured/custom'), { method: 'GET' })
         .then(expectStatus(401))
     })
   })
 
   describe('combined', function () {
     it('should allow access', function () {
-      return popsicle.default(server.url('/secured/combined'))
-        .use(auth('blakeembrey', 'hunter2'))
+      return utils.makeFetcher(auth('blakeembrey', 'hunter2'))
+        .fetch(server.url('/secured/combined'), { method: 'GET' })
         .then(expectHelloWorld)
     })
 
     it('should allow access with anonymous', function () {
-      return popsicle.default(server.url('/secured/combined/unauthed'))
+      return utils.makeFetcher()
+        .fetch(server.url('/secured/combined/unauthed'), { method: 'GET' })
         .then(expectHelloWorld)
     })
   })

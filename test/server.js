@@ -1,8 +1,7 @@
 /* global describe, beforeEach, it */
 
 var expect = require('chai').expect
-var popsicle = require('popsicle')
-var server = require('popsicle-server')
+var popsicleServer = require('popsicle-server')
 var router = require('osprey-router')
 var join = require('path').join
 var auth = require('popsicle-basic-auth')
@@ -42,8 +41,8 @@ describe('server', function () {
     })
 
     it('should accept defined routes', function () {
-      return popsicle.default('/users')
-        .use(server(http))
+      return utils.makeFetcher(popsicleServer(http))
+        .fetch('/users', { method: 'GET' })
         .then(function (res) {
           expect(res.body).to.equal('success')
           expect(res.status).to.equal(200)
@@ -51,16 +50,16 @@ describe('server', function () {
     })
 
     it('should reject undefined routes', function () {
-      return popsicle.default('/unknown')
-        .use(server(http))
+      return utils.makeFetcher(popsicleServer(http))
+        .fetch('/unknown', { method: 'GET' })
         .then(function (res) {
           expect(res.status).to.equal(404)
         })
     })
 
     it('should have cors enabled', function () {
-      return popsicle.default({ url: '/users', method: 'options' })
-        .use(server(http))
+      return utils.makeFetcher(popsicleServer(http))
+        .fetch('/users', { method: 'OPTIONS' })
         .then(function (res) {
           expect(res.status).to.equal(204)
           expect(res.headers['access-control-allow-origin']).to.equal('*')
@@ -69,8 +68,8 @@ describe('server', function () {
     })
 
     it('should have compression enabled', function () {
-      return popsicle.default('/users')
-        .use(server(http))
+      return utils.makeFetcher(popsicleServer(http))
+        .fetch('/users', { method: 'GET' })
         .then(function (res) {
           expect(res.body).to.equal('success')
           expect(res.headers['content-encoding']).to.equal('gzip')
@@ -93,8 +92,8 @@ describe('server', function () {
     })
 
     it('should accept defined routes', function () {
-      return popsicle.default('/definitelynotfound')
-        .use(server(http))
+      return utils.makeFetcher(popsicleServer(http))
+        .fetch('/definitelynotfound', { method: 'GET' })
         .then(function (res) {
           expect(res.body).to.equal('success')
           expect(res.status).to.equal(200)
@@ -138,17 +137,16 @@ describe('server', function () {
     })
 
     it('should block unauthenticated access', function () {
-      return popsicle.default('/secured/basic')
-        .use(server(http))
+      return utils.makeFetcher(popsicleServer(http))
+        .fetch('/secured/basic', { method: 'GET' })
         .then(function (res) {
           expect(res.status).to.equal(401)
         })
     })
 
     it('should allow access with basic authentication', function () {
-      return popsicle.default('/secured/basic')
-        .use(server(http))
-        .use(auth('blakeembrey', 'hunter2'))
+      return utils.makeFetcher(auth('blakeembrey', 'hunter2'))
+        .fetch('/secured/basic', { method: 'GET' })
         .then(function (res) {
           expect(res.status).to.equal(200)
         })
@@ -173,8 +171,7 @@ describe('server', function () {
     })
 
     it('should accept server options in the method handler', function () {
-      return popsicle.get('/users?x=1&y=2')
-        .use(server(http))
+      return utils.makeFetcher().fetch('/users?x=1&y=2', { method: 'GET' })
         .then(function (res) {
           expect(res.body).to.equal('/users?x=1&y=2')
           expect(res.status).to.equal(200)
