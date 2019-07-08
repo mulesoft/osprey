@@ -296,7 +296,7 @@ describe('RAML types', function () {
 
     return utils.makeFetcher().fetch(proxy.url('/stringRoot'), {
       method: 'POST',
-      body: 7,
+      body: '7',
       headers: { 'Content-Type': 'application/json' }
     }).then(function (res) {
       expect(res.status).to.equal(400)

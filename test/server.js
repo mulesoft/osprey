@@ -62,8 +62,8 @@ describe('server', function () {
         .fetch('/users', { method: 'OPTIONS' })
         .then(function (res) {
           expect(res.status).to.equal(204)
-          expect(res.headers['access-control-allow-origin']).to.equal('*')
-          expect(res.headers['access-control-allow-methods']).to.equal('GET,HEAD,PUT,PATCH,POST,DELETE')
+          expect(res.headers.get('access-control-allow-origin')).to.equal('*')
+          expect(res.headers.get('access-control-allow-methods')).to.equal('GET,HEAD,PUT,PATCH,POST,DELETE')
         })
     })
 
@@ -72,7 +72,7 @@ describe('server', function () {
         .fetch('/users', { method: 'GET' })
         .then(function (res) {
           expect(res.body).to.equal('success')
-          expect(res.headers['content-encoding']).to.equal('gzip')
+          expect(res.headers.get('content-encoding')).to.equal('gzip')
         })
     })
   })
@@ -145,7 +145,7 @@ describe('server', function () {
     })
 
     it('should allow access with basic authentication', function () {
-      return utils.makeFetcher(auth('blakeembrey', 'hunter2'))
+      return utils.makeFetcher(popsicleServer(http), auth('blakeembrey', 'hunter2'))
         .fetch('/secured/basic', { method: 'GET' })
         .then(function (res) {
           expect(res.status).to.equal(200)
@@ -171,7 +171,8 @@ describe('server', function () {
     })
 
     it('should accept server options in the method handler', function () {
-      return utils.makeFetcher().fetch('/users?x=1&y=2', { method: 'GET' })
+      return utils.makeFetcher(popsicleServer(http))
+        .fetch('/users?x=1&y=2', { method: 'GET' })
         .then(function (res) {
           expect(res.body).to.equal('/users?x=1&y=2')
           expect(res.status).to.equal(200)

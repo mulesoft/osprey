@@ -331,12 +331,10 @@ describe('security', function () {
             method: 'GET'
           })
             .then(function (res) {
-              console.log(url)
-              console.log(res.url)
               return fetcher.fetch(url, {
                 method: 'POST',
                 body: res.body,
-                header: {
+                headers: {
                   'Content-Type': 'application/json'
                 }
               })
@@ -379,7 +377,7 @@ describe('security', function () {
               return fetcher.fetch(url, {
                 method: 'POST',
                 body: res.body,
-                header: {
+                headers: {
                   'Content-Type': 'application/json'
                 }
               })
