@@ -4,9 +4,9 @@ var expect = require('chai').expect
 var popsicleServer = require('popsicle-server')
 var router = require('osprey-router')
 var join = require('path').join
-var auth = require('popsicle-basic-auth')
 var osprey = require('../')
 var utils = require('./support/utils')
+var auth = utils.basicAuth
 
 var EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/example.raml')
 

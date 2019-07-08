@@ -10,6 +10,7 @@ var parser = require('raml-1-parser')
 var osprey = require('../')
 var utils = require('./support/utils')
 var FormData = require('form-data')
+var querystring = require('querystring')
 
 var EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/example.raml')
 
@@ -159,12 +160,9 @@ describe('proxy', function () {
           success
         )
 
-        var form = new FormData()
-        form.append('hello', 'world')
-
         return utils.makeFetcher().fetch(proxy.url('/urlencoded'), {
           method: 'POST',
-          body: form,
+          body: querystring.encode({ hello: 'world' }),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
@@ -184,12 +182,9 @@ describe('proxy', function () {
           return next()
         }, success)
 
-        var form = new FormData()
-        form.append('hello', 12345)
-
         return utils.makeFetcher().fetch(proxy.url('/urlencoded'), {
           method: 'POST',
-          body: form,
+          body: querystring.encode({ hello: 12345 }),
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           }
@@ -234,9 +229,7 @@ describe('proxy', function () {
         return utils.makeFetcher().fetch(proxy.url('/formdata'), {
           method: 'POST',
           body: form,
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+          headers: form.getHeaders()
         })
           .then(function (res) {
             expect(res.body).to.equal('success')
@@ -259,9 +252,7 @@ describe('proxy', function () {
         return utils.makeFetcher().fetch(proxy.url('/formdata'), {
           method: 'POST',
           body: form,
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+          headers: form.getHeaders()
         })
           .then(function (res) {
             expect(run).to.equal(false)

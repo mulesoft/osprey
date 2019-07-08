@@ -7,6 +7,7 @@ var finalhandler = require('finalhandler')
 exports.createServer = createServer
 exports.response = response
 exports.makeFetcher = makeFetcher
+exports.basicAuth = basicAuth
 
 /**
  * Create a HTTP server from middleware.
@@ -57,5 +58,19 @@ function makeFetcher (...mware) {
 
   return {
     fetch: popsicle.toFetch(compose(middleware), Request)
+  }
+}
+
+/* Rework of popsicle-basic-auth/popsicle-basic-auth.js to work with popsicle 12 */
+function basicAuth (username, password) {
+  var encode = typeof window === 'object' ? window.btoa : function (str) {
+    return Buffer.from(str).toString('base64')
+  }
+  var authorization = 'Basic ' + encode(username + ':' + password)
+
+  return function (req, next) {
+    req.headers.set('Authorization', authorization)
+
+    return next()
   }
 }

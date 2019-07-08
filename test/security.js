@@ -1,14 +1,13 @@
 /* global describe, before, after, beforeEach, it, context */
 
 var expect = require('chai').expect
-var popsicle = require('popsicle')
 var router = require('osprey-router')
 var join = require('path').join
 var parser = require('raml-1-parser')
 var ClientOAuth2 = require('client-oauth2')
 var serverAddress = require('server-address')
-var auth = require('popsicle-basic-auth')
 var utils = require('./support/utils')
+var auth = utils.basicAuth
 var osprey = require('../')
 var securityHandler = require('../lib/security/handler')
 var securityScope = require('../lib/security/scope')
@@ -241,7 +240,7 @@ describe('security', function () {
         'realm="Users", nonce="ImAnAwesomeNonce", uri="/secured/digest", ' +
         'response="ba7687213adfa6ccddda9dc247030232"'
       return function (req, next) {
-        req.set('Authorization', header)
+        req.headers.set('Authorization', header)
         return next()
       }
     }
@@ -283,9 +282,11 @@ describe('security', function () {
         it('should authenticate', function () {
           return localOAuth2.credentials.getToken()
             .then(function (user) {
-              return popsicle.request(user.sign({
-                url: server.url('/secured/oauth2')
-              }))
+              var req = user.sign({
+                url: server.url('/secured/oauth2'),
+                method: 'GET'
+              })
+              return utils.makeFetcher().fetch(req.url, req)
             })
             .then(expectHelloWorld)
         })
@@ -305,9 +306,11 @@ describe('security', function () {
         it('should authenticate', function () {
           return localOAuth2.owner.getToken('blakeembrey', 'hunter2')
             .then(function (user) {
-              return popsicle.request(user.sign({
-                url: server.url('/secured/oauth2')
-              }))
+              var req = user.sign({
+                url: server.url('/secured/oauth2'),
+                method: 'GET'
+              })
+              return utils.makeFetcher().fetch(req.url, req)
             })
             .then(expectHelloWorld)
         })
@@ -322,17 +325,20 @@ describe('security', function () {
         it('should authenticate', function () {
           var url = localOAuth2.code.getUri()
           expect(url).to.not.contain(localOAuth2.options.redirectUri)
-          var transp = popsicle.createTransport({ jar: popsicle.jar() })
 
-          return popsicle.get({
-            url: url,
-            transport: transp
+          var fetcher = utils.makeFetcher()
+          return fetcher.fetch(url, {
+            method: 'GET'
           })
             .then(function (res) {
-              return popsicle.post({
-                url: url,
-                body: JSON.parse(res.body),
-                transport: transp
+              console.log(url)
+              console.log(res.url)
+              return fetcher.fetch(url, {
+                method: 'POST',
+                body: res.body,
+                header: {
+                  'Content-Type': 'application/json'
+                }
               })
             })
             .then(function (res) {
@@ -340,16 +346,17 @@ describe('security', function () {
               return localOAuth2.code.getToken(res.url)
             })
             .then(function (user) {
-              return popsicle.request(user.sign({
-                url: server.url('/secured/oauth2')
-              }))
+              var req = user.sign({
+                url: server.url('/secured/oauth2'),
+                method: 'GET'
+              })
+              return fetcher.fetch(req.url, req)
             })
             .then(expectHelloWorld)
             // Subsequent authorizations should happen automatically.
             .then(function () {
-              return popsicle.get({
-                url: url,
-                transport: transp
+              return fetcher.fetch(url, {
+                method: 'GET'
               })
             })
             .then(function (res) {
@@ -362,17 +369,19 @@ describe('security', function () {
         it('should authenticate', function () {
           var url = localOAuth2.token.getUri()
           expect(url).to.not.contain(localOAuth2.options.redirectUri)
-          var transp = popsicle.createTransport({ jar: popsicle.jar() })
 
-          return popsicle.get({
-            url: url,
-            transport: transp
+          var fetcher = utils.makeFetcher()
+
+          return fetcher.fetch(url, {
+            method: 'GET'
           })
             .then(function (res) {
-              return popsicle.post({
-                url: url,
-                body: JSON.parse(res.body),
-                transport: transp
+              return fetcher.fetch(url, {
+                method: 'POST',
+                body: res.body,
+                header: {
+                  'Content-Type': 'application/json'
+                }
               })
             })
             .then(function (res) {
@@ -380,9 +389,11 @@ describe('security', function () {
               return localOAuth2.token.getToken(res.url)
             })
             .then(function (user) {
-              return popsicle.request(user.sign({
-                url: server.url('/secured/oauth2')
-              }))
+              var req = user.sign({
+                url: server.url('/secured/oauth2'),
+                method: 'GET'
+              })
+              return fetcher.fetch(req.url, req)
             })
             .then(expectHelloWorld)
         })
@@ -406,19 +417,21 @@ describe('security', function () {
     describe('scopes', function () {
       it('should authorize valid scopes', function () {
         var user = localOAuth2.createToken(token, { token_type: 'bearer' })
-
-        return popsicle.request(user.sign({
-          url: server.url('/secured/oauth2/scoped')
-        }))
+        var req = user.sign({
+          url: server.url('/secured/oauth2/scoped'),
+          method: 'GET'
+        })
+        return utils.makeFetcher().fetch(req.url, req)
           .then(expectHelloWorld)
       })
 
       it('should reject invalid scopes', function () {
         var user = localOAuth2.createToken(altToken, { token_type: 'bearer' })
-
-        return popsicle.request(user.sign({
-          url: server.url('/secured/oauth2/scoped')
-        }))
+        var req = user.sign({
+          url: server.url('/secured/oauth2/scoped'),
+          method: 'GET'
+        })
+        return utils.makeFetcher().fetch(req.url, req)
           .then(expectStatus(400))
       })
     })
