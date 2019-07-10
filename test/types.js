@@ -1,7 +1,6 @@
 /* global describe, before, after, it */
 
 var expect = require('chai').expect
-var popsicle = require('popsicle')
 var router = require('osprey-router')
 var join = require('path').join
 var serverAddress = require('server-address')
@@ -46,14 +45,14 @@ describe('RAML types', function () {
     it('should accept valid data', function () {
       app.post('/users', success)
 
-      return popsicle.default({
-        url: proxy.url('/users'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/users'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           firstname: 'john',
           lastname: 'doe',
           age: 1
-        }
+        })
       }).then(function (res) {
         expect(res.body).to.equal('success')
         expect(res.status).to.equal(200)
@@ -63,10 +62,10 @@ describe('RAML types', function () {
     it('should reject invalid data', function () {
       app.post('/users', success)
 
-      return popsicle.default({
-        url: proxy.url('/users'),
-        method: 'post',
-        body: {}
+      return utils.makeFetcher().fetch(proxy.url('/users'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
       }).then(function (res) {
         expect(res.status).to.equal(400)
       })
@@ -75,9 +74,8 @@ describe('RAML types', function () {
     it('should accept valid query types', function () {
       app.get('/users', success)
 
-      return popsicle.default({
-        url: proxy.url('/users?sort=asc'),
-        method: 'get'
+      return utils.makeFetcher().fetch(proxy.url('/users?sort=asc'), {
+        method: 'GET'
       }).then(function (res) {
         expect(res.body).to.equal('success')
         expect(res.status).to.equal(200)
@@ -87,9 +85,8 @@ describe('RAML types', function () {
     it('should reject invalid query types', function () {
       app.get('/users', success)
 
-      return popsicle.default({
-        url: proxy.url('/users'),
-        method: 'get'
+      return utils.makeFetcher().fetch(proxy.url('/users'), {
+        method: 'GET'
       }).then(function (res) {
         expect(res.status).to.equal(400)
       })
@@ -100,14 +97,14 @@ describe('RAML types', function () {
     it('should accept any type of data when type: any', function () {
       app.post('/any', success)
 
-      return popsicle.default({
-        url: proxy.url('/any'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/any'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           anyone: 'one',
           anytwo: 12,
           anythree: [1, 2, 3]
-        }
+        })
       }).then(function (res) {
         expect(res.body).to.equal('success')
         expect(res.status).to.equal(200)
@@ -117,14 +114,14 @@ describe('RAML types', function () {
     it('should accept valid object properties', function () {
       app.post('/object', success)
 
-      return popsicle.default({
-        url: proxy.url('/object'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/object'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           obj: {
             existing_property: 'valid'
           }
-        }
+        })
       }).then(function (res) {
         expect(res.body).to.equal('success')
         expect(res.status).to.equal(200)
@@ -134,15 +131,15 @@ describe('RAML types', function () {
     it('should reject invalid object properties', function () {
       app.post('/object', success)
 
-      return popsicle.default({
-        url: proxy.url('/object'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/object'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           obj: {
             existing_property: 'valid',
             additional_property: 'invalid'
           }
-        }
+        })
       }).then(function (res) {
         expect(res.status).to.equal(400)
       })
@@ -151,12 +148,12 @@ describe('RAML types', function () {
     it('should accept valid array properties', function () {
       app.post('/array', success)
 
-      return popsicle.default({
-        url: proxy.url('/array'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/array'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           choices: ['a', 'b', 'c']
-        }
+        })
       }).then(function (res) {
         expect(res.body).to.equal('success')
         expect(res.status).to.equal(200)
@@ -166,12 +163,12 @@ describe('RAML types', function () {
     it('should reject invalid array properties', function () {
       app.post('/array', success)
 
-      return popsicle.default({
-        url: proxy.url('/array'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/array'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           choices: ['a', 'b', 'c', 'a']
-        }
+        })
       }).then(function (res) {
         expect(res.status).to.equal(400)
       })
@@ -180,12 +177,12 @@ describe('RAML types', function () {
     it('should accept arrays as root element', function () {
       app.post('/arrayRoot', success)
 
-      return popsicle.default({
-        url: proxy.url('/arrayRoot'),
-        method: 'post',
-        body: [
+      return utils.makeFetcher().fetch(proxy.url('/arrayRoot'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify([
           'a', 'b', 'c', 'd'
-        ]
+        ])
       }).then(function (res) {
         expect(res.body).to.equal('success')
         expect(res.status).to.equal(200)
@@ -196,12 +193,12 @@ describe('RAML types', function () {
   it('should reject objects when an array is expected as root element', function () {
     app.post('/arrayRoot', success)
 
-    return popsicle.default({
-      url: proxy.url('/arrayRoot'),
-      method: 'post',
-      body: {
+    return utils.makeFetcher().fetch(proxy.url('/arrayRoot'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
         foo: 'bar'
-      }
+      })
     }).then(function (res) {
       expect(res.status).to.equal(400)
     })
@@ -211,10 +208,10 @@ describe('RAML types', function () {
     it('should accept valid scalar types', function () {
       app.post('/people', success)
 
-      return popsicle.default({
-        url: proxy.url('/people'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/people'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           firstname: 'john',
           lastname: 'doe',
           phone: '333-222-4444',
@@ -223,7 +220,7 @@ describe('RAML types', function () {
           emails: ['john@doe.com'],
           married: false,
           dogOrCat: 'cat'
-        }
+        })
       }).then(function (res) {
         expect(res.body).to.equal('success')
         expect(res.status).to.equal(200)
@@ -233,10 +230,10 @@ describe('RAML types', function () {
     it('should reject invalid scalar types', function () {
       app.post('/people', success)
 
-      return popsicle.default({
-        url: proxy.url('/people'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/people'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           firstname: 1,
           lastname: 1,
           phone: '1111-222',
@@ -247,7 +244,7 @@ describe('RAML types', function () {
           married: 'false',
           dogOrCat: 'fish',
           optionalTastes: []
-        }
+        })
       }).then(function (res) {
         expect(res.status).to.equal(400)
       })
@@ -256,9 +253,8 @@ describe('RAML types', function () {
     it('should accept strings as root element', function () {
       app.post('/stringRoot', success)
 
-      return popsicle.default({
-        url: proxy.url('/stringRoot'),
-        method: 'post',
+      return utils.makeFetcher().fetch(proxy.url('/stringRoot'), {
+        method: 'POST',
         body: '"test"',
         headers: { 'Content-Type': 'application/json' }
       }).then(function (res) {
@@ -270,10 +266,9 @@ describe('RAML types', function () {
     it('should reject integers when a string is expected as root element', function () {
       app.post('/stringRoot', success)
 
-      return popsicle.default({
-        url: proxy.url('/stringRoot'),
-        method: 'post',
-        body: 7,
+      return utils.makeFetcher().fetch(proxy.url('/stringRoot'), {
+        method: 'POST',
+        body: '7',
         headers: { 'Content-Type': 'application/json' }
       }).then(function (res) {
         expect(res.status).to.equal(400)
@@ -284,12 +279,11 @@ describe('RAML types', function () {
   it('should accept objects as root element', function () {
     app.post('/objectRoot', success)
 
-    return popsicle.default({
-      url: proxy.url('/objectRoot'),
-      method: 'post',
-      body: {
+    return utils.makeFetcher().fetch(proxy.url('/objectRoot'), {
+      method: 'POST',
+      body: JSON.stringify({
         foo: 'bar'
-      },
+      }),
       headers: { 'Content-Type': 'application/json' }
     }).then(function (res) {
       expect(res.body).to.equal('success')
@@ -300,10 +294,9 @@ describe('RAML types', function () {
   it('should reject integers when an object is expected as root element', function () {
     app.post('/objectRoot', success)
 
-    return popsicle.default({
-      url: proxy.url('/stringRoot'),
-      method: 'post',
-      body: 7,
+    return utils.makeFetcher().fetch(proxy.url('/stringRoot'), {
+      method: 'POST',
+      body: '7',
       headers: { 'Content-Type': 'application/json' }
     }).then(function (res) {
       expect(res.status).to.equal(400)
@@ -314,13 +307,13 @@ describe('RAML types', function () {
     it('should accept valid Client bodies', function () {
       app.post('/clients', success)
 
-      return popsicle.default({
-        url: proxy.url('/clients'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/clients'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           id: 7,
           name: 'very important client'
-        }
+        })
       }).then(function (res) {
         expect(res.body).to.equal('success')
         expect(res.status).to.equal(200)
@@ -330,12 +323,12 @@ describe('RAML types', function () {
     it('should reject invalid Client bodies', function () {
       app.post('/clients', success)
 
-      return popsicle.default({
-        url: proxy.url('/clients'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/clients'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           id: '7'
-        }
+        })
       }).then(function (res) {
         expect(res.status).to.equal(400)
       })
@@ -344,12 +337,12 @@ describe('RAML types', function () {
     it('should accept valid Resource bodies', function () {
       app.post('/resource', success)
 
-      return popsicle.default({
-        url: proxy.url('/resource'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/resource'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           name: 'amazing resource'
-        }
+        })
       }).then(function (res) {
         expect(res.body).to.equal('success')
         expect(res.status).to.equal(200)
@@ -359,12 +352,12 @@ describe('RAML types', function () {
     it('should reject invalid Resource bodies', function () {
       app.post('/resource', success)
 
-      return popsicle.default({
-        url: proxy.url('/resource'),
-        method: 'post',
-        body: {
+      return utils.makeFetcher().fetch(proxy.url('/resource'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           name: 1234
-        }
+        })
       }).then(function (res) {
         expect(res.status).to.equal(400)
       })
