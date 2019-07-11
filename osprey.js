@@ -30,6 +30,36 @@ exports.addJsonSchema = function (schema, key) {
  * @param  {Object}  opts
  * @return {Promise}
  */
+
+exports.loadFileSync = function (path, opts) {
+  var options = opts || {}
+  const ramlApi = require('raml-1-parser').loadRAMLSync(path, {
+    rejectOnErrors: true
+  })
+
+  var raml = ramlApi.expand(true).toJSON({
+    serializeMetadata: false
+  })
+
+  var middleware = []
+  var handler = server(
+    raml,
+    extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server)
+  )
+
+  var error = errorHandler(options.errorHandler)
+  if (options.security) {
+    middleware.push(security(raml, options.security))
+  }
+  if (!options.disableErrorInterception) {
+    middleware.push(error)
+  }
+
+  var result = compose(middleware)
+  result.ramlUriParameters = handler.ramlUriParameters
+  return result
+}
+
 exports.loadFile = function (path, opts) {
   var options = opts || {}
 
@@ -40,7 +70,10 @@ exports.loadFile = function (path, opts) {
         serializeMetadata: false
       })
       var middleware = []
-      var handler = server(raml, extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server))
+      var handler = server(
+        raml,
+        extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server)
+      )
       var error = errorHandler(options.errorHandler)
 
       if (options.security) {
