@@ -1,10 +1,10 @@
-var express = require('express')
-var osprey = require('../..')
-var join = require('path').join
+const express = require('express')
+const osprey = require('../..')
+const join = require('path').join
 
-var PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000
 
-var router = osprey.Router()
+const router = osprey.Router()
 
 router.get('/users', function (req, res) {
   res.json([
@@ -17,7 +17,7 @@ router.get('/users', function (req, res) {
 
 osprey.loadFile(join(__dirname, 'api.raml'))
   .then(function (middleware) {
-    var app = express()
+    const app = express()
 
     app.use('/v1', middleware, router)
 

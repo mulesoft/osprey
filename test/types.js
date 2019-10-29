@@ -1,21 +1,21 @@
 /* global describe, before, after, it */
 
-var expect = require('chai').expect
-var router = require('osprey-router')
-var join = require('path').join
-var serverAddress = require('server-address')
-var parser = require('raml-1-parser')
-var osprey = require('../')
-var utils = require('./support/utils')
+const expect = require('chai').expect
+const router = require('osprey-router')
+const join = require('path').join
+const serverAddress = require('server-address')
+const parser = require('raml-1-parser')
+const osprey = require('../')
+const utils = require('./support/utils')
 
-var EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/types.raml')
+const EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/types.raml')
 
-var success = utils.response('success')
+const success = utils.response('success')
 
 describe('RAML types', function () {
-  var app
-  var proxy
-  var server
+  let app
+  let proxy
+  let server
 
   before(function () {
     app = router()
@@ -25,11 +25,11 @@ describe('RAML types', function () {
 
     return parser.loadRAML(EXAMPLE_RAML_PATH)
       .then(function (ramlApi) {
-        var raml = ramlApi.expand(true).toJSON({
+        const raml = ramlApi.expand(true).toJSON({
           serializeMetadata: false
         })
-        var ospreyApp = osprey.server(raml, { RAMLVersion: ramlApi.RAMLVersion() })
-        var proxyApp = osprey.proxy(ospreyApp, server.url())
+        const ospreyApp = osprey.server(raml, { RAMLVersion: ramlApi.RAMLVersion() })
+        const proxyApp = osprey.proxy(ospreyApp, server.url())
 
         proxy = serverAddress(proxyApp)
         proxy.listen()

@@ -1,5 +1,5 @@
-var http = require('http')
-var finalhandler = require('finalhandler')
+const http = require('http')
+const finalhandler = require('finalhandler')
 
 /**
  * Expose utilities.
@@ -39,9 +39,9 @@ function response (value, contentType) {
  * Inspired by popsicle 12.0+ code.
  */
 function makeFetcher (...mware) {
-  var compose = require('throwback').compose
-  var Request = require('servie').Request
-  var popsicle = require('popsicle')
+  const compose = require('throwback').compose
+  const Request = require('servie').Request
+  const popsicle = require('popsicle')
 
   // Set response text to "body" property to mimic popsicle v10
   // response interface.
@@ -54,7 +54,7 @@ function makeFetcher (...mware) {
     })
   }
 
-  var middleware = [responseBodyMiddleware, ...mware, popsicle.middleware]
+  const middleware = [responseBodyMiddleware, ...mware, popsicle.middleware]
 
   return {
     fetch: popsicle.toFetch(compose(middleware), Request)
@@ -63,10 +63,10 @@ function makeFetcher (...mware) {
 
 /* Rework of popsicle-basic-auth/popsicle-basic-auth.js to work with popsicle 12 */
 function basicAuth (username, password) {
-  var encode = typeof window === 'object' ? window.btoa : function (str) {
+  const encode = typeof window === 'object' ? window.btoa : function (str) {
     return Buffer.from(str).toString('base64')
   }
-  var authorization = 'Basic ' + encode(username + ':' + password)
+  const authorization = 'Basic ' + encode(username + ':' + password)
 
   return function (req, next) {
     req.headers.set('Authorization', authorization)

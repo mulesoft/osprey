@@ -1,11 +1,11 @@
-var Router = require('osprey-router')
-var compose = require('compose-middleware').compose
-var methodHandler = require('osprey-method-handler')
-var server = require('./lib/server')
-var proxy = require('./lib/proxy')
-var security = require('./lib/security')
-var errorHandler = require('request-error-handler')
-var extend = require('xtend')
+const Router = require('osprey-router')
+const compose = require('compose-middleware').compose
+const methodHandler = require('osprey-method-handler')
+const server = require('./lib/server')
+const proxy = require('./lib/proxy')
+const security = require('./lib/security')
+const errorHandler = require('request-error-handler')
+const extend = require('xtend')
 
 /**
  * Expose functions.
@@ -31,17 +31,17 @@ exports.addJsonSchema = function (schema, key) {
  * @return {Promise}
  */
 exports.loadFile = function (path, opts) {
-  var options = opts || {}
+  const options = opts || {}
 
   return require('raml-1-parser')
     .loadRAML(path, { rejectOnErrors: true })
     .then(function (ramlApi) {
-      var raml = ramlApi.expand(true).toJSON({
+      const raml = ramlApi.expand(true).toJSON({
         serializeMetadata: false
       })
-      var middleware = []
-      var handler = server(raml, extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server))
-      var error = errorHandler(options.errorHandler)
+      const middleware = []
+      const handler = server(raml, extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server))
+      const error = errorHandler(options.errorHandler)
 
       if (options.security) {
         middleware.push(security(raml, options.security))
@@ -53,7 +53,7 @@ exports.loadFile = function (path, opts) {
         middleware.push(error)
       }
 
-      var result = compose(middleware)
+      const result = compose(middleware)
       result.ramlUriParameters = handler.ramlUriParameters
       return result
     })

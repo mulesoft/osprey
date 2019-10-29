@@ -1,28 +1,28 @@
 /* global describe, before, after, beforeEach, it, context */
 
-var expect = require('chai').expect
-var router = require('osprey-router')
-var join = require('path').join
-var parser = require('raml-1-parser')
-var ClientOAuth2 = require('client-oauth2')
-var serverAddress = require('server-address')
-var utils = require('./support/utils')
-var auth = utils.basicAuth
-var osprey = require('../')
-var securityHandler = require('../lib/security/handler')
-var securityScope = require('../lib/security/scope')
+const expect = require('chai').expect
+const router = require('osprey-router')
+const join = require('path').join
+const parser = require('raml-1-parser')
+const ClientOAuth2 = require('client-oauth2')
+const serverAddress = require('server-address')
+const utils = require('./support/utils')
+const auth = utils.basicAuth
+const osprey = require('../')
+const securityHandler = require('../lib/security/handler')
+const securityScope = require('../lib/security/scope')
 
-var SECURITY_RAML_PATH = join(__dirname, 'fixtures/security.raml')
+const SECURITY_RAML_PATH = join(__dirname, 'fixtures/security.raml')
 
 describe('security', function () {
-  var server
-  var oauth2Apps = {
+  let server
+  const oauth2Apps = {
     abc: {
       id: 'abc',
       secret: '123'
     }
   }
-  var users = {
+  const users = {
     blakeembrey: {
       username: 'blakeembrey',
       password: 'hunter2'
@@ -32,26 +32,26 @@ describe('security', function () {
       password: 'secret'
     }
   }
-  var localOAuth2
-  var token = uid()
-  var altToken = uid()
-  var refreshToken = uid()
-  var code = uid()
-  var loggedIn
+  let localOAuth2
+  const token = uid()
+  const altToken = uid()
+  const refreshToken = uid()
+  const code = uid()
+  let loggedIn
 
   // Set up the server on each render.
   before(function () {
     return parser.loadRAML(SECURITY_RAML_PATH)
       .then(function (ramlApi) {
-        var raml = ramlApi.toJSON({
+        const raml = ramlApi.toJSON({
           serializeMetadata: false
         })
-        var app = router()
+        const app = router()
 
         app.use(osprey.security(raml, {
           oauth_2_0: {
             authenticateClient: function (clientId, clientSecret, done) {
-              var client = oauth2Apps[clientId]
+              const client = oauth2Apps[clientId]
 
               if (client.secret !== clientSecret) {
                 return done(null, false)
@@ -142,7 +142,7 @@ describe('security', function () {
           },
           digest_auth: {
             findUserByUsername: function (username, done) {
-              var user = users[username]
+              const user = users[username]
               if (user) {
                 return done(null, user, user.password)
               }
@@ -152,14 +152,14 @@ describe('security', function () {
             realm: 'Users'
           },
           custom_auth: function () {
-            var count = 0
+            let count = 0
 
             function rejectOddRoute (req, res, next) {
               if (count++ % 2 === 0) {
                 return next()
               }
 
-              var err = new Error('Wrong number. Try again.')
+              const err = new Error('Wrong number. Try again.')
               err.status = 401
               return next(err)
             }
@@ -172,7 +172,7 @@ describe('security', function () {
           }
         }))
 
-        var helloWorld = utils.response('hello, world')
+        const helloWorld = utils.response('hello, world')
 
         app.get('/default', helloWorld)
         app.get('/unsecured', helloWorld)
@@ -236,7 +236,7 @@ describe('security', function () {
     function simpleDigestAuth (username) {
       // This header has 'response' encoded for username 'bob'
       // and password 'secret'
-      var header = 'Digest username="' + username + '", ' +
+      const header = 'Digest username="' + username + '", ' +
         'realm="Users", nonce="ImAnAwesomeNonce", uri="/secured/digest", ' +
         'response="ba7687213adfa6ccddda9dc247030232"'
       return function (req, next) {
@@ -282,7 +282,7 @@ describe('security', function () {
         it('should authenticate', function () {
           return localOAuth2.credentials.getToken()
             .then(function (user) {
-              var req = user.sign({
+              const req = user.sign({
                 url: server.url('/secured/oauth2'),
                 method: 'GET'
               })
@@ -306,7 +306,7 @@ describe('security', function () {
         it('should authenticate', function () {
           return localOAuth2.owner.getToken('blakeembrey', 'hunter2')
             .then(function (user) {
-              var req = user.sign({
+              const req = user.sign({
                 url: server.url('/secured/oauth2'),
                 method: 'GET'
               })
@@ -323,10 +323,10 @@ describe('security', function () {
 
       describe('code', function () {
         it('should authenticate', function () {
-          var url = localOAuth2.code.getUri()
+          const url = localOAuth2.code.getUri()
           expect(url).to.not.contain(localOAuth2.options.redirectUri)
 
-          var fetcher = utils.makeFetcher()
+          const fetcher = utils.makeFetcher()
           return fetcher.fetch(url, {
             method: 'GET'
           })
@@ -344,7 +344,7 @@ describe('security', function () {
               return localOAuth2.code.getToken(res.url)
             })
             .then(function (user) {
-              var req = user.sign({
+              const req = user.sign({
                 url: server.url('/secured/oauth2'),
                 method: 'GET'
               })
@@ -365,10 +365,10 @@ describe('security', function () {
 
       describe('token', function () {
         it('should authenticate', function () {
-          var url = localOAuth2.token.getUri()
+          const url = localOAuth2.token.getUri()
           expect(url).to.not.contain(localOAuth2.options.redirectUri)
 
-          var fetcher = utils.makeFetcher()
+          const fetcher = utils.makeFetcher()
 
           return fetcher.fetch(url, {
             method: 'GET'
@@ -387,7 +387,7 @@ describe('security', function () {
               return localOAuth2.token.getToken(res.url)
             })
             .then(function (user) {
-              var req = user.sign({
+              const req = user.sign({
                 url: server.url('/secured/oauth2'),
                 method: 'GET'
               })
@@ -414,8 +414,8 @@ describe('security', function () {
 
     describe('scopes', function () {
       it('should authorize valid scopes', function () {
-        var user = localOAuth2.createToken(token, { token_type: 'bearer' })
-        var req = user.sign({
+        const user = localOAuth2.createToken(token, { token_type: 'bearer' })
+        const req = user.sign({
           url: server.url('/secured/oauth2/scoped'),
           method: 'GET'
         })
@@ -424,8 +424,8 @@ describe('security', function () {
       })
 
       it('should reject invalid scopes', function () {
-        var user = localOAuth2.createToken(altToken, { token_type: 'bearer' })
-        var req = user.sign({
+        const user = localOAuth2.createToken(altToken, { token_type: 'bearer' })
+        const req = user.sign({
           url: server.url('/secured/oauth2/scoped'),
           method: 'GET'
         })

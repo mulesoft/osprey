@@ -1,19 +1,19 @@
 /* global describe, beforeEach, it */
 
-var expect = require('chai').expect
-var utils = require('./support/utils')
-var osprey = require('../')
-var popsicleServer = require('popsicle-server')
+const expect = require('chai').expect
+const utils = require('./support/utils')
+const osprey = require('../')
+const popsicleServer = require('popsicle-server')
 
 describe('error handler', function () {
-  var app
+  let app
 
   beforeEach(function () {
     app = osprey.Router()
   })
 
   function test (ramlBody, requestBody, headers) {
-    var path = '/' + Math.random().toString(36).substr(2)
+    const path = '/' + Math.random().toString(36).substr(2)
 
     app.use(osprey.server({
       resources: [{
@@ -29,7 +29,7 @@ describe('error handler', function () {
 
     app.post(path, utils.response('bad bad bad'))
 
-    var mw = popsicleServer(utils.createServer(app))
+    const mw = popsicleServer(utils.createServer(app))
     return utils.makeFetcher(mw).fetch(path, {
       method: 'POST',
       body: requestBody,
