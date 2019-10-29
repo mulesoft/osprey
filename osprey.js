@@ -40,7 +40,9 @@ exports.loadFile = function (path, opts) {
         serializeMetadata: false
       })
       const middleware = []
-      const handler = server(raml, extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server))
+      const handler = server(
+        raml,
+        extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server))
       const error = errorHandler(options.errorHandler)
 
       if (options.security) {
