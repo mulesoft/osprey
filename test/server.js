@@ -104,7 +104,7 @@ describe('server', function () {
   describe('secured handler', function () {
     beforeEach(function () {
       var users = {
-        'blakeembrey': {
+        blakeembrey: {
           username: 'blakeembrey',
           password: 'hunter2'
         }
