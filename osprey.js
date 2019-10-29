@@ -6,6 +6,7 @@ const proxy = require('./lib/proxy')
 const security = require('./lib/security')
 const errorHandler = require('request-error-handler')
 const extend = require('xtend')
+const wap = require('webapi-parser').WebApiParser
 
 /**
  * Expose functions.
@@ -27,22 +28,21 @@ exports.addJsonSchema = function (schema, key) {
  * Load an Osprey server directly from a RAML file.
  *
  * @param  {String}  path
- * @param  {Object}  opts
+ * @param  {Object}  options
  * @return {Promise}
  */
-exports.loadFile = function (path, opts) {
-  const options = opts || {}
-
-  return require('raml-1-parser')
-    .loadRAML(path, { rejectOnErrors: true })
-    .then(function (ramlApi) {
-      const raml = ramlApi.expand(true).toJSON({
-        serializeMetadata: false
-      })
+exports.loadFile = function (path, options = {}) {
+  return wap.raml10.parse(path)
+    .then(model => wap.raml10.resolve(model))
+    .then(model => {
       const middleware = []
+      const RAMLVersion = model.raw.indexOf('RAML 1.0') >= 0
+        ? 'RAML10'
+        : 'RAML08'
+      // DIVED HERE >>v
       const handler = server(
-        raml,
-        extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server))
+        model,
+        extend({ RAMLVersion }, options.server))
       const error = errorHandler(options.errorHandler)
 
       if (options.security) {
