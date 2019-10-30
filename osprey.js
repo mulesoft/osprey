@@ -1,12 +1,13 @@
 const Router = require('osprey-router')
 const compose = require('compose-middleware').compose
 const methodHandler = require('osprey-method-handler')
-const server = require('./lib/server')
-const proxy = require('./lib/proxy')
-const security = require('./lib/security')
 const errorHandler = require('request-error-handler')
 const extend = require('xtend')
 const wap = require('webapi-parser').WebApiParser
+
+const server = require('./lib/server')
+const proxy = require('./lib/proxy')
+const security = require('./lib/security')
 
 /**
  * Expose functions.
@@ -39,7 +40,7 @@ exports.loadFile = function (path, options = {}) {
       const RAMLVersion = model.raw.indexOf('RAML 1.0') >= 0
         ? 'RAML10'
         : 'RAML08'
-      // DIVED HERE >>v
+      // 1 DIVED HERE >>v
       const handler = server(
         model,
         extend({ RAMLVersion }, options.server))
