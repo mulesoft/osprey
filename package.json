@@ -51,7 +51,7 @@
     "datatype-expansion": "^0.3.6",
     "debug": "^4.0.0",
     "finalhandler": "^1.1.1",
-    "form-data": "^2.5.0",
+    "form-data": "^3.0.0",
     "http-errors": "^1.7.1",
     "invariant": "^2.2.2",
     "oauth2orize": "^1.0.1",
