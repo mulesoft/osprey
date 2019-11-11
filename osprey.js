@@ -40,14 +40,14 @@ exports.loadFile = function (path, options = {}) {
       const RAMLVersion = model.raw.indexOf('RAML 1.0') >= 0
         ? 'RAML10'
         : 'RAML08'
-      // 1 DIVED HERE >>v
       const handler = server(
         model,
         extend({ RAMLVersion }, options.server))
       const error = errorHandler(options.errorHandler)
 
       if (options.security) {
-        middleware.push(security(raml, options.security))
+      // 1 DIVED HERE >>v
+        middleware.push(security(model, options.security))
       }
 
       middleware.push(handler)
