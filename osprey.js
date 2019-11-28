@@ -46,8 +46,9 @@ exports.loadFile = function (path, options = {}) {
       const error = errorHandler(options.errorHandler)
 
       if (options.security) {
-      // 1 DIVED HERE >>v
-        middleware.push(security(model, options.security))
+        middleware.push(
+        // 1 DIVED HERE --v
+          security(model, options.security))
       }
 
       middleware.push(handler)
