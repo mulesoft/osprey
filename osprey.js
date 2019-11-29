@@ -2,9 +2,9 @@ const Router = require('osprey-router')
 const compose = require('compose-middleware').compose
 const methodHandler = require('osprey-method-handler')
 const errorHandler = require('request-error-handler')
-const extend = require('xtend')
 const wap = require('webapi-parser').WebApiParser
 const path = require('path')
+
 const server = require('./lib/server')
 const proxy = require('./lib/proxy')
 const security = require('./lib/security')
