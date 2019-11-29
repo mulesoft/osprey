@@ -4,7 +4,7 @@ const methodHandler = require('osprey-method-handler')
 const errorHandler = require('request-error-handler')
 const extend = require('xtend')
 const wap = require('webapi-parser').WebApiParser
-
+const path = require('path')
 const server = require('./lib/server')
 const proxy = require('./lib/proxy')
 const security = require('./lib/security')
@@ -28,37 +28,38 @@ exports.addJsonSchema = function (schema, key) {
 /**
  * Load an Osprey server directly from a RAML file.
  *
- * @param  {String}  path
+ * @param  {String}  fpath
  * @param  {Object}  options
  * @return {Promise}
  */
-exports.loadFile = function (path, options = {}) {
-  return wap.raml10.parse(path)
-    .then(model => wap.raml10.resolve(model))
-    .then(model => {
-      const middleware = []
-      const RAMLVersion = model.raw.indexOf('RAML 1.0') >= 0
-        ? 'RAML10'
-        : 'RAML08'
-      const handler = server(
-        model,
-        extend({ RAMLVersion }, options.server))
-      const error = errorHandler(options.errorHandler)
+exports.loadFile = async function (fpath, options = {}) {
+  fpath = path.resolve(fpath)
+  fpath = fpath.startsWith('file:') ? fpath : `file://${fpath}`
 
-      if (options.security) {
-        middleware.push(
-        // 1 DIVED HERE --v
-          security(model, options.security))
-      }
+  let model
+  try {
+    model = await wap.raml10.parse(fpath)
+    model = await wap.raml10.resolve(model)
+  } catch (e) {
+    model = await wap.raml08.parse(fpath)
+    model = await wap.raml08.resolve(model)
+  }
 
-      middleware.push(handler)
+  const middleware = []
+  const handler = server(model, options.server)
+  const error = errorHandler(options.errorHandler)
 
-      if (!options.disableErrorInterception) {
-        middleware.push(error)
-      }
+  if (options.security) {
+    middleware.push(security(model, options.security))
+  }
 
-      const result = compose(middleware)
-      result.ramlUriParameters = handler.ramlUriParameters
-      return result
-    })
+  middleware.push(handler)
+
+  if (!options.disableErrorInterception) {
+    middleware.push(error)
+  }
+
+  const result = compose(middleware)
+  result.ramlUriParameters = handler.ramlUriParameters
+  return result
 }
