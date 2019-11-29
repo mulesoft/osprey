@@ -1,39 +1,36 @@
 /* global describe, before, after, it */
 
 const expect = require('chai').expect
-const router = require('osprey-router')
-const join = require('path').join
+const ospreyRouter = require('osprey-router')
+const path = require('path')
 const serverAddress = require('server-address')
-const parser = require('raml-1-parser')
+const wap = require('webapi-parser').WebApiParser
+const wp = require('webapi-parser')
+
 const osprey = require('../')
 const utils = require('./support/utils')
-
-const EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/types.raml')
-
 const success = utils.response('success')
+
+const EXAMPLE_RAML_PATH = path.resolve(__dirname, 'fixtures/types.raml')
 
 describe('RAML types', function () {
   let app
   let proxy
   let server
 
-  before(function () {
-    app = router()
+  before(async function () {
+    app = ospreyRouter()
     server = serverAddress(utils.createServer(app))
 
     server.listen()
 
-    return parser.loadRAML(EXAMPLE_RAML_PATH)
-      .then(function (ramlApi) {
-        const raml = ramlApi.expand(true).toJSON({
-          serializeMetadata: false
-        })
-        const ospreyApp = osprey.server(raml, { RAMLVersion: ramlApi.RAMLVersion() })
-        const proxyApp = osprey.proxy(ospreyApp, server.url())
+    const model = await wap.raml10.parse(`file://${EXAMPLE_RAML_PATH}`)
+    const resolved = await wp.Resolver('RAML 1.0').resolve(model, 'editing')
+    const ospreyApp = osprey.server(resolved)
+    const proxyApp = osprey.proxy(ospreyApp, server.url())
 
-        proxy = serverAddress(proxyApp)
-        proxy.listen()
-      })
+    proxy = serverAddress(proxyApp)
+    proxy.listen()
   })
 
   after(function () {
