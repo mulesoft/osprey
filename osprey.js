@@ -1,6 +1,5 @@
 const Router = require('osprey-router')
 const compose = require('compose-middleware').compose
-const methodHandler = require('osprey-method-handler')
 const errorHandler = require('request-error-handler')
 const wap = require('webapi-parser').WebApiParser
 const path = require('path')
@@ -17,13 +16,6 @@ exports.server = server
 exports.proxy = proxy
 exports.security = security
 exports.errorHandler = errorHandler
-
-/**
- * Proxy JSON schema addition to method handler.
- */
-exports.addJsonSchema = function (schema, key) {
-  methodHandler.addJsonSchema(schema, key)
-}
 
 /**
  * Load an Osprey server directly from a RAML file.
