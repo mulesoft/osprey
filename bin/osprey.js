@@ -15,12 +15,12 @@ const argv = require('yargs')
   .describe('s', 'Path to a security options file')
   .argv
 
-osprey.loadFile(argv.f, {
-  security: argv.s ? require(join(process.cwd(), argv.s)) : null
-})
+osprey
+  .loadFile(argv.f, {
+    security: argv.s ? require(join(process.cwd(), argv.s)) : null
+  })
   .then(function (app) {
     const proxy = osprey.proxy(app, argv.a).listen(argv.p)
-
     console.log('Osprey is now listening on port ' + proxy.address().port)
   })
   .catch(function (err) {
