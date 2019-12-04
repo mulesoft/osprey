@@ -12,6 +12,7 @@ const EXAMPLE_RAML_PATH = path.join(__dirname, 'fixtures/error-handler-example.r
 
 describe('error handler', function () {
   describe('json', function () {
+    this.timeout(5000)
     it('should render json', async function () {
       const model = await wap.raml10.parse(`file://${EXAMPLE_RAML_PATH}`)
       const resolved = await wap.raml10.resolve(model)
