@@ -12,7 +12,7 @@ const success = utils.response('success')
 
 const EXAMPLE_RAML_PATH = path.resolve(__dirname, 'fixtures/types.raml')
 
-describe.only('RAML types', function () {
+describe('RAML types', function () {
   let app
   let proxy
   let server

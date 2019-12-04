@@ -1,16 +1,16 @@
 /* global describe, beforeEach, it */
 
 const expect = require('chai').expect
+const ospreyRouter = require('osprey-router')
+const path = require('path')
 const popsicleServer = require('popsicle-server')
-const router = require('osprey-router')
-const join = require('path').join
+
 const osprey = require('../')
 const utils = require('./support/utils')
+const success = utils.response('success')
 const auth = utils.basicAuth
 
-const EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/example.raml')
-
-const success = utils.response('success')
+const EXAMPLE_RAML_PATH = path.resolve(__dirname, 'fixtures/example.raml')
 
 describe('server', function () {
   let http
@@ -19,23 +19,10 @@ describe('server', function () {
     beforeEach(function () {
       return osprey.loadFile(EXAMPLE_RAML_PATH, { server: { cors: true, compression: true } })
         .then(function (middleware) {
-          const app = router()
-
+          const app = ospreyRouter()
           app.use(middleware)
-
-          expect(middleware.ramlUriParameters).to.deep.equal({
-            userId: {
-              type: ['number'],
-              displayName: 'userId',
-              name: 'userId',
-              required: true,
-              typePropertyKind: 'TYPE_EXPRESSION'
-            }
-          })
-
           app.get('/users', success)
           app.get('/unknown', success)
-
           http = utils.createServer(app)
         })
     })
@@ -81,12 +68,9 @@ describe('server', function () {
     beforeEach(function () {
       return osprey.loadFile(EXAMPLE_RAML_PATH, { server: { notFoundHandler: false } })
         .then(function (middleware) {
-          const app = router()
-
+          const app = ospreyRouter()
           app.use(middleware)
-
           app.get('/definitelynotfound', success)
-
           http = utils.createServer(app)
         })
     })
@@ -109,7 +93,7 @@ describe('server', function () {
           password: 'hunter2'
         }
       }
-      const securityRAMLPath = join(__dirname, 'fixtures/security.raml')
+      const securityRAMLPath = path.resolve(__dirname, 'fixtures/security.raml')
       const options = {
         server: { notFoundHandler: false },
         security: {
@@ -126,12 +110,9 @@ describe('server', function () {
       }
       return osprey.loadFile(securityRAMLPath, options)
         .then(function (middleware) {
-          const app = router()
-
+          const app = ospreyRouter()
           app.use(middleware)
-
           app.get('/secured/basic', success)
-
           http = utils.createServer(app)
         })
     })
@@ -157,10 +138,8 @@ describe('server', function () {
     beforeEach(function () {
       return osprey.loadFile(EXAMPLE_RAML_PATH, { server: { discardUnknownQueryParameters: false } })
         .then(function (middleware) {
-          const app = router()
-
+          const app = ospreyRouter()
           app.use(middleware)
-
           app.get('/users', function (req, res) {
             res.setHeader('Content-Type', 'application/json')
             res.end(req.url)

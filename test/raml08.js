@@ -16,7 +16,7 @@ const EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/example.raml')
 
 const success = utils.response('success')
 
-describe('RAML 0.8', function () {
+describe.skip('RAML 0.8', function () {
   let app
   let proxy
   let server
