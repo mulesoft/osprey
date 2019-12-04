@@ -10,7 +10,7 @@ const utils = require('./support/utils')
 const success = utils.response('success')
 const auth = utils.basicAuth
 
-const EXAMPLE_RAML_PATH = path.resolve(__dirname, 'fixtures/example.raml')
+const EXAMPLE_RAML_PATH = path.join(__dirname, 'fixtures/example.raml')
 
 describe('server', function () {
   let http
@@ -93,7 +93,7 @@ describe('server', function () {
           password: 'hunter2'
         }
       }
-      const securityRAMLPath = path.resolve(__dirname, 'fixtures/security.raml')
+      const securityRAMLPath = path.join(__dirname, 'fixtures/security.raml')
       const options = {
         server: { notFoundHandler: false },
         security: {

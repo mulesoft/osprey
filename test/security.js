@@ -13,7 +13,7 @@ const osprey = require('../')
 const securityHandler = require('../lib/security/handler')
 const securityScope = require('../lib/security/scope')
 
-const SECURITY_RAML_PATH = path.resolve(__dirname, 'fixtures/security.raml')
+const SECURITY_RAML_PATH = path.join(__dirname, 'fixtures/security.raml')
 
 describe('security', function () {
   let server

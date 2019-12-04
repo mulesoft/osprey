@@ -7,7 +7,7 @@ const wap = require('webapi-parser').WebApiParser
 
 const server = rewire('../lib/server')
 
-const SECURITY_HEADERS = path.resolve(__dirname, 'fixtures/security-headers.raml')
+const SECURITY_HEADERS = path.join(__dirname, 'fixtures/security-headers.raml')
 
 describe('server.addSecurityHeaders()', function () {
   const addSecurityHeaders = server.__get__('addSecurityHeaders')

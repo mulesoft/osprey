@@ -10,7 +10,7 @@ const osprey = require('../')
 const utils = require('./support/utils')
 const success = utils.response('success')
 
-const EXAMPLE_RAML_PATH = path.resolve(__dirname, 'fixtures/types.raml')
+const EXAMPLE_RAML_PATH = path.join(__dirname, 'fixtures/types.raml')
 
 describe('RAML types', function () {
   let app

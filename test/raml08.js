@@ -13,7 +13,7 @@ const wap = require('webapi-parser').WebApiParser
 const osprey = require('../')
 const utils = require('./support/utils')
 
-const EXAMPLE_RAML_PATH = path.resolve(__dirname, 'fixtures/raml08.raml')
+const EXAMPLE_RAML_PATH = path.join(__dirname, 'fixtures/raml08.raml')
 
 const success = utils.response('success')
 

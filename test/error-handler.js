@@ -8,7 +8,7 @@ const osprey = require('../')
 const utils = require('./support/utils')
 const wap = require('webapi-parser').WebApiParser
 
-const EXAMPLE_RAML_PATH = path.resolve(__dirname, 'fixtures/error-handler-example.raml')
+const EXAMPLE_RAML_PATH = path.join(__dirname, 'fixtures/error-handler-example.raml')
 
 describe('error handler', function () {
   describe('json', function () {
