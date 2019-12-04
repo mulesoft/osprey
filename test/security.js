@@ -2,19 +2,20 @@
 
 const expect = require('chai').expect
 const router = require('osprey-router')
-const join = require('path').join
-const parser = require('raml-1-parser')
+const path = require('path')
 const ClientOAuth2 = require('client-oauth2')
 const serverAddress = require('server-address')
+const wap = require('webapi-parser').WebApiParser
+
 const utils = require('./support/utils')
 const auth = utils.basicAuth
 const osprey = require('../')
 const securityHandler = require('../lib/security/handler')
 const securityScope = require('../lib/security/scope')
 
-const SECURITY_RAML_PATH = join(__dirname, 'fixtures/security.raml')
+const SECURITY_RAML_PATH = path.resolve(__dirname, 'fixtures/security.raml')
 
-describe.skip('security', function () {
+describe('security', function () {
   let server
   const oauth2Apps = {
     abc: {
@@ -40,162 +41,159 @@ describe.skip('security', function () {
   let loggedIn
 
   // Set up the server on each render.
-  before(function () {
-    return parser.loadRAML(SECURITY_RAML_PATH)
-      .then(function (ramlApi) {
-        const raml = ramlApi.toJSON({
-          serializeMetadata: false
-        })
-        const app = router()
+  before(async function () {
+    const model = await wap.raml10.parse(`file://${SECURITY_RAML_PATH}`)
+    const resolved = await wap.raml10.resolve(model)
 
-        app.use(osprey.security(raml, {
-          oauth_2_0: {
-            authenticateClient: function (clientId, clientSecret, done) {
-              const client = oauth2Apps[clientId]
+    const app = router()
 
-              if (client.secret !== clientSecret) {
-                return done(null, false)
-              }
+    app.use(osprey.security(resolved, {
+      oauth_2_0: {
+        authenticateClient: function (clientId, clientSecret, done) {
+          const client = oauth2Apps[clientId]
 
-              return done(null, client)
-            },
-            findUserByToken: function (userToken, done) {
-              if (userToken === token) {
-                return done(null, users.blakeembrey, { scope: 'profile' })
-              }
-
-              // Invalid scope use-case.
-              if (userToken === altToken) {
-                return done(null, {}, { scope: 'foo' })
-              }
-
-              return done()
-            },
-            sessionKeys: ['a', 'b', 'c'],
-            serializeClient: function (application, done) {
-              return done(null, application.id)
-            },
-            deserializeClient: function (id, done) {
-              return done(null, oauth2Apps[id])
-            },
-            serveAuthorizationPage: function (req, res) {
-              res.writeHead(200, { 'Content-Type': 'application/json' })
-              res.end(JSON.stringify({
-                scope: req.oauth2.req.scope,
-                transaction_id: req.oauth2.transactionID
-              }))
-            },
-            immediateAuthorization: function (client, user, scope, done) {
-              return done(null, loggedIn)
-            },
-            authorizeClient: function (clientId, redirectUri, scope, type, done) {
-              if (Object.prototype.hasOwnProperty.call(oauth2Apps, clientId)) {
-                return done(null, oauth2Apps[clientId], redirectUri)
-              }
-
-              return done()
-            },
-            ensureLoggedIn: function (req, res, next) {
-              req.user = users.blakeembrey
-
-              return next() // Assume logged in.
-            },
-            grant: {
-              code: function (client, redirectUri, user, ares, done) {
-                loggedIn = true
-
-                return done(null, code)
-              },
-              token: function (client, user, ares, done) {
-                loggedIn = true
-
-                return done(null, token)
-              }
-            },
-            exchange: {
-              credentials: function (client, scope, done) {
-                return done(null, token, refreshToken, { expires_in: 3600 })
-              },
-              owner: function (client, username, password, scope, done) {
-                if (users[username] && users[username].password === password) {
-                  return done(null, token)
-                }
-
-                return done(null, false)
-              },
-              code: function (client, code, redirectUri, done) {
-                return done(null, token)
-              },
-              refresh: function (client, refreshToken, scope, done) {
-                return done(null, altToken)
-              }
-            }
-          },
-          basic_auth: {
-            validateUser: function (username, password, done) {
-              if (users[username] && users[username].password === password) {
-                return done(null, true)
-              }
-
-              return done(null, false)
-            }
-          },
-          digest_auth: {
-            findUserByUsername: function (username, done) {
-              const user = users[username]
-              if (user) {
-                return done(null, user, user.password)
-              }
-
-              return done(null, false)
-            },
-            realm: 'Users'
-          },
-          custom_auth: function () {
-            let count = 0
-
-            function rejectOddRoute (req, res, next) {
-              if (count++ % 2 === 0) {
-                return next()
-              }
-
-              const err = new Error('Wrong number. Try again.')
-              err.status = 401
-              return next(err)
-            }
-
-            return {
-              handler: function () {
-                return rejectOddRoute
-              }
-            }
+          if (client.secret !== clientSecret) {
+            return done(null, false)
           }
-        }))
 
-        const helloWorld = utils.response('hello, world')
+          return done(null, client)
+        },
+        findUserByToken: function (userToken, done) {
+          if (userToken === token) {
+            return done(null, users.blakeembrey, { scope: 'profile' })
+          }
 
-        app.get('/default', helloWorld)
-        app.get('/unsecured', helloWorld)
-        app.get('/secured/oauth2', helloWorld)
-        app.get('/secured/oauth2/scoped', helloWorld)
-        app.get('/secured/basic', helloWorld)
-        app.get('/secured/digest', helloWorld)
-        app.get('/secured/custom', helloWorld)
-        app.get('/secured/combined', helloWorld)
-        app.get('/secured/combined/unauthed', helloWorld)
+          // Invalid scope use-case.
+          if (userToken === altToken) {
+            return done(null, {}, { scope: 'foo' })
+          }
 
-        server = serverAddress(utils.createServer(app))
-        server.listen()
+          return done()
+        },
+        sessionKeys: ['a', 'b', 'c'],
+        serializeClient: function (application, done) {
+          return done(null, application.id)
+        },
+        deserializeClient: function (id, done) {
+          return done(null, oauth2Apps[id])
+        },
+        serveAuthorizationPage: function (req, res) {
+          res.writeHead(200, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({
+            scope: req.oauth2.req.scope,
+            transaction_id: req.oauth2.transactionID
+          }))
+        },
+        immediateAuthorization: function (client, user, scope, done) {
+          return done(null, loggedIn)
+        },
+        authorizeClient: function (clientId, redirectUri, scope, type, done) {
+          if (Object.prototype.hasOwnProperty.call(oauth2Apps, clientId)) {
+            return done(null, oauth2Apps[clientId], redirectUri)
+          }
 
-        localOAuth2 = new ClientOAuth2({
-          clientId: 'abc',
-          clientSecret: '123',
-          accessTokenUri: server.url('/oauth/token'),
-          authorizationUri: server.url('/oauth/authorize'),
-          scopes: ['profile'],
-          redirectUri: server.url('/callback')
-        })
-      })
+          return done()
+        },
+        ensureLoggedIn: function (req, res, next) {
+          req.user = users.blakeembrey
+
+          return next() // Assume logged in.
+        },
+        grant: {
+          code: function (client, redirectUri, user, ares, done) {
+            loggedIn = true
+
+            return done(null, code)
+          },
+          token: function (client, user, ares, done) {
+            loggedIn = true
+
+            return done(null, token)
+          }
+        },
+        exchange: {
+          credentials: function (client, scope, done) {
+            return done(null, token, refreshToken, { expires_in: 3600 })
+          },
+          owner: function (client, username, password, scope, done) {
+            if (users[username] && users[username].password === password) {
+              return done(null, token)
+            }
+
+            return done(null, false)
+          },
+          code: function (client, code, redirectUri, done) {
+            return done(null, token)
+          },
+          refresh: function (client, refreshToken, scope, done) {
+            return done(null, altToken)
+          }
+        }
+      },
+      basic_auth: {
+        validateUser: function (username, password, done) {
+          if (users[username] && users[username].password === password) {
+            return done(null, true)
+          }
+
+          return done(null, false)
+        }
+      },
+      digest_auth: {
+        findUserByUsername: function (username, done) {
+          const user = users[username]
+          if (user) {
+            return done(null, user, user.password)
+          }
+
+          return done(null, false)
+        },
+        realm: 'Users'
+      },
+      custom_auth: function () {
+        let count = 0
+
+        function rejectOddRoute (req, res, next) {
+          if (count++ % 2 === 0) {
+            return next()
+          }
+
+          const err = new Error('Wrong number. Try again.')
+          err.status = 401
+          return next(err)
+        }
+
+        return {
+          handler: function () {
+            return rejectOddRoute
+          }
+        }
+      }
+    }))
+
+    const helloWorld = utils.response('hello, world')
+
+    app.get('/default', helloWorld)
+    app.get('/unsecured', helloWorld)
+    app.get('/secured/oauth2', helloWorld)
+    app.get('/secured/oauth2/scoped', helloWorld)
+    app.get('/secured/basic', helloWorld)
+    app.get('/secured/digest', helloWorld)
+    app.get('/secured/custom', helloWorld)
+    app.get('/secured/combined', helloWorld)
+    app.get('/secured/combined/unauthed', helloWorld)
+
+    server = serverAddress(utils.createServer(app))
+    server.listen()
+
+    localOAuth2 = new ClientOAuth2({
+      clientId: 'abc',
+      clientSecret: '123',
+      accessTokenUri: server.url('/oauth/token'),
+      authorizationUri: server.url('/oauth/authorize'),
+      scopes: ['profile'],
+      redirectUri: server.url('/callback')
+    })
   })
 
   after(function () {
@@ -464,11 +462,12 @@ describe.skip('security', function () {
   })
 })
 
-describe.skip('lib.security.handler.createHandler', function () {
+describe('lib.security.handler.createHandler', function () {
   context('when handle function for custom type is not provided', function () {
     it('should throw an error', function () {
+      const scheme = { type: { value: () => 'Foo' } }
       try {
-        securityHandler({ type: 'Foo' }, null, null)
+        securityHandler(scheme, null, null)
       } catch (error) {
         expect(error).to.not.equal(null)
         expect(error.message).to.contain(
@@ -478,7 +477,7 @@ describe.skip('lib.security.handler.createHandler', function () {
   })
 })
 
-describe.skip('lib.security.scope.enforceScope', function () {
+describe('lib.security.scope.enforceScope', function () {
   context('when empty scope is passed', function () {
     it('should throw an error', function () {
       try {
