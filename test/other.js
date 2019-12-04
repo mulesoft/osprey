@@ -1,30 +1,26 @@
 /* global describe, it */
 
 const rewire = require('rewire')
-const server = rewire('../lib/server')
 const expect = require('chai').expect
 const path = require('path')
+const wap = require('webapi-parser').WebApiParser
 
-const SECURITY_HEADERS = path.join(__dirname, 'fixtures', 'security-headers.raml')
-describe.skip('server.addSecurityHeaders()', function () {
+const server = rewire('../lib/server')
+
+const SECURITY_HEADERS = path.resolve(__dirname, 'fixtures/security-headers.raml')
+
+describe('server.addSecurityHeaders()', function () {
   const addSecurityHeaders = server.__get__('addSecurityHeaders')
-  it('should duplicate securityScheme headers on the resources describedBy them.', function () {
-    return require('raml-1-parser')
-      .loadRAML(SECURITY_HEADERS, { rejectOnErrors: true })
-      .then(function (ramlApi) {
-        const raml = ramlApi.expand(true).toJSON({
-          serializeMetadata: false
-        })
-        const result = addSecurityHeaders(raml)
-        expect(result.resources[0].methods[0].headers).to.deep.equal({
-          'Custom-Token': {
-            name: 'Custom-Token',
-            displayName: 'Custom-Token',
-            type: 'string',
-            required: false,
-            repeat: false
-          }
-        })
-      })
+  it('should copy headers from security scheme to method', async function () {
+    const model = await wap.raml10.parse(`file://${SECURITY_HEADERS}`)
+    const resolved = await wap.raml10.resolve(model)
+    const oldMethod = resolved.encodes.endPoints[0].operations[0]
+    expect(oldMethod.request).to.equal(null)
+
+    addSecurityHeaders(resolved)
+
+    const newMethod = resolved.encodes.endPoints[0].operations[0]
+    expect(newMethod.request.headers).to.have.lengthOf(1)
+    expect(newMethod.request.headers[0].name.value()).to.equal('Custom-Token')
   })
 })
