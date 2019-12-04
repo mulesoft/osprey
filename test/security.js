@@ -4,7 +4,7 @@ const expect = require('chai').expect
 const router = require('osprey-router')
 const path = require('path')
 const ClientOAuth2 = require('client-oauth2')
-const serverAddress = require('server-address')
+const ServerAddress = require('server-address').ServerAddress
 const wap = require('webapi-parser').WebApiParser
 
 const utils = require('./support/utils')
@@ -183,7 +183,7 @@ describe('security', function () {
     app.get('/secured/combined', helloWorld)
     app.get('/secured/combined/unauthed', helloWorld)
 
-    server = serverAddress(utils.createServer(app))
+    server = new ServerAddress(utils.createServer(app))
     server.listen()
 
     localOAuth2 = new ClientOAuth2({

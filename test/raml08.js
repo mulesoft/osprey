@@ -4,7 +4,7 @@ const expect = require('chai').expect
 const router = require('osprey-router')
 const path = require('path')
 const bodyParser = require('body-parser')
-const serverAddress = require('server-address')
+const ServerAddress = require('server-address').ServerAddress
 const Busboy = require('busboy')
 const FormData = require('form-data')
 const querystring = require('querystring')
@@ -24,7 +24,7 @@ describe('RAML 0.8', function () {
 
   before(async function () {
     app = router()
-    server = serverAddress(utils.createServer(app))
+    server = new ServerAddress(utils.createServer(app))
 
     server.listen()
 
@@ -34,7 +34,7 @@ describe('RAML 0.8', function () {
     const ospreyApp = osprey.server(resolved)
     const proxyApp = osprey.proxy(ospreyApp, server.url())
 
-    proxy = serverAddress(proxyApp)
+    proxy = new ServerAddress(proxyApp)
     proxy.listen()
   })
 

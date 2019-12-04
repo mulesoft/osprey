@@ -1,7 +1,7 @@
 /* global describe, it */
 
 const expect = require('chai').expect
-const popsicleServer = require('popsicle-server')
+const popsicleServer = require('popsicle-server').server
 const path = require('path')
 
 const osprey = require('../')

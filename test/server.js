@@ -3,7 +3,7 @@
 const expect = require('chai').expect
 const ospreyRouter = require('osprey-router')
 const path = require('path')
-const popsicleServer = require('popsicle-server')
+const popsicleServer = require('popsicle-server').server
 
 const osprey = require('../')
 const utils = require('./support/utils')

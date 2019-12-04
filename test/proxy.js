@@ -1,10 +1,10 @@
 /* global describe, before, after, it */
 
 const expect = require('chai').expect
-const router = require('osprey-router')
+const ospreyRouter = require('osprey-router')
 const path = require('path')
 const bodyParser = require('body-parser')
-const serverAddress = require('server-address')
+const ServerAddress = require('server-address').ServerAddress
 const Busboy = require('busboy')
 const FormData = require('form-data')
 const querystring = require('querystring')
@@ -23,8 +23,8 @@ describe('proxy', function () {
   let server
 
   before(async function () {
-    app = router()
-    server = serverAddress(utils.createServer(app))
+    app = ospreyRouter()
+    server = new ServerAddress(utils.createServer(app))
 
     server.listen()
 
@@ -34,7 +34,7 @@ describe('proxy', function () {
     const ospreyApp = osprey.server(resolved)
     const proxyApp = osprey.proxy(ospreyApp, server.url())
 
-    proxy = serverAddress(proxyApp)
+    proxy = new ServerAddress(proxyApp)
     proxy.listen()
   })
 
