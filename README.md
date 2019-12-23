@@ -90,12 +90,12 @@ npm install osprey --save
 Osprey is normally used as a local node module and is compatible with any library supporting HTTP middleware, including Express and Connect. Just require the module locally and generate the middleware from a RAML definition file.
 
 ```js
-var osprey = require('osprey')
-var express = require('express')
-var join = require('path').join
-var app = express()
+const osprey = require('osprey')
+const express = require('express')
+const join = require('path').join
+const app = express()
 
-var path = join(__dirname, 'assets', 'api.raml')
+const path = join(__dirname, 'assets', 'api.raml')
 
 // Be careful, this uses all middleware functions by default. You might just
 // want to use each one separately instead - `osprey.server`, etc.
@@ -114,12 +114,14 @@ osprey.loadFile(path)
 
 **Please note:** The middleware function does not use the RAML `baseUri`. Make sure you mount the application under the correct path. E.g. `app.use('/v1', middleware)`.
 
-**Please note:** `osprey.loadFile` is shorthand for `ramlParser.loadFile -> [osprey.security, osprey.server, osprey.errorHandler]`.
-
 ### Server (Resource Handling)
 
 ```js
-var handler = osprey.server(raml, options)
+const wap = require('webapi-parser').WebApiParser
+
+// webapi-parser.WebApiDocument
+const model = wap.raml10.parse('/some/api.raml')
+const handler = osprey.server(model, options)
 
 console.log(handler) //=> function (req, res, next) {}
 
@@ -177,21 +179,21 @@ app.post('/users/{userId}', function (req, res, next) {
 
 #### Headers, Parameters and Query Parameters
 
-All parameters are automatically validated and parsed to the correct types according to the RAML document using [raml-validate](https://github.com/mulesoft/node-raml-validate) and [raml-sanitize](https://github.com/mulesoft/node-raml-sanitize). URL parameter validation comes with [Osprey Router](https://github.com/mulesoft-labs/osprey-router), available using `osprey.Router`.
+All parameters are automatically validated and parsed to the correct types according to the RAML document using [webapi-parser](https://github.com/raml-org/webapi-parser) and [raml-sanitize](https://github.com/mulesoft/node-raml-sanitize). URL parameter validation comes with [Osprey Router](https://github.com/mulesoft-labs/osprey-router), available using `osprey.Router`.
 
 ```js
 // Similar to `express.Router`, but uses RAML paths.
-var Router = require('osprey').Router
+const Router = require('osprey').Router
+const utils = require('./utils')
 
-var app = new Router()
+// Array<webapi-parser.Parameter>
+const parameters = utils.getUriParameters()
+
+const app = new Router()
 
 app.use(...)
 
-app.get('/{slug}', {
-  slug: {
-    type: 'string'
-  }
-}, function (req, res) {
+app.get('/{slug}', parameters, function (req, res) {
   res.send('success')
 })
 
@@ -201,8 +203,8 @@ module.exports = app
 You can initialize a `Router` with `ramlUriParameters`. This is helpful, since every router collects an object with merged URI parameters. For example, you can combine it with the `server` middleware to generate a router with your RAML URI parameters:
 
 ```js
-var handler = osprey.server(raml)
-var router = osprey.Router({ ramlUriParameters: handler.ramlUriParameters })
+const handler = osprey.server(model)
+const router = osprey.Router({ ramlUriParameters: handler.ramlUriParameters })
 
 // Uses an existing `userId` URI parameter, if it exists.
 router.get('/{userId}', function (req, res, next) {})
@@ -213,10 +215,10 @@ router.get('/{userId}', function (req, res, next) {})
 Osprey returns a [middleware router instance](https://github.com/pillarjs/router), so you can mount this within any compatible application and handle errors with the framework. For example, using HTTP with [finalhandler](https://github.com/pillarjs/finalhandler) (the same module Express uses):
 
 ```js
-var http = require('http')
-var osprey = require('osprey')
-var finalhandler = require('finalhandler')
-var join = require('path').join
+const http = require('http')
+const osprey = require('osprey')
+const finalhandler = require('finalhandler')
+const join = require('path').join
 
 osprey.loadFile(join(__dirname, 'api.raml'))
   .then(function (middleware) {
@@ -233,21 +235,13 @@ osprey.loadFile(join(__dirname, 'api.raml'))
 * `error.ramlValidation = true` A request failed validation and an array of validation data is set on `error.requestErrors` (beware, different types contain different information)
 * `error.ramlNotFound = true` A request 404'd because it was not specified in the RAML definition for the API
 
-#### Add JSON Schemas
-
-JSON schemas can be added to the application for when external JSON references are needed. From [osprey-method-handler](https://github.com/mulesoft-labs/osprey-method-handler#adding-json-schemas).
-
-```js
-osprey.addJsonSchema(schema, key)
-```
-
 ### Error Handler
 
 **Osprey** comes with support for a built-in [error handler middleware](https://github.com/mulesoft-labs/node-request-error-handler) that formats request errors for APIs. It comes with built-in i18n with some languages already included for certain formats ([_help us add more!_](https://github.com/mulesoft-labs/node-request-error-handler/pulls)). The default fallback language is `en` and the default responder renders JSON, XML, HTML and plain text - all options are overridable.
 
 ```js
-var osprey = require('osprey')
-var app = require('express')()
+const osprey = require('osprey')
+const app = require('express')()
 
 // It's best to use the default responder, but it's overridable if you need it.
 app.use(osprey.errorHandler(function (req, res, errors, stack) { /* Override */ }, 'en'))
@@ -286,7 +280,8 @@ interface RequestError {
 ### Security
 
 ```js
-osprey.security(raml, options)
+// model is an instance of webapi-parser WebApiDocument
+osprey.security(model, options)
 ```
 
 Osprey accepts an options object that maps object keys to the security scheme name in the RAML definition.
@@ -343,7 +338,8 @@ OAuth 2.0 can be fairly tricky to enforce on your own. With **Osprey**, any endp
 The authorization page must submit a POST request to the same URL with the `transaction_id` and `scope` properties set (from `req.oauth2`). If the dialog was denied, submit `cancel=true` with the POST body. If you wish to enable the ability to skip the authorization page (E.g. user already authorized or first-class client), use the `immediateAuthorization` option.
 
 ```js
-osprey.security(raml, {
+// model is an instance of webapi-parser WebApiDocument
+osprey.security(model, {
   oauth_2_0: {
     // Optionally override `accessTokenUri` and `authorizationUri` when needed.
     // They need to match the suffix defined in the security scheme.
@@ -473,10 +469,11 @@ securitySchemes:
 ```
 
 ```js
-osprey.security(raml, {
+// model is an instance of webapi-parser WebApiDocument
+osprey.security(model, {
   basic_auth: {
     realm: 'Users', // Optional.
-    passReqToCallback: false, // Optional. Default value: false. If true "req" is added as the first callback argument. 
+    passReqToCallback: false, // Optional. Default value: false. If true "req" is added as the first callback argument.
     validateUser: function (username, password, done) {
       User.findOne({ username: username }, function (err, user) {
         if (err) { return done(err) }
@@ -500,7 +497,8 @@ securitySchemes:
 ```
 
 ```js
-osprey.security(raml, {
+// model is an instance of webapi-parser WebApiDocument
+osprey.security(model, {
   digest_auth: {
     realm: 'Users', // Optional.
     domain: 'example.com', // Optional.
@@ -528,7 +526,8 @@ securitySchemes:
 The function must return an object with a handler and, optionally, a router. The router will be mounted immediately and the handler will be called on every secured route with the secured by options and the RAML path.
 
 ```js
-osprey.security(raml, {
+// model is an instance of webapi-parser WebApiDocument
+osprey.security(model, {
   custom_auth: function (scheme, name) {
     return {
       handler: function (options, path) {
