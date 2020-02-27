@@ -44,7 +44,6 @@ describe('security', function () {
   before(async function () {
     const model = await wap.raml10.parse(`file://${SECURITY_RAML_PATH}`)
     const resolved = await wap.raml10.resolve(model)
-
     const app = router()
 
     app.use(osprey.security(resolved, {
