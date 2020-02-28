@@ -4,10 +4,32 @@ const rewire = require('rewire')
 const expect = require('chai').expect
 const path = require('path')
 const wap = require('webapi-parser').WebApiParser
-
+const osprey = rewire('../')
 const server = rewire('../lib/server')
 
 const SECURITY_HEADERS = path.join(__dirname, 'fixtures/security-headers.raml')
+
+describe('osprey.addJsonSchema', function () {
+  const schemas = {}
+  osprey.__set__('ospreyMethodHandler', {
+    addJsonSchema: function (schema, key) {
+      schemas[key] = schema
+    }
+  })
+
+  it('should call osprey-method-handler.addJsonSchema', function () {
+    const schema = {
+      properties: {
+        name: {
+          type: 'string'
+        }
+      }
+    }
+    expect(schemas).to.be.deep.equal({})
+    osprey.addJsonSchema(schema, 'cats')
+    expect(schemas).to.be.deep.equal({ cats: schema })
+  })
+})
 
 describe('server.addSecurityHeaders()', function () {
   const addSecurityHeaders = server.__get__('addSecurityHeaders')
