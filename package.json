@@ -67,7 +67,7 @@
     "request-error-handler": "^1.1.1",
     "type-is": "^1.5.5",
     "xtend": "^4.0.0",
-    "yargs": "^14.2.0"
+    "yargs": "^15.3.1"
   },
   "devDependencies": {
     "busboy": "^0.3.1",
@@ -75,13 +75,13 @@
     "client-oauth2": "^4.2.0",
     "es6-promise": "^4.2.4",
     "express": "^4.13.3",
-    "mocha": "^6.1.4",
-    "nyc": "^14.1.0",
+    "mocha": "^7.1.2",
+    "nyc": "^15.0.1",
     "popsicle": "12.0.4",
     "popsicle-server": "^2.0.0",
     "pre-commit": "^1.0.5",
-    "rewire": "^4.0.0",
+    "rewire": "^5.0.0",
     "server-address": "^2.0.0",
-    "standard": "^14.3.1"
+    "standard": "^14.3.3"
   }
 }
