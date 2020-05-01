@@ -14,3 +14,12 @@ cache:
     - $HOME/.npm
 
 after_script: "npm install coveralls@2 && cat ./coverage/lcov.info | coveralls"
+
+deploy:
+  provider: npm
+  email: "$NPM_EMAIL"
+  api_key: "$NPM_TOKEN"
+  skip_cleanup: true
+  on:
+    tags: true
+    node: "node"
