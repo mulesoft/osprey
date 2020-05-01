@@ -51,7 +51,7 @@
     "datatype-expansion": "^0.3.6",
     "debug": "^4.0.0",
     "finalhandler": "^1.1.1",
-    "form-data": "^2.5.0",
+    "form-data": "^3.0.0",
     "http-errors": "^1.7.1",
     "invariant": "^2.2.2",
     "oauth2orize": "^1.0.1",
@@ -77,11 +77,11 @@
     "express": "^4.13.3",
     "mocha": "^7.1.2",
     "nyc": "^15.0.1",
-    "popsicle": "12.0.4",
-    "popsicle-server": "^2.0.0",
+    "popsicle": "^12.0.5",
+    "popsicle-server": "^3.0.0",
     "pre-commit": "^1.0.5",
     "rewire": "^5.0.0",
-    "server-address": "^2.0.0",
+    "server-address": "^3.0.1",
     "standard": "^14.3.3"
   }
 }

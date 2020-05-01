@@ -5,7 +5,7 @@ var router = require('osprey-router')
 var join = require('path').join
 var parser = require('raml-1-parser')
 var ClientOAuth2 = require('client-oauth2')
-var serverAddress = require('server-address')
+var ServerAddress = require('server-address').ServerAddress
 var utils = require('./support/utils')
 var auth = utils.basicAuth
 var osprey = require('../')
@@ -184,7 +184,7 @@ describe('security', function () {
         app.get('/secured/combined', helloWorld)
         app.get('/secured/combined/unauthed', helloWorld)
 
-        server = serverAddress(utils.createServer(app))
+        server = new ServerAddress(utils.createServer(app))
         server.listen()
 
         localOAuth2 = new ClientOAuth2({

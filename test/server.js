@@ -1,7 +1,7 @@
 /* global describe, beforeEach, it */
 
 var expect = require('chai').expect
-var popsicleServer = require('popsicle-server')
+var popsicleServer = require('popsicle-server').server
 var router = require('osprey-router')
 var join = require('path').join
 var osprey = require('../')

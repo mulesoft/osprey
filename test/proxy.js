@@ -4,7 +4,7 @@ var expect = require('chai').expect
 var router = require('osprey-router')
 var join = require('path').join
 var bodyParser = require('body-parser')
-var serverAddress = require('server-address')
+var ServerAddress = require('server-address').ServerAddress
 var Busboy = require('busboy')
 var parser = require('raml-1-parser')
 var osprey = require('../')
@@ -23,7 +23,7 @@ describe('proxy', function () {
 
   before(function () {
     app = router()
-    server = serverAddress(utils.createServer(app))
+    server = new ServerAddress(utils.createServer(app))
 
     server.listen()
 
@@ -35,7 +35,7 @@ describe('proxy', function () {
         var ospreyApp = osprey.server(raml, { RAMLVersion: ramlApi.RAMLVersion() })
         var proxyApp = osprey.proxy(ospreyApp, server.url())
 
-        proxy = serverAddress(proxyApp)
+        proxy = new ServerAddress(proxyApp)
         proxy.listen()
       })
   })

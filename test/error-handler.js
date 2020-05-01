@@ -3,7 +3,7 @@
 var expect = require('chai').expect
 var utils = require('./support/utils')
 var osprey = require('../')
-var popsicleServer = require('popsicle-server')
+var popsicleServer = require('popsicle-server').server
 
 describe('error handler', function () {
   var app
