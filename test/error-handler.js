@@ -3,7 +3,7 @@
 var expect = require('chai').expect
 var utils = require('./support/utils')
 var osprey = require('../')
-var popsicleServer = require('popsicle-server')
+var popsicleServer = require('popsicle-server').server
 
 describe('error handler', function () {
   var app
@@ -44,7 +44,7 @@ describe('error handler', function () {
           schema: JSON.stringify({ type: 'string' })
         }
       }, '123', {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json'
       })
         .then(function (res) {

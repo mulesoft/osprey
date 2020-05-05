@@ -5,7 +5,7 @@ var router = require('osprey-router')
 var join = require('path').join
 var parser = require('raml-1-parser')
 var ClientOAuth2 = require('client-oauth2')
-var serverAddress = require('server-address')
+var ServerAddress = require('server-address').ServerAddress
 var utils = require('./support/utils')
 var auth = utils.basicAuth
 var osprey = require('../')
@@ -17,17 +17,17 @@ var SECURITY_RAML_PATH = join(__dirname, 'fixtures/security.raml')
 describe('security', function () {
   var server
   var oauth2Apps = {
-    'abc': {
+    abc: {
       id: 'abc',
       secret: '123'
     }
   }
   var users = {
-    'blakeembrey': {
+    blakeembrey: {
       username: 'blakeembrey',
       password: 'hunter2'
     },
-    'bob': {
+    bob: {
       username: 'bob',
       password: 'secret'
     }
@@ -89,7 +89,7 @@ describe('security', function () {
               return done(null, loggedIn)
             },
             authorizeClient: function (clientId, redirectUri, scope, type, done) {
-              if (oauth2Apps.hasOwnProperty(clientId)) {
+              if (Object.prototype.hasOwnProperty.call(oauth2Apps, clientId)) {
                 return done(null, oauth2Apps[clientId], redirectUri)
               }
 
@@ -184,7 +184,7 @@ describe('security', function () {
         app.get('/secured/combined', helloWorld)
         app.get('/secured/combined/unauthed', helloWorld)
 
-        server = serverAddress(utils.createServer(app))
+        server = new ServerAddress(utils.createServer(app))
         server.listen()
 
         localOAuth2 = new ClientOAuth2({
@@ -468,7 +468,7 @@ describe('lib.security.handler.createHandler', function () {
   context('when handle function for custom type is not provided', function () {
     it('should throw an error', function () {
       try {
-        securityHandler({ 'type': 'Foo' }, null, null)
+        securityHandler({ type: 'Foo' }, null, null)
       } catch (error) {
         expect(error).to.not.equal(null)
         expect(error.message).to.contain(
