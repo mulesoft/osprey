@@ -48,7 +48,7 @@
     "compression": "^1.7.3",
     "cookie-session": "^1.2.0",
     "cors": "^2.8.5",
-    "datatype-expansion": "^0.3.6",
+    "datatype-expansion": "^0.4.0",
     "debug": "^4.0.0",
     "finalhandler": "^1.1.1",
     "form-data": "^3.0.0",
