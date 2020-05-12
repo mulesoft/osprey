@@ -1,6 +1,6 @@
 {
   "name": "osprey",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Generate an API proxy from a RAML definition, which can be used locally or globally for validating API requests and responses",
   "main": "osprey.js",
   "files": [
@@ -44,27 +44,28 @@
   "dependencies": {
     "arrify": "^2.0.1",
     "body-parser": "^1.18.3",
+    "client-oauth": "^0.1.2",
     "compose-middleware": "^5.0.0",
     "compression": "^1.7.3",
     "cookie-session": "^1.2.0",
     "cors": "^2.8.5",
-    "datatype-expansion": "^0.3.6",
+    "datatype-expansion": "^0.4.0",
     "debug": "^4.0.0",
     "finalhandler": "^1.1.1",
     "form-data": "^3.0.0",
     "http-errors": "^1.7.1",
     "invariant": "^2.2.2",
     "oauth2orize": "^1.0.1",
-    "osprey-method-handler": "^0.12.3",
-    "osprey-resources": "^0.8.2",
-    "osprey-router": "^0.6.2",
+    "osprey-method-handler": "^0.13.1",
+    "osprey-resources": "^0.9.1",
+    "osprey-router": "^0.7.1",
     "parseurl": "^1.3.0",
     "passport": "^0.4.0",
     "passport-http": "^0.3.0",
     "passport-http-bearer": "^1.0.1",
     "passport-oauth2-client-password": "^0.1.2",
     "raml-1-parser": "^1.1.52",
-    "request-error-handler": "^1.1.1",
+    "request-error-handler": "^1.3.1",
     "type-is": "^1.5.5",
     "xtend": "^4.0.0",
     "yargs": "^15.3.1"
@@ -82,6 +83,6 @@
     "pre-commit": "^1.0.5",
     "rewire": "^5.0.0",
     "server-address": "^3.0.1",
-    "standard": "^14.3.3"
+    "standard": "^14.3.4"
   }
 }
