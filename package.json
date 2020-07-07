@@ -51,7 +51,7 @@
     "debug": "^4.0.0",
     "finalhandler": "^1.1.1",
     "form-data": "^3.0.0",
-    "http-errors": "^1.7.1",
+    "http-errors": "^1.8.0",
     "invariant": "^2.2.2",
     "oauth2orize": "^1.0.1",
     "osprey-method-handler": "^0.14.0",
@@ -66,7 +66,7 @@
     "type-is": "^1.5.5",
     "webapi-parser": "^0.4.0",
     "xtend": "^4.0.0",
-    "yargs": "^15.3.1"
+    "yargs": "^15.4.0"
   },
   "devDependencies": {
     "busboy": "^0.3.1",
@@ -74,8 +74,8 @@
     "client-oauth2": "^4.2.0",
     "es6-promise": "^4.2.4",
     "express": "^4.13.3",
-    "mocha": "^7.1.2",
-    "nyc": "^15.0.1",
+    "mocha": "^8.0.1",
+    "nyc": "^15.1.0",
     "popsicle": "^12.0.5",
     "popsicle-server": "^3.0.0",
     "pre-commit": "^1.0.5",
