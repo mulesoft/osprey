@@ -1,10 +1,10 @@
-var http = require('http')
-var osprey = require('../..')
-var finalhandler = require('finalhandler')
-var createError = require('http-errors')
-var join = require('path').join
+const http = require('http')
+const osprey = require('../..')
+const finalhandler = require('finalhandler')
+const createError = require('http-errors')
+const join = require('path').join
 
-var PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000
 
 // Create a custom authentication handler to force users to give me a token.
 function handler () {
@@ -28,7 +28,7 @@ osprey.loadFile(join(__dirname, 'api.raml'), {
   }
 })
   .then(function (middleware) {
-    var router = osprey.Router()
+    const router = osprey.Router()
 
     router.use(middleware)
 
@@ -37,7 +37,7 @@ osprey.loadFile(join(__dirname, 'api.raml'), {
       res.end('[]')
     })
 
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       router(req, res, finalhandler(req, res))
     })
 

@@ -1,41 +1,28 @@
 /* global describe, beforeEach, it */
 
-var expect = require('chai').expect
-var popsicleServer = require('popsicle-server').server
-var router = require('osprey-router')
-var join = require('path').join
-var osprey = require('../')
-var utils = require('./support/utils')
-var auth = utils.basicAuth
+const expect = require('chai').expect
+const ospreyRouter = require('osprey-router')
+const path = require('path')
+const popsicleServer = require('popsicle-server').server
 
-var EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/example.raml')
+const osprey = require('../')
+const utils = require('./support/utils')
+const success = utils.response('success')
+const auth = utils.basicAuth
 
-var success = utils.response('success')
+const EXAMPLE_RAML_PATH = path.join(__dirname, 'fixtures/example.raml')
 
 describe('server', function () {
-  var http
+  let http
 
   describe('normal usage', function () {
     beforeEach(function () {
       return osprey.loadFile(EXAMPLE_RAML_PATH, { server: { cors: true, compression: true } })
         .then(function (middleware) {
-          var app = router()
-
+          const app = ospreyRouter()
           app.use(middleware)
-
-          expect(middleware.ramlUriParameters).to.deep.equal({
-            userId: {
-              type: ['number'],
-              displayName: 'userId',
-              name: 'userId',
-              required: true,
-              typePropertyKind: 'TYPE_EXPRESSION'
-            }
-          })
-
           app.get('/users', success)
           app.get('/unknown', success)
-
           http = utils.createServer(app)
         })
     })
@@ -81,12 +68,9 @@ describe('server', function () {
     beforeEach(function () {
       return osprey.loadFile(EXAMPLE_RAML_PATH, { server: { notFoundHandler: false } })
         .then(function (middleware) {
-          var app = router()
-
+          const app = ospreyRouter()
           app.use(middleware)
-
           app.get('/definitelynotfound', success)
-
           http = utils.createServer(app)
         })
     })
@@ -103,14 +87,14 @@ describe('server', function () {
 
   describe('secured handler', function () {
     beforeEach(function () {
-      var users = {
+      const users = {
         blakeembrey: {
           username: 'blakeembrey',
           password: 'hunter2'
         }
       }
-      var securityRAMLPath = join(__dirname, 'fixtures/security.raml')
-      var options = {
+      const securityRAMLPath = path.join(__dirname, 'fixtures/security.raml')
+      const options = {
         server: { notFoundHandler: false },
         security: {
           basic_auth: {
@@ -126,12 +110,9 @@ describe('server', function () {
       }
       return osprey.loadFile(securityRAMLPath, options)
         .then(function (middleware) {
-          var app = router()
-
+          const app = ospreyRouter()
           app.use(middleware)
-
           app.get('/secured/basic', success)
-
           http = utils.createServer(app)
         })
     })
@@ -157,10 +138,8 @@ describe('server', function () {
     beforeEach(function () {
       return osprey.loadFile(EXAMPLE_RAML_PATH, { server: { discardUnknownQueryParameters: false } })
         .then(function (middleware) {
-          var app = router()
-
+          const app = ospreyRouter()
           app.use(middleware)
-
           app.get('/users', function (req, res) {
             res.setHeader('Content-Type', 'application/json')
             res.end(req.url)

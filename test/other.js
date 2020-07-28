@@ -1,22 +1,24 @@
 /* global describe, it */
 
-var rewire = require('rewire')
-var osprey = rewire('../')
-var server = rewire('../lib/server')
-var expect = require('chai').expect
-var path = require('path')
+const rewire = require('rewire')
+const expect = require('chai').expect
+const path = require('path')
+const wap = require('webapi-parser').WebApiParser
+const osprey = rewire('../')
+const server = rewire('../lib/server')
 
-var SECURITY_HEADERS = path.join(__dirname, 'fixtures', 'security-headers.raml')
+const SECURITY_HEADERS = path.join(__dirname, 'fixtures/security-headers.raml')
+
 describe('osprey.addJsonSchema', function () {
-  var schemas = {}
-  osprey.__set__('methodHandler', {
+  const schemas = {}
+  osprey.__set__('ospreyMethodHandler', {
     addJsonSchema: function (schema, key) {
       schemas[key] = schema
     }
   })
 
   it('should call osprey-method-handler.addJsonSchema', function () {
-    var schema = {
+    const schema = {
       properties: {
         name: {
           type: 'string'
@@ -28,25 +30,19 @@ describe('osprey.addJsonSchema', function () {
     expect(schemas).to.be.deep.equal({ cats: schema })
   })
 })
+
 describe('server.addSecurityHeaders()', function () {
-  var addSecurityHeaders = server.__get__('addSecurityHeaders')
-  it('should duplicate securityScheme headers on the resources describedBy them.', function () {
-    return require('raml-1-parser')
-      .loadRAML(SECURITY_HEADERS, { rejectOnErrors: true })
-      .then(function (ramlApi) {
-        var raml = ramlApi.expand(true).toJSON({
-          serializeMetadata: false
-        })
-        var result = addSecurityHeaders(raml)
-        expect(result.resources[0].methods[0].headers).to.deep.equal({
-          'Custom-Token': {
-            name: 'Custom-Token',
-            displayName: 'Custom-Token',
-            type: 'string',
-            required: false,
-            repeat: false
-          }
-        })
-      })
+  const addSecurityHeaders = server.__get__('addSecurityHeaders')
+  it('should copy headers from security scheme to method', async function () {
+    const model = await wap.raml10.parse(`file://${SECURITY_HEADERS}`)
+    const resolved = await wap.raml10.resolve(model)
+    const oldMethod = resolved.encodes.endPoints[0].operations[0]
+    expect(oldMethod.request).to.equal(null)
+
+    addSecurityHeaders(resolved)
+
+    const newMethod = resolved.encodes.endPoints[0].operations[0]
+    expect(newMethod.request.headers).to.have.lengthOf(1)
+    expect(newMethod.request.headers[0].name.value()).to.equal('Custom-Token')
   })
 })

@@ -1,43 +1,41 @@
 /* global describe, before, after, it */
 
-var expect = require('chai').expect
-var router = require('osprey-router')
-var join = require('path').join
-var bodyParser = require('body-parser')
-var ServerAddress = require('server-address').ServerAddress
-var Busboy = require('busboy')
-var parser = require('raml-1-parser')
-var osprey = require('../')
-var utils = require('./support/utils')
-var FormData = require('form-data')
-var querystring = require('querystring')
+const expect = require('chai').expect
+const router = require('osprey-router')
+const path = require('path')
+const bodyParser = require('body-parser')
+const ServerAddress = require('server-address').ServerAddress
+const Busboy = require('busboy')
+const FormData = require('form-data')
+const querystring = require('querystring')
+const wap = require('webapi-parser').WebApiParser
 
-var EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/example.raml')
+const osprey = require('../')
+const utils = require('./support/utils')
 
-var success = utils.response('success')
+const EXAMPLE_RAML_PATH = path.join(__dirname, 'fixtures/raml08.raml')
+
+const success = utils.response('success')
 
 describe('RAML 0.8', function () {
-  var app
-  var proxy
-  var server
+  let app
+  let proxy
+  let server
 
-  before(function () {
+  before(async function () {
     app = router()
     server = new ServerAddress(utils.createServer(app))
 
     server.listen()
 
-    return parser.loadRAML(EXAMPLE_RAML_PATH)
-      .then(function (ramlApi) {
-        var raml = ramlApi.toJSON({
-          serializeMetadata: false
-        })
-        var ospreyApp = osprey.server(raml, { RAMLVersion: ramlApi.RAMLVersion() })
-        var proxyApp = osprey.proxy(ospreyApp, server.url())
+    const model = await wap.raml08.parse(`file://${EXAMPLE_RAML_PATH}`)
+    const resolved = await wap.raml08.resolve(model)
 
-        proxy = new ServerAddress(proxyApp)
-        proxy.listen()
-      })
+    const ospreyApp = osprey.server(resolved)
+    const proxyApp = osprey.proxy(ospreyApp, server.url())
+
+    proxy = new ServerAddress(proxyApp)
+    proxy.listen()
   })
 
   after(function () {
@@ -99,7 +97,7 @@ describe('RAML 0.8', function () {
     })
 
     it('should reject invalid urlencoded string values', function () {
-      var run = false
+      let run = false
 
       app.post('/urlencoded', function (req, res, next) {
         run = true
@@ -126,10 +124,10 @@ describe('RAML 0.8', function () {
       app.post(
         '/formdata',
         function middleware (req, res, next) {
-          var busboy = new Busboy({ headers: req.headers })
+          const busboy = new Busboy({ headers: req.headers })
 
-          var fieldname
-          var fieldvalue
+          let fieldname
+          let fieldvalue
 
           busboy.on('field', function (name, value) {
             fieldname = name
@@ -148,7 +146,7 @@ describe('RAML 0.8', function () {
         success
       )
 
-      var form = new FormData()
+      const form = new FormData()
       form.append('hello', 'world')
 
       return utils.makeFetcher().fetch(proxy.url('/formdata'), {
@@ -163,7 +161,7 @@ describe('RAML 0.8', function () {
     })
 
     it('should reject invalid form data', function () {
-      var run = false
+      let run = false
 
       app.post('/formdata', function (req, res, next) {
         run = true
@@ -171,7 +169,7 @@ describe('RAML 0.8', function () {
         return next()
       }, success)
 
-      var form = new FormData()
+      const form = new FormData()
       form.append('hello', 12345)
 
       return utils.makeFetcher().fetch(proxy.url('/formdata'), {

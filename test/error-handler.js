@@ -1,55 +1,39 @@
-/* global describe, beforeEach, it */
+/* global describe, it */
 
-var expect = require('chai').expect
-var utils = require('./support/utils')
-var osprey = require('../')
-var popsicleServer = require('popsicle-server').server
+const expect = require('chai').expect
+const popsicleServer = require('popsicle-server').server
+const path = require('path')
+
+const osprey = require('../')
+const utils = require('./support/utils')
+const wap = require('webapi-parser').WebApiParser
+
+const EXAMPLE_RAML_PATH = path.join(__dirname, 'fixtures/error-handler-example.raml')
 
 describe('error handler', function () {
-  var app
-
-  beforeEach(function () {
-    app = osprey.Router()
-  })
-
-  function test (ramlBody, requestBody, headers) {
-    var path = '/' + Math.random().toString(36).substr(2)
-
-    app.use(osprey.server({
-      resources: [{
-        relativeUri: path,
-        methods: [{
-          method: 'post',
-          body: ramlBody
-        }]
-      }]
-    }))
-
-    app.use(osprey.errorHandler())
-
-    app.post(path, utils.response('bad bad bad'))
-
-    var mw = popsicleServer(utils.createServer(app))
-    return utils.makeFetcher(mw).fetch(path, {
-      method: 'POST',
-      body: requestBody,
-      headers: headers
-    })
-  }
-
   describe('json', function () {
-    it('should render json', function () {
-      return test({
-        'application/json': {
-          schema: JSON.stringify({ type: 'string' })
+    this.timeout(5000)
+    it('should render json', async function () {
+      const model = await wap.raml10.parse(`file://${EXAMPLE_RAML_PATH}`)
+      const resolved = await wap.raml10.resolve(model)
+      const relPath = resolved.encodes.endPoints[0].relativePath
+
+      const app = osprey.Router()
+      app.use(osprey.server(resolved))
+      app.use(osprey.errorHandler())
+      app.post(relPath, utils.response('bad bad bad'))
+
+      const mw = popsicleServer(utils.createServer(app))
+      return utils.makeFetcher(mw).fetch(relPath, {
+        method: 'POST',
+        body: '123',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
         }
-      }, '123', {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+      }).then(function (res) {
+        expect(res.headers.get('Content-Type')).to.equal('application/json')
       })
-        .then(function (res) {
-          expect(res.headers.get('Content-Type')).to.equal('application/json')
-        })
     })
   })
 })

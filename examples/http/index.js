@@ -1,13 +1,13 @@
-var http = require('http')
-var osprey = require('../..')
-var finalhandler = require('finalhandler')
-var join = require('path').join
+const http = require('http')
+const osprey = require('../..')
+const finalhandler = require('finalhandler')
+const join = require('path').join
 
-var PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000
 
 osprey.loadFile(join(__dirname, 'api.raml'))
   .then(function (middleware) {
-    var app = http.createServer(function (req, res) {
+    const app = http.createServer(function (req, res) {
       middleware(req, res, finalhandler(req, res))
     })
 

@@ -1,28 +1,29 @@
 /* global describe, before, after, beforeEach, it, context */
 
-var expect = require('chai').expect
-var router = require('osprey-router')
-var join = require('path').join
-var parser = require('raml-1-parser')
-var ClientOAuth2 = require('client-oauth2')
-var ServerAddress = require('server-address').ServerAddress
-var utils = require('./support/utils')
-var auth = utils.basicAuth
-var osprey = require('../')
-var securityHandler = require('../lib/security/handler')
-var securityScope = require('../lib/security/scope')
+const expect = require('chai').expect
+const router = require('osprey-router')
+const path = require('path')
+const ClientOAuth2 = require('client-oauth2')
+const ServerAddress = require('server-address').ServerAddress
+const wap = require('webapi-parser').WebApiParser
 
-var SECURITY_RAML_PATH = join(__dirname, 'fixtures/security.raml')
+const utils = require('./support/utils')
+const auth = utils.basicAuth
+const osprey = require('../')
+const securityHandler = require('../lib/security/handler')
+const securityScope = require('../lib/security/scope')
+
+const SECURITY_RAML_PATH = path.join(__dirname, 'fixtures/security.raml')
 
 describe('security', function () {
-  var server
-  var oauth2Apps = {
+  let server
+  const oauth2Apps = {
     abc: {
       id: 'abc',
       secret: '123'
     }
   }
-  var users = {
+  const users = {
     blakeembrey: {
       username: 'blakeembrey',
       password: 'hunter2'
@@ -32,170 +33,166 @@ describe('security', function () {
       password: 'secret'
     }
   }
-  var localOAuth2
-  var token = uid()
-  var altToken = uid()
-  var refreshToken = uid()
-  var code = uid()
-  var loggedIn
+  let localOAuth2
+  const token = uid()
+  const altToken = uid()
+  const refreshToken = uid()
+  const code = uid()
+  let loggedIn
 
   // Set up the server on each render.
-  before(function () {
-    return parser.loadRAML(SECURITY_RAML_PATH)
-      .then(function (ramlApi) {
-        var raml = ramlApi.toJSON({
-          serializeMetadata: false
-        })
-        var app = router()
+  before(async function () {
+    const model = await wap.raml10.parse(`file://${SECURITY_RAML_PATH}`)
+    const resolved = await wap.raml10.resolve(model)
+    const app = router()
 
-        app.use(osprey.security(raml, {
-          oauth_2_0: {
-            authenticateClient: function (clientId, clientSecret, done) {
-              var client = oauth2Apps[clientId]
+    app.use(osprey.security(resolved, {
+      oauth_2_0: {
+        authenticateClient: function (clientId, clientSecret, done) {
+          const client = oauth2Apps[clientId]
 
-              if (client.secret !== clientSecret) {
-                return done(null, false)
-              }
-
-              return done(null, client)
-            },
-            findUserByToken: function (userToken, done) {
-              if (userToken === token) {
-                return done(null, users.blakeembrey, { scope: 'profile' })
-              }
-
-              // Invalid scope use-case.
-              if (userToken === altToken) {
-                return done(null, {}, { scope: 'foo' })
-              }
-
-              return done()
-            },
-            sessionKeys: ['a', 'b', 'c'],
-            serializeClient: function (application, done) {
-              return done(null, application.id)
-            },
-            deserializeClient: function (id, done) {
-              return done(null, oauth2Apps[id])
-            },
-            serveAuthorizationPage: function (req, res) {
-              res.writeHead(200, { 'Content-Type': 'application/json' })
-              res.end(JSON.stringify({
-                scope: req.oauth2.req.scope,
-                transaction_id: req.oauth2.transactionID
-              }))
-            },
-            immediateAuthorization: function (client, user, scope, done) {
-              return done(null, loggedIn)
-            },
-            authorizeClient: function (clientId, redirectUri, scope, type, done) {
-              if (Object.prototype.hasOwnProperty.call(oauth2Apps, clientId)) {
-                return done(null, oauth2Apps[clientId], redirectUri)
-              }
-
-              return done()
-            },
-            ensureLoggedIn: function (req, res, next) {
-              req.user = users.blakeembrey
-
-              return next() // Assume logged in.
-            },
-            grant: {
-              code: function (client, redirectUri, user, ares, done) {
-                loggedIn = true
-
-                return done(null, code)
-              },
-              token: function (client, user, ares, done) {
-                loggedIn = true
-
-                return done(null, token)
-              }
-            },
-            exchange: {
-              credentials: function (client, scope, done) {
-                return done(null, token, refreshToken, { expires_in: 3600 })
-              },
-              owner: function (client, username, password, scope, done) {
-                if (users[username] && users[username].password === password) {
-                  return done(null, token)
-                }
-
-                return done(null, false)
-              },
-              code: function (client, code, redirectUri, done) {
-                return done(null, token)
-              },
-              refresh: function (client, refreshToken, scope, done) {
-                return done(null, altToken)
-              }
-            }
-          },
-          basic_auth: {
-            validateUser: function (username, password, done) {
-              if (users[username] && users[username].password === password) {
-                return done(null, true)
-              }
-
-              return done(null, false)
-            }
-          },
-          digest_auth: {
-            findUserByUsername: function (username, done) {
-              var user = users[username]
-              if (user) {
-                return done(null, user, user.password)
-              }
-
-              return done(null, false)
-            },
-            realm: 'Users'
-          },
-          custom_auth: function () {
-            var count = 0
-
-            function rejectOddRoute (req, res, next) {
-              if (count++ % 2 === 0) {
-                return next()
-              }
-
-              var err = new Error('Wrong number. Try again.')
-              err.status = 401
-              return next(err)
-            }
-
-            return {
-              handler: function () {
-                return rejectOddRoute
-              }
-            }
+          if (client.secret !== clientSecret) {
+            return done(null, false)
           }
-        }))
 
-        var helloWorld = utils.response('hello, world')
+          return done(null, client)
+        },
+        findUserByToken: function (userToken, done) {
+          if (userToken === token) {
+            return done(null, users.blakeembrey, { scope: 'profile' })
+          }
 
-        app.get('/default', helloWorld)
-        app.get('/unsecured', helloWorld)
-        app.get('/secured/oauth2', helloWorld)
-        app.get('/secured/oauth2/scoped', helloWorld)
-        app.get('/secured/basic', helloWorld)
-        app.get('/secured/digest', helloWorld)
-        app.get('/secured/custom', helloWorld)
-        app.get('/secured/combined', helloWorld)
-        app.get('/secured/combined/unauthed', helloWorld)
+          // Invalid scope use-case.
+          if (userToken === altToken) {
+            return done(null, {}, { scope: 'foo' })
+          }
 
-        server = new ServerAddress(utils.createServer(app))
-        server.listen()
+          return done()
+        },
+        sessionKeys: ['a', 'b', 'c'],
+        serializeClient: function (application, done) {
+          return done(null, application.id)
+        },
+        deserializeClient: function (id, done) {
+          return done(null, oauth2Apps[id])
+        },
+        serveAuthorizationPage: function (req, res) {
+          res.writeHead(200, { 'Content-Type': 'application/json' })
+          res.end(JSON.stringify({
+            scope: req.oauth2.req.scope,
+            transaction_id: req.oauth2.transactionID
+          }))
+        },
+        immediateAuthorization: function (client, user, scope, done) {
+          return done(null, loggedIn)
+        },
+        authorizeClient: function (clientId, redirectUri, scope, type, done) {
+          if (Object.prototype.hasOwnProperty.call(oauth2Apps, clientId)) {
+            return done(null, oauth2Apps[clientId], redirectUri)
+          }
 
-        localOAuth2 = new ClientOAuth2({
-          clientId: 'abc',
-          clientSecret: '123',
-          accessTokenUri: server.url('/oauth/token'),
-          authorizationUri: server.url('/oauth/authorize'),
-          scopes: ['profile'],
-          redirectUri: server.url('/callback')
-        })
-      })
+          return done()
+        },
+        ensureLoggedIn: function (req, res, next) {
+          req.user = users.blakeembrey
+
+          return next() // Assume logged in.
+        },
+        grant: {
+          code: function (client, redirectUri, user, ares, done) {
+            loggedIn = true
+
+            return done(null, code)
+          },
+          token: function (client, user, ares, done) {
+            loggedIn = true
+
+            return done(null, token)
+          }
+        },
+        exchange: {
+          credentials: function (client, scope, done) {
+            return done(null, token, refreshToken, { expires_in: 3600 })
+          },
+          owner: function (client, username, password, scope, done) {
+            if (users[username] && users[username].password === password) {
+              return done(null, token)
+            }
+
+            return done(null, false)
+          },
+          code: function (client, code, redirectUri, done) {
+            return done(null, token)
+          },
+          refresh: function (client, refreshToken, scope, done) {
+            return done(null, altToken)
+          }
+        }
+      },
+      basic_auth: {
+        validateUser: function (username, password, done) {
+          if (users[username] && users[username].password === password) {
+            return done(null, true)
+          }
+
+          return done(null, false)
+        }
+      },
+      digest_auth: {
+        findUserByUsername: function (username, done) {
+          const user = users[username]
+          if (user) {
+            return done(null, user, user.password)
+          }
+
+          return done(null, false)
+        },
+        realm: 'Users'
+      },
+      custom_auth: function () {
+        let count = 0
+
+        function rejectOddRoute (req, res, next) {
+          if (count++ % 2 === 0) {
+            return next()
+          }
+
+          const err = new Error('Wrong number. Try again.')
+          err.status = 401
+          return next(err)
+        }
+
+        return {
+          handler: function () {
+            return rejectOddRoute
+          }
+        }
+      }
+    }))
+
+    const helloWorld = utils.response('hello, world')
+
+    app.get('/default', helloWorld)
+    app.get('/unsecured', helloWorld)
+    app.get('/secured/oauth2', helloWorld)
+    app.get('/secured/oauth2/scoped', helloWorld)
+    app.get('/secured/basic', helloWorld)
+    app.get('/secured/digest', helloWorld)
+    app.get('/secured/custom', helloWorld)
+    app.get('/secured/combined', helloWorld)
+    app.get('/secured/combined/unauthed', helloWorld)
+
+    server = new ServerAddress(utils.createServer(app))
+    server.listen()
+
+    localOAuth2 = new ClientOAuth2({
+      clientId: 'abc',
+      clientSecret: '123',
+      accessTokenUri: server.url('/oauth/token'),
+      authorizationUri: server.url('/oauth/authorize'),
+      scopes: ['profile'],
+      redirectUri: server.url('/callback')
+    })
   })
 
   after(function () {
@@ -236,7 +233,7 @@ describe('security', function () {
     function simpleDigestAuth (username) {
       // This header has 'response' encoded for username 'bob'
       // and password 'secret'
-      var header = 'Digest username="' + username + '", ' +
+      const header = 'Digest username="' + username + '", ' +
         'realm="Users", nonce="ImAnAwesomeNonce", uri="/secured/digest", ' +
         'response="ba7687213adfa6ccddda9dc247030232"'
       return function (req, next) {
@@ -282,7 +279,7 @@ describe('security', function () {
         it('should authenticate', function () {
           return localOAuth2.credentials.getToken()
             .then(function (user) {
-              var req = user.sign({
+              const req = user.sign({
                 url: server.url('/secured/oauth2'),
                 method: 'GET'
               })
@@ -306,7 +303,7 @@ describe('security', function () {
         it('should authenticate', function () {
           return localOAuth2.owner.getToken('blakeembrey', 'hunter2')
             .then(function (user) {
-              var req = user.sign({
+              const req = user.sign({
                 url: server.url('/secured/oauth2'),
                 method: 'GET'
               })
@@ -323,10 +320,10 @@ describe('security', function () {
 
       describe('code', function () {
         it('should authenticate', function () {
-          var url = localOAuth2.code.getUri()
+          const url = localOAuth2.code.getUri()
           expect(url).to.not.contain(localOAuth2.options.redirectUri)
 
-          var fetcher = utils.makeFetcher()
+          const fetcher = utils.makeFetcher()
           return fetcher.fetch(url, {
             method: 'GET'
           })
@@ -344,7 +341,7 @@ describe('security', function () {
               return localOAuth2.code.getToken(res.url)
             })
             .then(function (user) {
-              var req = user.sign({
+              const req = user.sign({
                 url: server.url('/secured/oauth2'),
                 method: 'GET'
               })
@@ -365,10 +362,10 @@ describe('security', function () {
 
       describe('token', function () {
         it('should authenticate', function () {
-          var url = localOAuth2.token.getUri()
+          const url = localOAuth2.token.getUri()
           expect(url).to.not.contain(localOAuth2.options.redirectUri)
 
-          var fetcher = utils.makeFetcher()
+          const fetcher = utils.makeFetcher()
 
           return fetcher.fetch(url, {
             method: 'GET'
@@ -387,7 +384,7 @@ describe('security', function () {
               return localOAuth2.token.getToken(res.url)
             })
             .then(function (user) {
-              var req = user.sign({
+              const req = user.sign({
                 url: server.url('/secured/oauth2'),
                 method: 'GET'
               })
@@ -414,8 +411,8 @@ describe('security', function () {
 
     describe('scopes', function () {
       it('should authorize valid scopes', function () {
-        var user = localOAuth2.createToken(token, { token_type: 'bearer' })
-        var req = user.sign({
+        const user = localOAuth2.createToken(token, { token_type: 'bearer' })
+        const req = user.sign({
           url: server.url('/secured/oauth2/scoped'),
           method: 'GET'
         })
@@ -424,8 +421,8 @@ describe('security', function () {
       })
 
       it('should reject invalid scopes', function () {
-        var user = localOAuth2.createToken(altToken, { token_type: 'bearer' })
-        var req = user.sign({
+        const user = localOAuth2.createToken(altToken, { token_type: 'bearer' })
+        const req = user.sign({
           url: server.url('/secured/oauth2/scoped'),
           method: 'GET'
         })
@@ -467,8 +464,9 @@ describe('security', function () {
 describe('lib.security.handler.createHandler', function () {
   context('when handle function for custom type is not provided', function () {
     it('should throw an error', function () {
+      const scheme = { type: { value: () => 'Foo' } }
       try {
-        securityHandler({ type: 'Foo' }, null, null)
+        securityHandler(scheme, null, null)
       } catch (error) {
         expect(error).to.not.equal(null)
         expect(error.message).to.contain(

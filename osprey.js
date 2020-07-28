@@ -1,11 +1,13 @@
-var Router = require('osprey-router')
-var compose = require('compose-middleware').compose
-var methodHandler = require('osprey-method-handler')
-var server = require('./lib/server')
-var proxy = require('./lib/proxy')
-var security = require('./lib/security')
-var errorHandler = require('request-error-handler')
-var extend = require('xtend')
+const Router = require('osprey-router')
+const compose = require('compose-middleware').compose
+const ospreyMethodHandler = require('osprey-method-handler')
+const errorHandler = require('request-error-handler')
+const wap = require('webapi-parser').WebApiParser
+const path = require('path')
+
+const server = require('./lib/server')
+const proxy = require('./lib/proxy')
+const security = require('./lib/security')
 
 /**
  * Expose functions.
@@ -20,41 +22,44 @@ exports.errorHandler = errorHandler
  * Proxy JSON schema addition to method handler.
  */
 exports.addJsonSchema = function (schema, key) {
-  methodHandler.addJsonSchema(schema, key)
+  ospreyMethodHandler.addJsonSchema(schema, key)
 }
 
 /**
  * Load an Osprey server directly from a RAML file.
  *
- * @param  {String}  path
- * @param  {Object}  opts
+ * @param  {String}  fpath
+ * @param  {Object}  options
  * @return {Promise}
  */
-exports.loadFile = function (path, opts) {
-  var options = opts || {}
+exports.loadFile = async function (fpath, options = {}) {
+  fpath = path.resolve(fpath)
+  fpath = fpath.startsWith('file:') ? fpath : `file://${fpath}`
 
-  return require('raml-1-parser')
-    .loadRAML(path, { rejectOnErrors: true })
-    .then(function (ramlApi) {
-      var raml = ramlApi.expand(true).toJSON({
-        serializeMetadata: false
-      })
-      var middleware = []
-      var handler = server(raml, extend({ RAMLVersion: ramlApi.RAMLVersion() }, options.server))
-      var error = errorHandler(options.errorHandler)
+  let model
+  try {
+    model = await wap.raml10.parse(fpath)
+    model = await wap.raml10.resolve(model)
+  } catch (e) {
+    model = await wap.raml08.parse(fpath)
+    model = await wap.raml08.resolve(model)
+  }
 
-      if (options.security) {
-        middleware.push(security(raml, options.security))
-      }
+  const middleware = []
+  const handler = server(model, options.server)
+  const error = errorHandler(options.errorHandler)
 
-      middleware.push(handler)
+  if (options.security) {
+    middleware.push(security(model, options.security))
+  }
 
-      if (!options.disableErrorInterception) {
-        middleware.push(error)
-      }
+  middleware.push(handler)
 
-      var result = compose(middleware)
-      result.ramlUriParameters = handler.ramlUriParameters
-      return result
-    })
+  if (!options.disableErrorInterception) {
+    middleware.push(error)
+  }
+
+  const result = compose(middleware)
+  result.ramlUriParameters = handler.ramlUriParameters
+  return result
 }

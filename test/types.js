@@ -1,39 +1,35 @@
-/* global describe, before, after, it */
+/* global describe, before, after, it, context */
 
-var expect = require('chai').expect
-var router = require('osprey-router')
-var join = require('path').join
-var ServerAddress = require('server-address').ServerAddress
-var parser = require('raml-1-parser')
-var osprey = require('../')
-var utils = require('./support/utils')
+const expect = require('chai').expect
+const ospreyRouter = require('osprey-router')
+const path = require('path')
+const ServerAddress = require('server-address').ServerAddress
+const wap = require('webapi-parser').WebApiParser
 
-var EXAMPLE_RAML_PATH = join(__dirname, 'fixtures/types.raml')
+const osprey = require('../')
+const utils = require('./support/utils')
+const success = utils.response('success')
 
-var success = utils.response('success')
+const EXAMPLE_RAML_PATH = path.join(__dirname, 'fixtures/types.raml')
 
 describe('RAML types', function () {
-  var app
-  var proxy
-  var server
+  let app
+  let proxy
+  let server
 
-  before(function () {
-    app = router()
+  before(async function () {
+    app = ospreyRouter()
     server = new ServerAddress(utils.createServer(app))
 
     server.listen()
 
-    return parser.loadRAML(EXAMPLE_RAML_PATH)
-      .then(function (ramlApi) {
-        var raml = ramlApi.expand(true).toJSON({
-          serializeMetadata: false
-        })
-        var ospreyApp = osprey.server(raml, { RAMLVersion: ramlApi.RAMLVersion() })
-        var proxyApp = osprey.proxy(ospreyApp, server.url())
+    const model = await wap.raml10.parse(`file://${EXAMPLE_RAML_PATH}`)
+    const resolved = await wap.raml10.resolve(model)
+    const ospreyApp = osprey.server(resolved)
+    const proxyApp = osprey.proxy(ospreyApp, server.url())
 
-        proxy = new ServerAddress(proxyApp)
-        proxy.listen()
-      })
+    proxy = new ServerAddress(proxyApp)
+    proxy.listen()
   })
 
   after(function () {
@@ -65,7 +61,7 @@ describe('RAML types', function () {
       return utils.makeFetcher().fetch(proxy.url('/users'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({})
+        body: JSON.stringify(123)
       }).then(function (res) {
         expect(res.status).to.equal(400)
       })
@@ -94,20 +90,22 @@ describe('RAML types', function () {
   })
 
   describe('built-in types', function () {
-    it('should accept any type of data when type: any', function () {
-      app.post('/any', success)
+    context('when type: any', function () {
+      it('should accept any type of data', function () {
+        app.post('/any', success)
 
-      return utils.makeFetcher().fetch(proxy.url('/any'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          anyone: 'one',
-          anytwo: 12,
-          anythree: [1, 2, 3]
+        return utils.makeFetcher().fetch(proxy.url('/any'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            anyone: 'one',
+            anytwo: 12,
+            anythree: [1, 2, 3]
+          })
+        }).then(function (res) {
+          expect(res.body).to.equal('success')
+          expect(res.status).to.equal(200)
         })
-      }).then(function (res) {
-        expect(res.body).to.equal('success')
-        expect(res.status).to.equal(200)
       })
     })
 
@@ -190,17 +188,19 @@ describe('RAML types', function () {
     })
   })
 
-  it('should reject objects when an array is expected as root element', function () {
-    app.post('/arrayRoot', success)
+  context('when an array is expected as root element', function () {
+    it('should reject objects', function () {
+      app.post('/arrayRoot', success)
 
-    return utils.makeFetcher().fetch(proxy.url('/arrayRoot'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        foo: 'bar'
+      return utils.makeFetcher().fetch(proxy.url('/arrayRoot'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          foo: 'bar'
+        })
+      }).then(function (res) {
+        expect(res.status).to.equal(400)
       })
-    }).then(function (res) {
-      expect(res.status).to.equal(400)
     })
   })
 
@@ -263,15 +263,17 @@ describe('RAML types', function () {
       })
     })
 
-    it('should reject integers when a string is expected as root element', function () {
-      app.post('/stringRoot', success)
+    context('when a string is expected as root element', function () {
+      it('should reject integers', function () {
+        app.post('/stringRoot', success)
 
-      return utils.makeFetcher().fetch(proxy.url('/stringRoot'), {
-        method: 'POST',
-        body: '7',
-        headers: { 'Content-Type': 'application/json' }
-      }).then(function (res) {
-        expect(res.status).to.equal(400)
+        return utils.makeFetcher().fetch(proxy.url('/stringRoot'), {
+          method: 'POST',
+          body: '7',
+          headers: { 'Content-Type': 'application/json' }
+        }).then(function (res) {
+          expect(res.status).to.equal(400)
+        })
       })
     })
   })
@@ -291,15 +293,17 @@ describe('RAML types', function () {
     })
   })
 
-  it('should reject integers when an object is expected as root element', function () {
-    app.post('/objectRoot', success)
+  context('when an object is expected as root element', function () {
+    it('should reject integers', function () {
+      app.post('/objectRoot', success)
 
-    return utils.makeFetcher().fetch(proxy.url('/stringRoot'), {
-      method: 'POST',
-      body: '7',
-      headers: { 'Content-Type': 'application/json' }
-    }).then(function (res) {
-      expect(res.status).to.equal(400)
+      return utils.makeFetcher().fetch(proxy.url('/stringRoot'), {
+        method: 'POST',
+        body: '7',
+        headers: { 'Content-Type': 'application/json' }
+      }).then(function (res) {
+        expect(res.status).to.equal(400)
+      })
     })
   })
 
