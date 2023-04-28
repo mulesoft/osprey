@@ -16,7 +16,9 @@
     "lint": "standard",
     "test-cov": "nyc node_modules/mocha/bin/_mocha -- -R spec --bail --require test/support/globals",
     "test-spec": "mocha -R spec --bail --require test/support/globals",
-    "test": "npm run lint && npm run test-cov"
+    "test": "npm run lint && npm run test-cov",
+    "prepare": "npm run snyk-protect",
+    "snyk-protect": "snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -66,15 +68,16 @@
     "type-is": "^1.5.5",
     "webapi-parser": "^0.4.0",
     "xtend": "^4.0.0",
-    "yargs": "^15.4.0"
+    "yargs": "^15.4.0",
+    "@snyk/protect": "latest"
   },
   "devDependencies": {
     "busboy": "^0.3.1",
     "chai": "^4.1.2",
     "client-oauth2": "^4.2.0",
     "es6-promise": "^4.2.4",
-    "express": "^4.13.3",
-    "mocha": "^8.0.1",
+    "express": "^4.17.3",
+    "mocha": "^10.1.0",
     "nyc": "^15.1.0",
     "popsicle": "^12.0.5",
     "popsicle-server": "^3.0.0",
@@ -82,5 +85,6 @@
     "rewire": "^5.0.0",
     "server-address": "^3.0.1",
     "standard": "^14.3.4"
-  }
+  },
+  "snyk": true
 }
